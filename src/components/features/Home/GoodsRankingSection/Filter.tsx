@@ -1,11 +1,9 @@
-import styled from '@emotion/styled';
-
+import { RankTypeButton } from './RankTypeButton';
+import { TargetTypeButton } from './TargetTypeButton';
 import { Spacing } from '@/components/common/layouts/Spacing';
 import { breakpoints } from '@/styles/variants';
 import type { RankingFilterOption } from '@/types';
-
-import { RankTypeButton } from './RankTypeButton';
-import { TargetTypeButton } from './TargetTypeButton';
+import styled from '@emotion/styled';
 
 type Props = {
   filterOption: RankingFilterOption;
