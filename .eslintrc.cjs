@@ -10,6 +10,7 @@ module.exports = {
     'airbnb/hooks',
     'airbnb-typescript',
     'plugin:storybook/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:prettier/recommended',
   ],
   overrides: [
@@ -51,7 +52,10 @@ module.exports = {
     'import/no-default-export': 'off',
     'import/prefer-default-export': 'off',
     'import/extensions': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { optionalDependencies: false },
+    ],
     'prettier/prettier': 'error',
   },
   settings: {

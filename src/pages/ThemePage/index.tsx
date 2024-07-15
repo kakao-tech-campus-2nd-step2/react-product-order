@@ -1,10 +1,15 @@
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { ThemeErrorFallback } from '@/api/ThemeErrorFallback';
 import ROUTES from '@/constants/routes';
 import BaseLayout from '@/layouts/BaseLayout';
 
-import { ThemeGoods } from './components/ThemeGoods';
-import { ThemeHeader } from './components/ThemeHeader';
+import { Skeleton } from '@/components/Loading/Skeleton';
+
+import { ThemeGoodsSection } from './components/ThemeGoodsSection';
+import { ThemeHeroSection } from './components/ThemeHeroSection';
 
 export const ThemePage = () => {
   const navigate = useNavigate();
@@ -17,8 +22,12 @@ export const ThemePage = () => {
 
   return (
     <BaseLayout>
-      <ThemeHeader themeKey={themeKey} />
-      <ThemeGoods themeKey={themeKey} />
+      <ErrorBoundary FallbackComponent={ThemeErrorFallback}>
+        <Suspense fallback={<Skeleton width="100vw" height="13rem" />}>
+          <ThemeHeroSection themeKey={themeKey} />
+        </Suspense>
+      </ErrorBoundary>
+      <ThemeGoodsSection themeKey={themeKey} />
     </BaseLayout>
   );
 };

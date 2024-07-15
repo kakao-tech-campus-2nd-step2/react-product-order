@@ -1,8 +1,9 @@
+import { useRankProducts } from '@/api/hooks/useRankProducts';
 import { useExpansionControl } from '@/pages/HomePage/hooks/useExpansionControl';
-import { useRankListData } from '@/pages/HomePage/hooks/useRankListData';
 import { useVisibleList } from '@/pages/HomePage/hooks/useVisibleList';
 import { RankingFilter } from '@/types/productType';
 
+import { UpDownDots } from '@/components/Loading/UpDownDots';
 import { OneTextContainer } from '@/components/OneTextContainer';
 import { Container } from '@/components/ui/Layout/Container';
 
@@ -14,7 +15,7 @@ type GoodsRankingListProps = {
 };
 
 export const GoodsRankingList = ({ filter }: GoodsRankingListProps) => {
-  const { rankProducts, loading, error } = useRankListData(filter);
+  const { data: rankProducts, status, error } = useRankProducts(filter);
 
   const { visibleItems, visibleItemCount, setVisibleItemCount } =
     useVisibleList(rankProducts || [], filter);
@@ -25,18 +26,25 @@ export const GoodsRankingList = ({ filter }: GoodsRankingListProps) => {
     setVisibleItemCount
   );
 
-  const text = isExpanded ? '접기' : '더보기';
-  const onClick = isExpanded ? handleShowLess : handleShowMore;
+  if (error) {
+    return <OneTextContainer>{error.message}</OneTextContainer>;
+  }
 
-  if (error) return <OneTextContainer>{error}</OneTextContainer>;
-  if (loading) return <OneTextContainer>loading...</OneTextContainer>;
-  if (!rankProducts?.length)
+  if (status === 'pending') {
+    return <UpDownDots />;
+  }
+
+  if (!rankProducts?.length) {
     return <OneTextContainer>상품 목록이 없습니다.</OneTextContainer>;
+  }
 
   return (
     <Container flexDirection="column" gap="2rem">
       <RankList filteredRankList={visibleItems} />
-      <ShowMoreButton text={text} onClick={onClick} />
+      <ShowMoreButton
+        text={isExpanded ? '접기' : '더보기'}
+        onClick={isExpanded ? handleShowLess : handleShowMore}
+      />
     </Container>
   );
 };

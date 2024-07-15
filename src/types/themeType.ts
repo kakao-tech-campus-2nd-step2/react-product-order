@@ -8,12 +8,12 @@ export type ThemeData = {
   backgroundColor?: string;
 };
 
-export type ThemeListData = Pick<
+export type ThemeCategoryData = Pick<
   ThemeData,
   'id' | 'key' | 'label' | 'imageURL'
 >;
 
-export type ThemeHeaderData = Pick<
+export type ThemeHeroData = Pick<
   ThemeData,
-  'label' | 'title' | 'description' | 'backgroundColor'
+  'key' | 'label' | 'title' | 'description' | 'backgroundColor'
 >;
