@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ThemeErrorFallback } from '@/api/ThemeErrorFallback';
+import { ThemeErrorFallback } from '@/api/components/ThemeErrorFallback';
 import BaseLayout from '@/layouts/BaseLayout';
 import { ROUTER_PATH } from '@/routes/path';
 

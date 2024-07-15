@@ -1,4 +1,4 @@
-import { BACKEND_API } from '@/api/instance';
+import { BACKEND_API } from '@/api/config';
 import { API_ERROR_MESSAGES } from '@/constants/errorMessage';
 
 import { GetProductsRequest, GetProductsResponse } from './types';
