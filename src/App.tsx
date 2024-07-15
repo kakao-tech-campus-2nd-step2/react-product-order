@@ -1,16 +1,7 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 
-import { Router } from './router';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 0,
-      staleTime: 1000 * 60,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+import { queryClient } from './api/instance/query';
+import { Router } from './routes';
 
 const App = () => {
   return (

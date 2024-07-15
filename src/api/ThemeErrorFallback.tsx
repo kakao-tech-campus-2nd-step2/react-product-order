@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 
 import { RENDER_ERROR_MESSAGES } from '@/constants/errorMessage';
-import ROUTES from '@/constants/routes';
+import { ROUTER_PATH } from '@/routes/path';
 
 type ErrorFallbackProps = {
   error: AxiosError;
@@ -15,7 +15,7 @@ export const ThemeErrorFallback = ({ error }: ErrorFallbackProps) => {
 
   useEffect(() => {
     if (error.message === RENDER_ERROR_MESSAGES.THEME_NOT_FOUND) {
-      navigate(ROUTES.HOME);
+      navigate(ROUTER_PATH.HOME);
     }
   }, [error.message, navigate]);
 

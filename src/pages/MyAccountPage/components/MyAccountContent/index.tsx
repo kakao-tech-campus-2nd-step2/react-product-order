@@ -1,5 +1,5 @@
-import { useAuth } from '@/context/auth/useAuth';
 import { useLogout } from '@/pages/MyAccountPage/hooks/useLogout';
+import { useAuth } from '@/provider/auth/useAuth';
 
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Layout/Container';

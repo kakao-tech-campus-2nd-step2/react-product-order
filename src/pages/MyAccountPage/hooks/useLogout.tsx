@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
-import ROUTES from '@/constants/routes';
-import { useAuth } from '@/context/auth/useAuth';
+import { useAuth } from '@/provider/auth/useAuth';
+import { ROUTER_PATH } from '@/routes/path';
 
 export const useLogout = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export const useLogout = () => {
 
   const handleLogout = () => {
     logout();
-    navigate(ROUTES.HOME);
+    navigate(ROUTER_PATH.HOME);
   };
 
   return { handleLogout };

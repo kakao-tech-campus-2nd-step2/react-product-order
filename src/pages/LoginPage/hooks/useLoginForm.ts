@@ -1,7 +1,7 @@
 import { FormEvent, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '@/context/auth/useAuth';
+import { useAuth } from '@/provider/auth/useAuth';
 
 export const useLoginForm = () => {
   const navigate = useNavigate();

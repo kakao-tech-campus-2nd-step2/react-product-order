@@ -3,8 +3,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ThemeErrorFallback } from '@/api/ThemeErrorFallback';
-import ROUTES from '@/constants/routes';
 import BaseLayout from '@/layouts/BaseLayout';
+import { ROUTER_PATH } from '@/routes/path';
 
 import { Skeleton } from '@/components/Loading/Skeleton';
 
@@ -16,7 +16,7 @@ export const ThemePage = () => {
   const { themeKey } = useParams();
 
   if (!themeKey) {
-    navigate(ROUTES.HOME);
+    navigate(ROUTER_PATH.HOME);
     return null;
   }
 
