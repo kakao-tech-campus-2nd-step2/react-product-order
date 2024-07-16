@@ -1,15 +1,30 @@
 import { css } from '@emotion/css';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { Button } from '@/components/common/Button';
 import NumberField from '@/components/common/Form/Input/NumberField';
 import Header from '@/components/features/Header';
+import AuthContext from '@/context/AuthContext';
 
 import ProductDetail from './ProductDetail';
+import { PriceBox, SelectOption } from './PurchaseComps';
 
 export default () => {
+    const { isAuthenticated } = useContext(AuthContext);
+    const navigate = useNavigate();
     //TODO fetch data
     const price = 1000;
     const [count, setCount] = useState<number>(1);
+    const onClick = () => {
+        if (
+            !isAuthenticated &&
+            confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?')
+        )
+            navigate('/login');
+        //TODO localStorage에 구매목록 저장 (orderHistory -> id, count)
+        //TODO order 페이지로 이동
+    };
 
     return (
         <div>
@@ -23,13 +38,18 @@ export default () => {
                     />
                 </section>
                 <section className={purchaseLayout}>
-                    <div className={selectOptionStyle}>
+                    <SelectOption>
                         {/* TODO 옵션 반영 */}
                         <NumberField setValue={setCount} />
-                    </div>
-                    <div className={priceStyle}>
-                        <p>총 결제 금액</p>
-                        <p>{price * count}원</p>
+                    </SelectOption>
+                    <div>
+                        <PriceBox>
+                            <p>총 결제 금액</p>
+                            <p>{price * count}원</p>
+                        </PriceBox>
+                        <Button theme="black" onClick={onClick}>
+                            나에게 선물하기
+                        </Button>
                     </div>
                 </section>
             </div>
@@ -47,26 +67,4 @@ const purchaseLayout = css`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-`;
-const selectOptionStyle = css`
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-`;
-const priceStyle = css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-
-    border-radius: 5px;
-    background-color: #eee;
-    p:first-child {
-        font-size: 15px;
-        font-weight: 600;
-    }
-    p:last-child {
-        font-size: 20px;
-        font-weight: 700;
-    }
 `;
