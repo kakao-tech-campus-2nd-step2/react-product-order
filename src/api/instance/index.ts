@@ -17,7 +17,7 @@ const initInstance = (config: AxiosRequestConfig): AxiosInstance => {
 };
 
 export const fetchInstance = initInstance({
-  baseURL: "https://react-gift-mock-api-jyn523.vercel.app",
+  baseURL: "https://react-gift-mock-api-jyn523.vercel.app/api",
 });
 
 export const queryClient = new QueryClient({
