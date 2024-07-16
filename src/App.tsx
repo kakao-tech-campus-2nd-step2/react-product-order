@@ -10,6 +10,7 @@ import Error from './pages/Error';
 import Login from './pages/Login';
 import Main from './pages/Main';
 import MyAccount from './pages/MyAccount';
+import Product from './pages/Product';
 import Theme from './pages/Theme';
 
 axios.defaults.baseURL = 'https://react-gift-mock-api-self.vercel.app/api/v1';
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
     {
         path: '/my-account',
         element: <MyAccount />,
+    },
+    {
+        path: 'products/:productId',
+        element: <Product />,
     },
     {
         path: '/error/:http_status',
