@@ -18,6 +18,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    productKey: 1,
     rankingIndex: 1,
     imageSrc: 'https://t1.kakaocdn.net/friends/www/talk/kakaofriends_talk_2018.png',
     subtitle: '카카오 프렌즈 특별 한정판',
