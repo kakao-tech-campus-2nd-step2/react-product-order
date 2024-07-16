@@ -42,7 +42,7 @@ const TARGET_TYPE_TEXT = {
 
 const Wrapper = styled.button`
   width: 100%;
-  max-width: 58px;
+  min-width: 58px;
 
   display: flex;
   flex-direction: column;

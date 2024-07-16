@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from '@emotion/styled';
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useGetRankingProducts } from '@/api/hooks/useGetRankingProducts';
+import { useGetRankingProducts } from '@/api';
 import { Container } from '@/components/common/layouts/Container';
+import Loading from '@/components/common/Loading';
 import { breakpoints } from '@/styles/variants';
 import type { RankingFilterOption } from '@/types';
 
@@ -15,27 +17,30 @@ export const GoodsRankingSection = () => {
     rankType: 'MANY_WISH',
   });
 
-  const { data, isLoading, isError } = useGetRankingProducts(filterOption);
+  const {
+    data: rankingProducts,
+    refetch: refetchRankingProducts,
+    isLoading,
+    isError,
+  } = useGetRankingProducts({
+    targetType: filterOption.targetType,
+    rankType: filterOption.rankType,
+  });
 
-  const GoodRankingListView = useCallback(() => {
-    const goodsList = data?.products ?? [];
+  const goodsList = rankingProducts?.products || [];
 
-    if (isError) {
-      return <TextView>데이터를 불러오는 중에 문제가 발생했습니다.</TextView>;
-    }
-    if (isLoading && !goodsList.length) {
-      return <TextView>로딩중</TextView>;
-    }
-
-    return <GoodsRankingList goodsList={goodsList} />;
-  }, [isLoading, data, isError]);
+  useEffect(() => {
+    refetchRankingProducts();
+  }, [filterOption]);
 
   return (
     <Wrapper>
       <Container>
         <Title>실시간 급상승 선물랭킹</Title>
         <GoodsRankingFilter filterOption={filterOption} onFilterOptionChange={setFilterOption} />
-        <GoodRankingListView />
+        <Loading isLoading={isLoading} error={isError}>
+          <GoodsRankingList goodsList={goodsList} />
+        </Loading>
       </Container>
     </Wrapper>
   );
@@ -62,13 +67,4 @@ const Title = styled.h2`
     font-size: 35px;
     line-height: 50px;
   }
-`;
-
-const TextView = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 16px 60px;
-  font-size: 16px;
 `;
