@@ -5,6 +5,7 @@ export const RouterPath = {
   myAccount: '/my-account',
   login: '/login',
   notFound: '*',
+  product: '/product/:productId',
 };
 
 export const getDynamicPath = {
