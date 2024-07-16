@@ -1,4 +1,8 @@
 import { Box, Container, Image, Text } from '@chakra-ui/react';
+import { Navigate } from 'react-router-dom';
+
+import { useCurrentProduct } from '@/api/hooks/useGetProduct';
+import { RouterPath } from '@/routes/path';
 
 type Props = {
   imageSrc: string;
@@ -7,35 +11,41 @@ type Props = {
   count: number;
 };
 
-const mock: Props = {
-  imageSrc:
-    'https://st.kakaocdn.net/product/gift/product/20240709153502_a2722681b7e8490d9db2a696e079995c.png',
-  subtitle: '다니엘트루스',
-  title: '"집들이선물" 디켄터 리드 디퓨저 300ml (미니2종&메시지카드 증정)',
-  count: 1,
-};
+export const OrderProductSection = ({
+  productKey,
+  count,
+}: {
+  productKey: string;
+  count: number;
+}) => {
+  const { isRender, currentProduct } = useCurrentProduct(productKey);
+  if (!isRender) return null;
 
-export const OrderProductSection = () => {
+  if (!currentProduct) {
+    return <Navigate to={RouterPath.notFound} />;
+  }
+
+  const product: Props = {
+    imageSrc: currentProduct.imageURL,
+    subtitle: currentProduct.brandInfo.name,
+    title: currentProduct.name,
+    count: count,
+  };
+
   return (
     <>
-      <Wrapper></Wrapper>
-    </>
-  );
-};
-
-const Wrapper = () => {
-  return (
-    <Container>
-      <Text>선물내역</Text>
-      <Box>
-        <Image boxSize="66px" src={mock.imageSrc} />
+      <Container>
+        <Text>선물내역</Text>
         <Box>
-          <Text>{mock.subtitle}</Text>
-          <Text>
-            {mock.title} X {mock.count}개
-          </Text>
+          <Image boxSize="66px" src={product.imageSrc} />
+          <Box>
+            <Text>{product.subtitle}</Text>
+            <Text>
+              {product.title} X {product.count}개
+            </Text>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </>
   );
 };
