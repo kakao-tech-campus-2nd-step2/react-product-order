@@ -1,3 +1,4 @@
+import { ChakraBaseProvider, extendBaseTheme, theme as chakraTheme } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -14,6 +15,15 @@ import Theme from './pages/Theme';
 axios.defaults.baseURL = 'https://react-gift-mock-api-self.vercel.app/api/v1';
 const queryClient = new QueryClient();
 
+const { Button, Input } = chakraTheme.components;
+
+const theme = extendBaseTheme({
+    components: {
+        Button,
+        Input,
+    },
+});
+
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     useEffect(() => {
@@ -24,8 +34,10 @@ const App = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-                <RouterProvider router={router} />
-                <Footer />
+                <ChakraBaseProvider theme={theme}>
+                    <RouterProvider router={router} />
+                    <Footer />
+                </ChakraBaseProvider>
             </AuthContext.Provider>
         </QueryClientProvider>
     );

@@ -18,7 +18,6 @@ export default () => {
                     <Image
                         alt={'카카오 선물하기 로그인'}
                         src={'https://gift-s.kakaocdn.net/dn/gift/images/m640/pc_gift_logo.png'}
-                        height={'54px'}
                         onClick={() => navigate('/')}
                     />
                     <UserButton navigate={navigate} />
@@ -37,6 +36,9 @@ const headerStyle = css`
     position: fixed;
     width: 100%;
     background-color: #ffffff;
+    img {
+        height: 54px;
+    }
 `;
 const FlexContainer = styled.div({
     display: 'flex',
