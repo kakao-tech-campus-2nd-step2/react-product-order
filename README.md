@@ -283,14 +283,14 @@ queryKey는 react-query의 기능들 중 하나인 데이터 캐싱을 위한 ke
 
 ### Step 1
 
-- [ ] chakra-ui 설치
-- [ ] GoodsItem 클릭 시 라우팅 구현
-- [ ] 상품의 상세정보를 표시하는 ProductDetailPage 구현
-  - [ ] 없는 상품의 경우 메인 페이지로 리디렉션
-  - [ ] 상품 결제 시 로그인 여부 체크
-- [ ] 결제 페이지 구현 (ProductOrderPage)
-  - [ ] 결제 옵션 input 구현
-  - [ ] +, - 버튼 구현
+- [x] chakra-ui 설치
+- [x] GoodsItem 클릭 시 라우팅 구현
+- [x] 상품의 상세정보를 표시하는 ProductDetailPage 구현
+  - [x] 없는 상품의 경우 메인 페이지로 리디렉션
+  - [x] 상품 결제 시 로그인 여부 체크
+- [x] 결제 페이지 구현 (ProductOrderPage)
+  - [x] 결제 옵션 input 구현
+  - [x] +, - 버튼 구현
 
 ### Step 2
 
