@@ -1,29 +1,35 @@
 import { Box, Divider, Flex, Image, Text } from '@chakra-ui/react';
+import { Navigate } from 'react-router-dom';
+
+import { useCurrentProduct } from '@/api/hooks/useGetProduct';
+import { RouterPath } from '@/routes/path';
 
 type Props = {
-  imageUrl: string;
+  imageURL: string;
   name: string;
-  price: string;
+  price: number;
 };
 
-const mock: Props = {
-  imageUrl:
-    'https://st.kakaocdn.net/product/gift/product/20240703140657_19263fd5455146b0a308a4e0d6bacc6a.png',
-  name: '[단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)',
-  price: '145000원',
-};
+export const ProductDetailSection = ({ productKey }: { productKey: string }) => {
+  const { isRender, currentProduct } = useCurrentProduct(productKey);
+  if (!isRender) return null;
 
-export const ProductDetailSection = () => {
-  return <Wrapper></Wrapper>;
-};
+  if (!currentProduct) {
+    return <Navigate to={RouterPath.notFound} />;
+  }
 
-const Wrapper = () => {
+  const product: Props = {
+    imageURL: currentProduct.imageURL,
+    name: currentProduct.name,
+    price: currentProduct.price.sellingPrice,
+  };
+
   return (
     <Flex>
-      <Image boxSize="450px" src={mock.imageUrl} />
+      <Image boxSize="450px" src={product.imageURL} />
       <Box>
-        <Box>{mock.name}</Box>
-        <Box>{mock.price}</Box>
+        <Box>{product.name}</Box>
+        <Box>{product.price}</Box>
         <Box>
           <Divider />
           <Text as="b">카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Text>

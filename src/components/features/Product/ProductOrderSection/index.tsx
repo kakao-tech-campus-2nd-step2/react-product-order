@@ -9,8 +9,9 @@ import {
   NumberInputStepper,
   Text,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
+import { useCurrentProduct } from '@/api/hooks/useGetProduct';
 import { RouterPath } from '@/routes/path';
 
 type Props = {
@@ -18,20 +19,22 @@ type Props = {
   totalPrice: string;
 };
 
-const mock: Props = {
-  name: '외식 통합권 10만원권',
-  totalPrice: '100000원',
-};
+export const ProductOrderSection = ({ productKey }: { productKey: string }) => {
+  const { isRender, currentProduct } = useCurrentProduct(productKey);
+  if (!isRender) return null;
 
-export const ProductOrderSection = () => {
-  return <Wrapper></Wrapper>;
-};
+  if (!currentProduct) {
+    return <Navigate to={RouterPath.notFound} />;
+  }
 
-const Wrapper = () => {
+  const product: Props = {
+    name: currentProduct.name,
+    totalPrice: currentProduct.price.sellingPrice,
+  };
   return (
     <Flex direction="column" justify="space-between">
       <Box>
-        <Text as="b">{mock.name}</Text>
+        <Text as="b">{product.name}</Text>
         <NumberInput defaultValue={1}>
           <NumberInputField />
           <NumberInputStepper>
@@ -44,7 +47,7 @@ const Wrapper = () => {
         <Box bg="lightgray" w="100%">
           <Flex justify="space-between">
             <Text as="b">총 결제 금액</Text>
-            <Text as="b">{mock.totalPrice}</Text>
+            <Text as="b">{product.totalPrice}</Text>
           </Flex>
         </Box>
         <Link to={RouterPath.order}>
