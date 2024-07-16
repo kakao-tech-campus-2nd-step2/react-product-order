@@ -1,9 +1,10 @@
 import { Box, Button, Center, Flex, Image, Input, Spinner, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { RouterPath } from '@/routes/path';
+import { authSessionStorage } from '@/utils/storage';
 
 interface ProductDetail {
   id: number;
@@ -16,6 +17,7 @@ interface ProductDetail {
 
 export const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
+  const navigate = useNavigate();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -29,7 +31,8 @@ export const ProductPage: React.FC = () => {
         const data = response.data.detail;
 
         if (!data) {
-          <Link to={RouterPath.home} />;
+          navigate(RouterPath.home);
+          return;
         }
         setProductDetail({
           id: data.id,
@@ -46,7 +49,7 @@ export const ProductPage: React.FC = () => {
     };
 
     fetchProductDetail();
-  }, [productId]);
+  }, [productId, navigate]);
 
   if (isLoading || !productDetail) {
     return (
@@ -67,9 +70,11 @@ export const ProductPage: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    const totalPrice = productDetail!.price.basicPrice * quantity;
-    alert(`구매가 완료되었습니다! 총 ${totalPrice}원을 결제하셨습니다.`);
-    // 여기에 추가적인 로직 구현 가능
+    const authToken = authSessionStorage.get();
+    if (!authToken) {
+      navigate(RouterPath.login);
+      return;
+    }
   };
 
   return (
