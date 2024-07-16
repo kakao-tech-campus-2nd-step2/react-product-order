@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import { Layout } from '@/components/features/Layout';
+import { DetailPage } from '@/pages/Detail';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: RouterPath.theme,
         element: <ThemePage />,
+      },
+      {
+        path:RouterPath.detail,
+        element:<DetailPage/>
       },
       {
         path: RouterPath.myAccount,
