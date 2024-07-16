@@ -5,7 +5,7 @@ import type { ProductDetailData } from '@/types';
 import { fetchInstance } from '../instance';
 
 export type ProductDetailResponseData = {
-  productDetail: ProductDetailData[];
+  detail: ProductDetailData;
 };
 
 const getThemesProductsDetailPath = (productId: string) => `/v1/products/${productId}/detail`;
