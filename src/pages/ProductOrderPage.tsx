@@ -56,7 +56,7 @@ function ProductOrderPage() {
             flexDirection="column"
             maxWidth="360px"
           >
-            <ProductOrderForm productDetails={product} count={count} />
+            <ProductOrderForm productDetails={product} count={count} cardMessage={cardMessage} />
           </Container>
         </Container>
       </Container>
