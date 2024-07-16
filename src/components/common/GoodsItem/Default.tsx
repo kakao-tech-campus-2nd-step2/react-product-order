@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 import { Image } from '@/components/common/Image';
+import { getDynamicPath } from '@/routes/path';
 
 export type DefaultGoodsItemsProps = {
+  goodsId: number;
   imageSrc: string;
   subtitle: string;
   title: string;
@@ -10,6 +13,7 @@ export type DefaultGoodsItemsProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const DefaultGoodsItems = ({
+  goodsId,
   imageSrc,
   subtitle,
   title,
@@ -17,17 +21,19 @@ export const DefaultGoodsItems = ({
   ...props
 }: DefaultGoodsItemsProps) => {
   return (
-    <Wrapper {...props}>
-      <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
-      <InfoWrapper>
-        <Subtitle>{subtitle}</Subtitle>
-        <Title>{title}</Title>
-        <Amount>
-          {amount}
-          <span>원</span>
-        </Amount>
-      </InfoWrapper>
-    </Wrapper>
+    <Link to={getDynamicPath.detail(goodsId)}>
+      <Wrapper {...props}>
+        <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
+        <InfoWrapper>
+          <Subtitle>{subtitle}</Subtitle>
+          <Title>{title}</Title>
+          <Amount>
+            {amount}
+            <span>원</span>
+          </Amount>
+        </InfoWrapper>
+      </Wrapper>
+    </Link>
   );
 };
 
