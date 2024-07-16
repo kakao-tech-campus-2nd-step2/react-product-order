@@ -24,8 +24,8 @@ const router = createBrowserRouter([
         element: <ThemePage />,
       },
       {
-        path:RouterPath.detail,
-        element:<DetailPage/>
+        path: RouterPath.detail,
+        element: <DetailPage />,
       },
       {
         path: RouterPath.myAccount,
