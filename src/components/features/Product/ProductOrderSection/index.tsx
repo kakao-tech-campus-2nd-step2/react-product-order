@@ -10,10 +10,11 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import { useCurrentProduct } from '@/api/hooks/useGetProduct';
 import { RouterPath } from '@/routes/path';
+import { authSessionStorage } from '@/utils/storage';
 
 type Props = {
   name: string;
@@ -32,6 +33,18 @@ export const ProductOrderSection = ({ productKey }: { productKey: string }) => {
   const product: Props = {
     name: currentProduct.name,
     totalPrice: currentProduct.price.sellingPrice,
+  };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
+  const loginCheck = (e: { preventDefault: () => void }) => {
+    const isLogin = authSessionStorage.get();
+    if (isLogin == null) {
+      e.preventDefault();
+      if (confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+        return navigate(RouterPath.login);
+      }
+    }
   };
 
   return (
@@ -53,7 +66,11 @@ export const ProductOrderSection = ({ productKey }: { productKey: string }) => {
             <Text as="b">{product.totalPrice}</Text>
           </Flex>
         </Box>
-        <Link to={RouterPath.order} state={{ productKey: productKey, productCount: count }}>
+        <Link
+          to={RouterPath.order}
+          onClick={loginCheck}
+          state={{ productKey: productKey, productCount: count }}
+        >
           <Button w="100%" colorScheme="teal">
             나에게 선물하기
           </Button>
