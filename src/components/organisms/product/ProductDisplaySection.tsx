@@ -33,6 +33,7 @@ function ProductDisplaySection({
             title={product.name}
             amount={product.price.sellingPrice}
             rankingIndex={indexed ? i + 1 : undefined}
+            productId={product.id}
             key={key}
           />
         );

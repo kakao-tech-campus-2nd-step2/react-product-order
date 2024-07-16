@@ -14,6 +14,7 @@ export interface GoodsItemProps {
   subtitle: string,
   title: string,
   amount: number,
+  productId: number,
 }
 
 export interface RankingBadgeProps {
