@@ -1,9 +1,9 @@
-import type { UseQueryResult } from '@tanstack/react-query';
-import { useQuery } from '@tanstack/react-query';
+import type { UseQueryResult } from "@tanstack/react-query";
+import { useQuery} from "@tanstack/react-query";
 
-import type { GoodsData } from '@/types';
+import type { GoodsData } from "@/types";
 
-import { fetchInstance } from '../instance';
+import { fetchInstance } from "../instance";
 
 type RequestParams = {
   productId: string;
@@ -24,10 +24,9 @@ export const getProductDetails = async (params: RequestParams) => {
   return response.data.detail;
 };
 
-export const useGetProductDetails = (productId: string): UseQueryResult<GoodsData> => {
-  return useQuery<GoodsData>({
+export const useGetProductDetails = (productId: string): UseQueryResult<GoodsData> => 
+  useQuery<GoodsData>({
     queryKey: ['detail', productId],
     queryFn: () => getProductDetails({ productId }),
     enabled: !!productId,
   });
-};
