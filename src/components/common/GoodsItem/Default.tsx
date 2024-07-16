@@ -33,6 +33,7 @@ export const DefaultGoodsItems = ({
 
 const Wrapper = styled.div`
   width: 100%;
+  cursor: pointer;
 `;
 
 const InfoWrapper = styled.div`
