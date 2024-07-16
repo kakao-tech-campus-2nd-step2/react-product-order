@@ -1,19 +1,25 @@
 import Container from '@components/atoms/container/Container';
-import { defaultBorderColor } from '@styles/colors';
+import { defaultBorderColor, textColors } from '@styles/colors';
 import {
   Checkbox, Divider, Input, Select, Text,
 } from '@chakra-ui/react';
-import { ChangeEvent, useCallback, useState } from 'react';
+import {
+  ChangeEvent, useCallback, useState,
+} from 'react';
 import Button from '@components/atoms/button/Button';
+import { FormErrorMessages } from '@constants/ErrorMessage';
 import { OrderRequestBody } from '@/types/request';
 import { ProductDetailData } from '@/dto';
 import { CashReceiptOptions } from '@/constants';
 import { CashReceiptType } from '@/types';
+import { isNumericString } from '@/utils';
 
 interface ProductOrderFormProps {
   productDetails: ProductDetailData;
   count: number;
   cardMessage: string;
+  cardMessageError: string;
+  setCardMessageError: (message: string) => void;
 }
 
 function InternalFormDivider() {
@@ -26,13 +32,32 @@ function InternalFormDivider() {
   );
 }
 
-function ProductOrderForm({ productDetails, count, cardMessage }: ProductOrderFormProps) {
+function ProductOrderForm({
+  productDetails, count, cardMessage, cardMessageError, setCardMessageError,
+}: ProductOrderFormProps) {
   const [cashReceiptType, setCashReceiptType] = useState<CashReceiptType>(
     CashReceiptOptions.PERSONAL,
   );
 
   const [hasCashReceipt, setHasCashReceipt] = useState<boolean>(false);
   const [cashReceiptNumber, setCashReceiptNumber] = useState<string>('');
+
+  const [receiptNumberError, setReceiptNumberError] = useState<string>('');
+  const displayReceiptValidity = useCallback((inputValue: string) => {
+    if (!isNumericString(inputValue) && hasCashReceipt) {
+      setReceiptNumberError(FormErrorMessages.RECEIPT_NUMBER_NOT_NUMERIC);
+
+      return;
+    }
+
+    setReceiptNumberError('');
+  }, [hasCashReceipt]);
+
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setCashReceiptNumber(inputValue);
+    displayReceiptValidity(inputValue);
+  }, [setCashReceiptNumber, displayReceiptValidity]);
 
   const handleSelectChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
     setCashReceiptType(e.target.value);
@@ -41,10 +66,6 @@ function ProductOrderForm({ productDetails, count, cardMessage }: ProductOrderFo
   const handleCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setHasCashReceipt(e.target.checked);
   }, [setHasCashReceipt]);
-
-  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setCashReceiptNumber(e.target.value);
-  }, [setCashReceiptNumber]);
 
   const handleSubmit = useCallback(() => {
     // @ts-ignore eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -60,9 +81,36 @@ function ProductOrderForm({ productDetails, count, cardMessage }: ProductOrderFo
       cashReceiptType,
       cashReceiptNumber,
     };
+
     // console.log(body);
+    let hasError = false;
+
+    if (cardMessage === '') {
+      setCardMessageError(FormErrorMessages.MESSAGE_CARD_EMPTY);
+      hasError = true;
+    }
+
+    if (!isNumericString(cashReceiptNumber) && hasCashReceipt) {
+      setReceiptNumberError(FormErrorMessages.RECEIPT_NUMBER_NOT_NUMERIC);
+      hasError = true;
+    }
+
+    if (hasError || receiptNumberError !== '' || cardMessageError !== '') {
+      return;
+    }
+
     alert('주문이 완료되었습니다: ');
-  }, [cardMessage, cashReceiptNumber, cashReceiptType, count, hasCashReceipt, productDetails]);
+  }, [
+    cardMessage,
+    cardMessageError,
+    cashReceiptNumber,
+    cashReceiptType,
+    count,
+    hasCashReceipt,
+    productDetails,
+    receiptNumberError,
+    setCardMessageError,
+  ]);
 
   const cashReceiptTypeText = {
     [CashReceiptOptions.PERSONAL]: '개인소득공제',
@@ -117,6 +165,7 @@ function ProductOrderForm({ productDetails, count, cardMessage }: ProductOrderFo
           onChange={handleInputChange}
           value={cashReceiptNumber}
         />
+        <Text color={textColors.error}>{receiptNumberError}</Text>
       </Container>
       <InternalFormDivider />
       <Container elementSize="full-width" justifyContent="space-between" padding="16px">
