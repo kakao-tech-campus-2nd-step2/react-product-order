@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { RouterPath } from '@/routes/path';
+import { getDynamicPath, RouterPath } from '@/routes/path';
 import { authSessionStorage } from '@/utils/storage';
 
 interface ProductDetail {
@@ -74,6 +74,15 @@ export const ProductPage: React.FC = () => {
     if (!authToken) {
       navigate(RouterPath.login);
       return;
+    }
+
+    if (productId) {
+      const totalPrice = productDetail!.price.basicPrice * quantity;
+      navigate(getDynamicPath.order(productId), {
+        state: totalPrice,
+      });
+    } else {
+      console.error('ProductId is undefined');
     }
   };
 
