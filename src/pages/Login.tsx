@@ -18,7 +18,7 @@ export default function Login() {
         event.preventDefault();
         authSessionStorage.set(username);
         setIsAuthenticated(true);
-        navigate('/');
+        navigate(-1);
     };
 
     return (
