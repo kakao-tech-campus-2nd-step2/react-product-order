@@ -1,16 +1,18 @@
 import { Image } from '@chakra-ui/react';
 import { css } from '@emotion/css';
 
-export default () => {
+interface Props {
+    imageURL: string;
+    productName: string;
+    price: number;
+}
+export default ({ imageURL, productName, price }: Props) => {
     return (
         <div className={containerStyle}>
-            <Image
-                src="https://st.kakaocdn.net/product/gift/product/20230823153529_37aa37bcef074955ab6548f7fc799c18.jpg"
-                alt="Product"
-            />
+            <Image src={imageURL} alt="상품 이미지" />
             <div className={detailStyle}>
-                <h1>Product Name</h1>
-                <p className={priceStyle}>1000원</p>
+                <h1>{productName}</h1>
+                <p className={priceStyle}>{price}원</p>
                 <p className={msgStyle}>카톡 친구가 아니어도 선물코드로 선물할 수 있어요!</p>
             </div>
         </div>
