@@ -15,6 +15,8 @@ import useData from '@/hooks/useData';
 import DefaultList from './DefaultList';
 import ThemeHeader from './ThemeHeader';
 
+const productsByThemeKey = (theme: string) => ['productsByThemeKey', theme];
+
 export default () => {
     const themeKey = useParams().themeKey ?? '';
     const navigate = useNavigate();
@@ -76,7 +78,7 @@ const ThemeHeaderRender = ({ themeKey, navigate }: RenderProps) => {
 };
 const ProductsRender = ({ themeKey, navigate }: RenderProps) => {
     const { data, isLoading, error, hasNextPage, fetchNextPage } = useInfiniteQuery<Products>({
-        queryKey: ['productsByTheme', themeKey],
+        queryKey: productsByThemeKey(themeKey),
         queryFn: ({ pageParam }) =>
             axios
                 .get(`/themes/${themeKey}/products?maxResults=20&pageToken=${pageParam}`)
