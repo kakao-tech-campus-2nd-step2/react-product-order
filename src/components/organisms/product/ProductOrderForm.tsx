@@ -5,6 +5,7 @@ import {
 } from '@chakra-ui/react';
 import { ChangeEvent, useCallback, useState } from 'react';
 import Button from '@components/atoms/button/Button';
+import { OrderRequestBody } from '@/types/request';
 import { ProductDetailData } from '@/dto';
 import { CashReceiptOptions } from '@/constants';
 import { CashReceiptType } from '@/types';
@@ -12,6 +13,7 @@ import { CashReceiptType } from '@/types';
 interface ProductOrderFormProps {
   productDetails: ProductDetailData;
   count: number;
+  cardMessage: string;
 }
 
 function InternalFormDivider() {
@@ -24,14 +26,43 @@ function InternalFormDivider() {
   );
 }
 
-function ProductOrderForm({ productDetails, count }: ProductOrderFormProps) {
+function ProductOrderForm({ productDetails, count, cardMessage }: ProductOrderFormProps) {
   const [cashReceiptType, setCashReceiptType] = useState<CashReceiptType>(
     CashReceiptOptions.PERSONAL,
   );
 
+  const [hasCashReceipt, setHasCashReceipt] = useState<boolean>(false);
+  const [cashReceiptNumber, setCashReceiptNumber] = useState<string>('');
+
   const handleSelectChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
     setCashReceiptType(e.target.value);
   }, [setCashReceiptType]);
+
+  const handleCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setHasCashReceipt(e.target.checked);
+  }, [setHasCashReceipt]);
+
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setCashReceiptNumber(e.target.value);
+  }, [setCashReceiptNumber]);
+
+  const handleSubmit = useCallback(() => {
+    // @ts-ignore eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const body: OrderRequestBody = {
+      productId: productDetails.id,
+      productQuantity: count,
+      productOptionId: 0,
+      messageCardTemplateId: 0,
+      messageCardTextMessage: cardMessage,
+      senderId: 0,
+      receiverId: 0,
+      hasCashReceipt,
+      cashReceiptType,
+      cashReceiptNumber,
+    };
+    // console.log(body);
+    alert('주문이 완료되었습니다: ');
+  }, [cardMessage, cashReceiptNumber, cashReceiptType, count, hasCashReceipt, productDetails]);
 
   const cashReceiptTypeText = {
     [CashReceiptOptions.PERSONAL]: '개인소득공제',
@@ -60,7 +91,11 @@ function ProductOrderForm({ productDetails, count }: ProductOrderFormProps) {
         padding="16px"
         flexDirection="column"
       >
-        <Checkbox borderColor={defaultBorderColor}>
+        <Checkbox
+          borderColor={defaultBorderColor}
+          defaultChecked={hasCashReceipt}
+          onChange={handleCheckboxChange}
+        >
           현금영수증 신청
         </Checkbox>
         <Select
@@ -76,7 +111,12 @@ function ProductOrderForm({ productDetails, count }: ProductOrderFormProps) {
             {cashReceiptTypeText[CashReceiptOptions.BUSINESS]}
           </option>
         </Select>
-        <Input borderColor={defaultBorderColor} marginTop="5px" />
+        <Input
+          borderColor={defaultBorderColor}
+          marginTop="5px"
+          onChange={handleInputChange}
+          value={cashReceiptNumber}
+        />
       </Container>
       <InternalFormDivider />
       <Container elementSize="full-width" justifyContent="space-between" padding="16px">
@@ -94,6 +134,7 @@ function ProductOrderForm({ productDetails, count }: ProductOrderFormProps) {
         style={{
           marginTop: '16px',
         }}
+        onClick={handleSubmit}
       />
     </Container>
   );
