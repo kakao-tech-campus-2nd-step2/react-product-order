@@ -5,12 +5,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetThemeProductDetail } from '@/api/hooks/useGetThemeProductDetail';
 import { Container } from '@/components/common/layouts/Container';
-import { RouterPath } from '@/routes/path';
+import { useAuth } from '@/provider/Auth';
+import { getDynamicPath, RouterPath } from '@/routes/path';
 
 export const ProductPage = () => {
   const { productId = '' } = useParams<{ productId: string }>();
   const { data } = useGetThemeProductDetail(productId);
   const navigate = useNavigate();
+  const authInfo = useAuth();
 
   const detail = data?.detail;
 
@@ -23,9 +25,14 @@ export const ProductPage = () => {
   const handleDecrease = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
 
   const handleBtnClick = () => {
-    navigate(RouterPath.order, {
-      state: { name: detail?.name, imageURL: detail?.imageURL, totalPrice: totalPrice },
-    });
+    if (!authInfo) {
+      const redirectUrl = getDynamicPath.product(productId);
+      navigate(getDynamicPath.login(redirectUrl));
+    } else {
+      navigate(RouterPath.order, {
+        state: { name: detail?.name, imageURL: detail?.imageURL, totalPrice: totalPrice },
+      });
+    }
   };
 
   return (
