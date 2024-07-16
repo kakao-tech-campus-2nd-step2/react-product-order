@@ -2,7 +2,8 @@ import Container from '@components/atoms/container/Container';
 import {
   Box, Button, HStack, Input, Text, useNumberInput,
 } from '@chakra-ui/react';
-import { defaultBorderColor } from '@styles/colors';
+import { backgroundColors, defaultBorderColor } from '@styles/colors';
+import DefaultButton from '@components/atoms/button/Button';
 import { ProductDetailData } from '@/dto';
 
 interface ProductCounterAreaProps {
@@ -19,8 +20,17 @@ function ProductCounterForm({ productDetails }: ProductCounterAreaProps) {
 
   return (
 
-    <Container flexDirection="column" elementSize="full-width" maxWidth="360px">
-      <Container padding="30px 12px 30px 30px">
+    <Container
+      flexDirection="column"
+      elementSize={{
+        width: '100%',
+        height: '100%',
+      }}
+      maxWidth="360px"
+      justifyContent="space-between"
+      padding="30px 12px 30px 30px"
+    >
+      <Container>
         <Box
           w="100%"
           padding="12px 14px 16px"
@@ -35,6 +45,30 @@ function ProductCounterForm({ productDetails }: ProductCounterAreaProps) {
             <Button {...getIncrementButtonProps()}>+</Button>
           </HStack>
         </Box>
+      </Container>
+      <Container flexDirection="column" cssProps={{ gap: '16px' }}>
+        <Box
+          w="100%"
+          padding="18px 20px"
+          backgroundColor={backgroundColors.root}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Text>총 결제 금액</Text>
+          <Text fontWeight="bold" fontSize="lg">
+            {productDetails.price.sellingPrice}
+            원
+          </Text>
+        </Box>
+        <DefaultButton
+          theme="black"
+          text="나에게 선물하기"
+          elementSize="big"
+          style={{
+            fontSize: '15px',
+          }}
+        />
       </Container>
     </Container>
   );
