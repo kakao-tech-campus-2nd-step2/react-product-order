@@ -17,7 +17,7 @@ export const ThemeHeroSection = ({ themeKey }: Props) => {
   if (!currentTheme) {
     return null;
   }
-
+  console.log(currentTheme);
   const { backgroundColor, label, title, description } = currentTheme;
 
   return (
