@@ -31,7 +31,7 @@
 - [ ] 상품 상세 데이터 fetch `/api/v1/products/{productId}/detail`, `/api/v1/products/{productId}/options`
 - [ ] 상품 결제 기능 구현 `/api/v1/order` (React의 form, ref, state만 사용)
 - 추가 구현해야할 기능
-  - [ ] localStorge 재사용성 높이기 (객체화)
+  - [x] localStorge 재사용성 높이기 (객체화)
   - [ ] 로그인 후 이전페이지로 라우팅
 
 ## 🎸

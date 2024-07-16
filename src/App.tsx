@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Footer from './components/features/Footer';
 import AuthContext from './context/AuthContext';
+import { authSessionStorage } from './lib/storage';
 import Error from './pages/Error';
 import Login from './pages/Login';
 import Main from './pages/Main';
@@ -28,7 +29,7 @@ const theme = extendBaseTheme({
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     useEffect(() => {
-        const authToken = sessionStorage.getItem('authToken');
+        const authToken = authSessionStorage.get();
         setIsAuthenticated(!!authToken);
     }, [isAuthenticated]);
 
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
     {
         path: '/my-account',
         element: <MyAccount />,
+    },
+    {
+        path: '/order',
+        element: <div>Order</div>,
     },
     {
         path: 'products/:productId',

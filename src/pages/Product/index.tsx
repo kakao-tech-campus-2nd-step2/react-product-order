@@ -1,29 +1,32 @@
 import { css } from '@emotion/css';
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import NumberField from '@/components/common/Form/Input/NumberField';
 import Header from '@/components/features/Header';
 import AuthContext from '@/context/AuthContext';
+import { orderHistoryStorage } from '@/lib/storage';
 
 import ProductDetail from './ProductDetail';
 import { PriceBox, SelectOption } from './PurchaseComps';
 
 export default () => {
     const { isAuthenticated } = useContext(AuthContext);
+    const { productId } = useParams();
     const navigate = useNavigate();
     //TODO fetch data
     const price = 1000;
     const [count, setCount] = useState<number>(1);
     const onClick = () => {
-        if (
-            !isAuthenticated &&
-            confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?')
-        )
-            navigate('/login');
-        //TODO localStorage에 구매목록 저장 (orderHistory -> id, count)
-        //TODO order 페이지로 이동
+        if (!isAuthenticated) {
+            if (confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?'))
+                navigate('/login');
+            return;
+        }
+
+        orderHistoryStorage.set({ productId: Number(productId), productQuantity: count });
+        navigate('/order');
     };
 
     return (

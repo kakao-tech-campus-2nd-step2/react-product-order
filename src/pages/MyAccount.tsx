@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import Header from '@/components/features/Header';
 import AuthContext from '@/context/AuthContext';
+import { authSessionStorage } from '@/lib/storage';
 
 export default () => {
     const navigate = useNavigate();
@@ -13,9 +14,9 @@ export default () => {
         if (!isAuthenticated) navigate('/login');
     }, [navigate, isAuthenticated]);
 
-    const username = sessionStorage.getItem('authToken');
+    const username = authSessionStorage.get();
     const logout = () => {
-        sessionStorage.removeItem('authToken');
+        authSessionStorage.set(undefined);
         setIsAuthenticated(false);
         navigate('/');
     };
