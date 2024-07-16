@@ -5,16 +5,16 @@ import Container from '@components/atoms/container/Container';
 import { generateRandomId, isEmptyList } from '@/utils';
 import { ProductData } from '@/dto';
 
-interface GiftDisplaySectionProps {
+interface ProductDisplaySectionProps {
   products: ProductData[];
   indexed?: boolean,
   maxColumns: number,
   minColumns: number,
 }
 
-function GiftDisplaySection({
+function ProductDisplaySection({
   products, indexed, maxColumns, minColumns,
-}: GiftDisplaySectionProps) {
+}: ProductDisplaySectionProps) {
   const sectionRandomId = useRef(generateRandomId());
 
   return isEmptyList(products) ? (
@@ -41,4 +41,4 @@ function GiftDisplaySection({
   );
 }
 
-export default GiftDisplaySection;
+export default ProductDisplaySection;
