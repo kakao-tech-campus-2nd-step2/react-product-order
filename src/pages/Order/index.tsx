@@ -1,3 +1,13 @@
+import { OrderInfoSection } from '@/components/features/Order/OrderInfoSection';
+import { OrderMessageSection } from '@/components/features/Order/OrderMessageSection';
+import { OrderProductSection } from '@/components/features/Order/OrderProductSection';
+
 export const OrderPage = () => {
-  return <></>;
+  return (
+    <>
+      <OrderMessageSection />
+      <OrderProductSection />
+      <OrderInfoSection />
+    </>
+  );
 };

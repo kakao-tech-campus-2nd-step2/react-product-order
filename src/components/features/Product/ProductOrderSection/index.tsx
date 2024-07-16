@@ -9,6 +9,9 @@ import {
   NumberInputStepper,
   Text,
 } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+
+import { RouterPath } from '@/routes/path';
 
 type Props = {
   name: string;
@@ -44,10 +47,11 @@ const Wrapper = () => {
             <Text as="b">{mock.totalPrice}</Text>
           </Flex>
         </Box>
-
-        <Button w="100%" colorScheme="teal">
-          나에게 선물하기
-        </Button>
+        <Link to={RouterPath.order}>
+          <Button w="100%" colorScheme="teal">
+            나에게 선물하기
+          </Button>
+        </Link>
       </Box>
     </Flex>
   );
