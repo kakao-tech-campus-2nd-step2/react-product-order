@@ -1,17 +1,18 @@
-import styled from '@emotion/styled';
-
+import { Spinner } from '../Spinner';
 import {
   useIntersectionObserver,
   type UseIntersectionObserverProps,
 } from '@/hooks/useIntersectionObserver';
-
-import { Spinner } from '../Spinner';
+import styled from '@emotion/styled';
 
 type Props = {
   children?: React.ReactNode;
 } & UseIntersectionObserverProps;
 
-export const VisibilityLoader = ({ children = <Spinner />, ...observerProps }: Props) => {
+export const VisibilityLoader = ({
+  children = <Spinner />,
+  ...observerProps
+}: Props) => {
   const { ref } = useIntersectionObserver(observerProps);
 
   return (

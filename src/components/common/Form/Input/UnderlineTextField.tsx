@@ -1,6 +1,5 @@
-import styled from '@emotion/styled';
-
 import { breakpoints } from '@/styles/variants';
+import styled from '@emotion/styled';
 
 // Extends Input field
 type Props = {
@@ -68,5 +67,5 @@ const Input = styled.input<Pick<Props, 'invalid' | 'size'>>(
     return {
       borderColor: '#ccc',
     };
-  },
+  }
 );

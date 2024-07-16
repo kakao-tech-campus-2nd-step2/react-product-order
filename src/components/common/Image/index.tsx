@@ -43,5 +43,5 @@ const Wrapper = styled.img<Pick<Props, 'ratio' | 'radius'>>(
         aspectRatio: `${ratio}`,
       };
     }
-  },
+  }
 );

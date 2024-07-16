@@ -1,22 +1,27 @@
-import styled from '@emotion/styled';
-
 import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
-import { Container } from '@/components/common/layouts/Container';
-import { Grid } from '@/components/common/layouts/Grid';
 import { Spinner } from '@/components/common/Spinner';
 import { VisibilityLoader } from '@/components/common/VisibilityLoader';
+import { Container } from '@/components/common/layouts/Container';
+import { Grid } from '@/components/common/layouts/Grid';
 import { breakpoints } from '@/styles/variants';
+import styled from '@emotion/styled';
 
 type Props = {
   themeKey: string;
 };
 
 export const ThemeGoodsSection = ({ themeKey }: Props) => {
-  const { data, isError, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useGetThemesProducts({
-      themeKey,
-    });
+  const {
+    data,
+    isError,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetThemesProducts({
+    themeKey,
+  });
 
   if (isLoading)
     return (
@@ -26,9 +31,12 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
     );
   if (isError) return <TextView>에러가 발생했습니다.</TextView>;
   if (!data) return <></>;
-  if (data.pages[0].products.length <= 0) return <TextView>상품이 없어요.</TextView>;
+  if (data.pages[0].products.length <= 0)
+    return <TextView>상품이 없어요.</TextView>;
 
-  const flattenGoodsList = data.pages.map((page) => page?.products ?? []).flat();
+  const flattenGoodsList = data.pages
+    .map((page) => page?.products ?? [])
+    .flat();
 
   return (
     <Wrapper>

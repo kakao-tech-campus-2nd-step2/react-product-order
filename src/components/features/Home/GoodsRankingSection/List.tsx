@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { useState } from 'react';
 
 import { Button } from '@/components/common/Button';
@@ -6,6 +5,7 @@ import { RankingGoodsItems } from '@/components/common/GoodsItem/Ranking';
 import { Grid } from '@/components/common/layouts/Grid';
 import { breakpoints } from '@/styles/variants';
 import type { GoodsData } from '@/types';
+import styled from '@emotion/styled';
 
 type Props = {
   goodsList: GoodsData[];
@@ -16,7 +16,8 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
 
   const currentGoodsList = hasMore ? goodsList : goodsList.slice(0, 6);
 
-  if (goodsList.length === 0) return <EmptyView>보여줄 상품이 없어요!</EmptyView>;
+  if (goodsList.length === 0)
+    return <EmptyView>보여줄 상품이 없어요!</EmptyView>;
 
   return (
     <Wrapper>
@@ -28,21 +29,23 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
         }}
         gap={16}
       >
-        {currentGoodsList.map(({ id, imageURL, name, price, brandInfo }, index) => (
-          <RankingGoodsItems
-            key={id}
-            rankingIndex={index + 1}
-            imageSrc={imageURL}
-            title={name}
-            amount={price.sellingPrice}
-            subtitle={brandInfo.name}
-          />
-        ))}
+        {currentGoodsList.map(
+          ({ id, imageURL, name, price, brandInfo }, index) => (
+            <RankingGoodsItems
+              key={id}
+              rankingIndex={index + 1}
+              imageSrc={imageURL}
+              title={name}
+              amount={price.sellingPrice}
+              subtitle={brandInfo.name}
+            />
+          )
+        )}
       </Grid>
       {goodsList.length > 6 && (
         <ButtonWrapper>
           <Button
-            theme="outline"
+            theme='outline'
             style={{ maxWidth: '480px' }}
             onClick={() => {
               setHasMore((prev) => !prev);

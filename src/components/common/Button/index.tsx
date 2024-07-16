@@ -1,6 +1,5 @@
-import styled from '@emotion/styled';
-
 import { breakpoints } from '@/styles/variants';
+import styled from '@emotion/styled';
 
 type Props = {
   theme?: 'kakao' | 'outline' | 'black' | 'lightGray' | 'darkGray';
@@ -99,5 +98,5 @@ const Wrapper = styled.button<Pick<Props, 'theme' | 'size'>>(
         backgroundColor: '#fada0a',
       },
     };
-  },
+  }
 );

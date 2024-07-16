@@ -15,16 +15,22 @@ export const Header = () => {
 
   return (
     <Wrapper>
-      <Container flexDirection="row" alignItems="center" justifyContent="space-between">
+      <Container
+        flexDirection='row'
+        alignItems='center'
+        justifyContent='space-between'
+      >
         <Link to={RouterPath.home}>
           <Logo
-            src="https://gift-s.kakaocdn.net/dn/gift/images/m640/pc_gift_logo.png"
-            alt="카카오 선물하기 로고"
+            src='https://gift-s.kakaocdn.net/dn/gift/images/m640/pc_gift_logo.png'
+            alt='카카오 선물하기 로고'
           />
         </Link>
         <RightWrapper>
           {authInfo ? (
-            <LinkButton onClick={() => navigate(RouterPath.myAccount)}>내 계정</LinkButton>
+            <LinkButton onClick={() => navigate(RouterPath.myAccount)}>
+              내 계정
+            </LinkButton>
           ) : (
             <LinkButton onClick={handleLogin}>로그인</LinkButton>
           )}

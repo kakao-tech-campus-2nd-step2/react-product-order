@@ -1,13 +1,12 @@
-import styled from '@emotion/styled';
 import { useCallback, useState } from 'react';
 
+import { GoodsRankingFilter } from './Filter';
+import { GoodsRankingList } from './List';
 import { useGetRankingProducts } from '@/api/hooks/useGetRankingProducts';
 import { Container } from '@/components/common/layouts/Container';
 import { breakpoints } from '@/styles/variants';
 import type { RankingFilterOption } from '@/types';
-
-import { GoodsRankingFilter } from './Filter';
-import { GoodsRankingList } from './List';
+import styled from '@emotion/styled';
 
 export const GoodsRankingSection = () => {
   const [filterOption, setFilterOption] = useState<RankingFilterOption>({
@@ -34,7 +33,10 @@ export const GoodsRankingSection = () => {
     <Wrapper>
       <Container>
         <Title>실시간 급상승 선물랭킹</Title>
-        <GoodsRankingFilter filterOption={filterOption} onFilterOptionChange={setFilterOption} />
+        <GoodsRankingFilter
+          filterOption={filterOption}
+          onFilterOptionChange={setFilterOption}
+        />
         <GoodRankingListView />
       </Container>
     </Wrapper>

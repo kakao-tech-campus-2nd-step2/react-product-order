@@ -1,6 +1,5 @@
-import styled from '@emotion/styled';
-
 import { vars } from '@/styles';
+import styled from '@emotion/styled';
 
 type ResponseGridStyle = {
   [key in keyof typeof vars.breakpoints]?: number;
@@ -11,7 +10,11 @@ type Props = {
   gap?: number;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const Grid: React.FC<Props> = ({ children, columns, ...props }: Props) => {
+export const Grid: React.FC<Props> = ({
+  children,
+  columns,
+  ...props
+}: Props) => {
   return (
     <Wrapper columns={columns} {...props}>
       {children}
@@ -34,11 +37,13 @@ const Wrapper = styled.div<Pick<Props, 'columns' | 'gap'>>(
       };
     }
 
-    const breakpoints = Object.keys(columns) as (keyof typeof vars.breakpoints)[];
+    const breakpoints = Object.keys(
+      columns
+    ) as (keyof typeof vars.breakpoints)[];
     return breakpoints
       .map((breakpoint) => {
         return `@media screen and (min-width: ${vars.breakpoints[breakpoint]}) { grid-template-columns: repeat(${columns[breakpoint]}, 1fr); }`;
       })
       .join(' ');
-  },
+  }
 );

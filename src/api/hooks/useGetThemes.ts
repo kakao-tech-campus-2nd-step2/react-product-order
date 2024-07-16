@@ -1,8 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-
-import type { ThemeData } from '@/types';
-
 import { fetchInstance } from '../instance';
+import type { ThemeData } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 
 export type ThemeResponseData = {
   themes: ThemeData[];
