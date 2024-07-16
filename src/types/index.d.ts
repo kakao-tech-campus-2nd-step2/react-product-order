@@ -1,6 +1,6 @@
 import { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import FetchStatus from '@constants/FetchStatus';
-import { ThemeData } from '@/dto';
+import { ProductDetailData, ThemeData } from '@/dto';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   elementSize: ElementSize,
@@ -58,6 +58,11 @@ interface ProportionalSkeletonProps {
 interface SizedSkeletonProps {
   elementSize: FixedSize;
   radius?: string;
+}
+
+interface ProductOrderPageState {
+  productDetails: ProductDetailData;
+  count: number;
 }
 
 export interface FixedSize {
