@@ -28,5 +28,5 @@ export const fetchProductDetail = async ({ productId }: { productId: string }) =
   const endpoint = replacePathParams(RequestURLs.PRODUCT_DETAILS, { productId });
   const response = await axiosInstance.get<ProductDetailResponse>(endpoint);
 
-  return response.data;
+  return response.data.detail;
 };
