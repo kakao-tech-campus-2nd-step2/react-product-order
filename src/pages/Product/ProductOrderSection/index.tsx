@@ -1,8 +1,14 @@
 import { Button, Container, Flex, NumberDecrementStepper, NumberIncrementStepper, NumberInput,NumberInputField,NumberInputStepper,Text } from '@chakra-ui/react';
+import { useState } from 'react';
 
 import type { GoodsData } from '@/types';
 
 export const ProductOrderSection = (data: GoodsData) => {
+  const [quantity, setQuantity] = useState(1);
+
+  const handleQuantityChange = (value: string) => {
+    setQuantity(parseInt(value));
+  };
 
   return (
     <Container
@@ -45,6 +51,7 @@ export const ProductOrderSection = (data: GoodsData) => {
               defaultValue={1}
               min={1}
               max={100}
+              onChange={handleQuantityChange}
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -73,7 +80,7 @@ export const ProductOrderSection = (data: GoodsData) => {
               lineHeight='14px'
               color='rgb(17, 17, 17)'
             >
-              {data.price.sellingPrice}원
+              {data.price.sellingPrice * quantity}원
             </Text>
           </Flex>
           <Button
