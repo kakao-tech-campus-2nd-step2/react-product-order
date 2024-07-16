@@ -1,6 +1,7 @@
 import { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import FetchStatus from '@constants/FetchStatus';
 import { ProductDetailData, ThemeData } from '@/dto';
+import { CashReceiptOptions } from '@/constants';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   elementSize: ElementSize,
@@ -69,6 +70,8 @@ export interface FixedSize {
   width: string,
   height: string,
 }
+
+export type CashReceiptType = typeof CashReceiptOptions[string];
 
 export type ThemeDataRepository = { [key: string]: ThemeData };
 
