@@ -1,14 +1,16 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, IconButton, Image, Input, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetThemeProductDetail } from '@/api/hooks/useGetThemeProductDetail';
 import { Container } from '@/components/common/layouts/Container';
+import { RouterPath } from '@/routes/path';
 
 export const ProductPage = () => {
   const { productId = '' } = useParams<{ productId: string }>();
   const { data } = useGetThemeProductDetail(productId);
+  const navigate = useNavigate();
 
   const detail = data?.detail;
 
@@ -17,7 +19,14 @@ export const ProductPage = () => {
   const totalPrice = price * quantity;
 
   const handleIncrease = () => setQuantity(quantity + 1);
+
   const handleDecrease = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
+
+  const handleBtnClick = () => {
+    navigate(RouterPath.order, {
+      state: { name: detail?.name, imageURL: detail?.imageURL, totalPrice: totalPrice },
+    });
+  };
 
   return (
     <Container>
@@ -57,7 +66,7 @@ export const ProductPage = () => {
             </Flex>
 
             <Flex w="full">
-              <Button bg="black" width="full" color="white">
+              <Button bg="black" color="white" w="full" onClick={handleBtnClick}>
                 나에게 선물하기
               </Button>
             </Flex>

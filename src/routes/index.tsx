@@ -4,6 +4,7 @@ import { Layout } from '@/components/features/Layout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
+import { OrderPage } from '@/pages/Order';
 import { ProductPage } from '@/pages/Product';
 import { ThemePage } from '@/pages/Theme';
 
@@ -36,6 +37,16 @@ const router = createBrowserRouter([
       {
         path: RouterPath.product,
         element: <ProductPage />,
+      },
+      {
+        path: RouterPath.order,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: RouterPath.order,
+            element: <OrderPage />,
+          },
+        ],
       },
       {
         path: RouterPath.notFound,
