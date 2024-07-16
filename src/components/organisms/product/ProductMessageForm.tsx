@@ -1,4 +1,4 @@
-import { defaultBorderColor } from '@styles/colors';
+import { backgroundColors, defaultBorderColor } from '@styles/colors';
 import Container from '@components/atoms/container/Container';
 import {
   Divider, Text, Textarea,
@@ -21,6 +21,9 @@ function ProductMessageForm({ cardMessage, setCardMessage }: ProductMessageFormP
       <Container elementSize="full-width" padding="14px 30px">
         <Container elementSize="full-width" padding="12px 30px 16px">
           <Textarea
+            _focus={{
+              backgroundColor: backgroundColors.container,
+            }}
             width="100%"
             height="100px"
             border="none"
