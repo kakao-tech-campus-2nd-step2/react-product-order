@@ -1,26 +1,43 @@
-// import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import { MainProduct } from '@/components/features/ProductDetail/MainProduct';
 import { ProductOption } from '@/components/features/ProductDetail/ProductOption';
 
-// import { useCurrentTheme } from '@/hooks/useCurrentTheme';
-// import { RouterPath } from '@/routes/path';
+import { useCurrentProduct } from '@/hooks/useCurrentProduct';
+import { RouterPath } from '@/routes/path';
 
 export const ProductDetailPage = () => {
-    // const { themeKey = '' } = useParams<{ themeKey: string }>();
-    // const { isRender, currentTheme } = useCurrentTheme({ themeKey });
 
-    // if (!isRender) return null;
+    const { productId = '' } = useParams<{ productId: string }>();
+    const { isRender, currentProduct } = useCurrentProduct({ productId });
 
-    // if (!currentTheme) {
-    //     return <Navigate to={RouterPath.notFound} />;
+    if (!isRender) return null;
+
+    console.log('Current Product:', currentProduct);
+
+    if (!currentProduct) {
+        console.log('Not accessible, redirecting...');
+        return <Navigate to={RouterPath.home} replace />;
+    }
+
+    console.log('Current Product is accessible:', currentProduct);
+
+    // console.log(currentProduct);
+
+    // if (currentProduct === false) {
+    //     console.log('false...');
+    //     return <Navigate to={RouterPath.home} replace />;
+    // }
+
+    // if (currentProduct) {
+    //     console.log(currentProduct);
     // }
 
     return (
         <>
             <Wrapper>
-                <MainProduct />
+                <MainProduct productId={productId} />
                 <ProductOption />
             </Wrapper>
         </>

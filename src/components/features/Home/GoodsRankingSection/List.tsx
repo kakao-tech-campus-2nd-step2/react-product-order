@@ -6,6 +6,8 @@ import { RankingGoodsItems } from '@/components/common/GoodsItem/Ranking';
 import { Grid } from '@/components/common/layouts/Grid';
 import { breakpoints } from '@/styles/variants';
 import type { GoodsData } from '@/types';
+import { Link } from 'react-router-dom';
+import { getDynamicPath } from '@/routes/path';
 
 type Props = {
   goodsList: GoodsData[];
@@ -29,14 +31,16 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
         gap={16}
       >
         {currentGoodsList.map(({ id, imageURL, name, price, brandInfo }, index) => (
-          <RankingGoodsItems
-            key={id}
-            rankingIndex={index + 1}
-            imageSrc={imageURL}
-            title={name}
-            amount={price.sellingPrice}
-            subtitle={brandInfo.name}
-          />
+          <Link key={id} to={getDynamicPath.productDetail(id)}>
+            <RankingGoodsItems
+              key={id}
+              rankingIndex={index + 1}
+              imageSrc={imageURL}
+              title={name}
+              amount={price.sellingPrice}
+              subtitle={brandInfo.name}
+            />
+          </Link>
         ))}
       </Grid>
       {goodsList.length > 6 && (
