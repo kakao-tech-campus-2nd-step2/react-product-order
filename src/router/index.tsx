@@ -5,6 +5,7 @@ import ThemePage from '@pages/ThemePage';
 import LoginPage from '@pages/LoginPage';
 import MyPage from '@pages/MyPage';
 import ProductDetailsPage from '@pages/ProductDetailsPage';
+import ProductOrderPage from '@pages/ProductOrderPage';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: Paths.PRODUCT_DETAILS(':productId'),
     element: <ProductDetailsPage />,
+  },
+  {
+    path: Paths.PRODUCT_ORDER,
+    element: <ProductOrderPage />,
   },
 ]);
 
