@@ -6,6 +6,7 @@ import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
 import { ThemePage } from '@/pages/Theme';
 import ProductPage from '@/pages/ProductPage';
+import OrderPage from '@/pages/OrderPage';
 
 import { PrivateRoute } from './components/PrivateRoute';
 import { RouterPath } from './path';
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: RouterPath.product,
         element: <ProductPage />,
+      },
+      {
+        path: RouterPath.order,
+        element: <OrderPage />,
       },
       {
         path: RouterPath.myAccount,
