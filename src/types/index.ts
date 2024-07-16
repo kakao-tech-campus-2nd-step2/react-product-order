@@ -32,3 +32,18 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export interface GoodsDetailData extends GoodsData {
+  isAccessableProductPage: boolean;
+  review: {
+    averageRating: number;
+    totalReviewCount: number;
+  };
+  productDescription: {
+    displayImage: string;
+  };
+  productDetailInfo: {
+    announcement: { name: string; value: string; displayOrder: number }[];
+  };
+  terms: { displayCode: string; title: string; description: string }[];
+}
