@@ -14,6 +14,7 @@ function ProductOrderPage() {
   const navigate = useNavigate();
 
   const [cardMessage, setCardMessage] = useState('');
+  const [messageFormError, setMessageFormError] = useState('');
 
   useEffect(() => {
     if (!location.state) {
@@ -47,7 +48,12 @@ function ProductOrderPage() {
             flexDirection="column"
             padding="44px 0px 32px"
           >
-            <ProductMessageForm cardMessage={cardMessage} setCardMessage={setCardMessage} />
+            <ProductMessageForm
+              cardMessage={cardMessage}
+              setCardMessage={setCardMessage}
+              messageFormError={messageFormError}
+              setMessageFormError={setMessageFormError}
+            />
             <ProductOrderHistorySection productDetails={product} count={count} />
           </Container>
           <Container
