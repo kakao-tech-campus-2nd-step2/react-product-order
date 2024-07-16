@@ -11,7 +11,6 @@ import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import { vercelApi } from '@/api/axiosInstance';
 import type {
-  GetProductsDetailResponseBody,
   GetRankingProductsRequestBody,
   GetRankingProductsResponseBody,
   GetThemesProductsRequestBody,
@@ -91,19 +90,5 @@ export function useGetThemesProducts({
       params,
     },
     ['themes', themeKey],
-  );
-}
-
-export function useGetProductsDetail({
-  productsId,
-}: {
-  productsId: string;
-}): UseQueryResult<GetProductsDetailResponseBody> {
-  return useAxiosQuery<GetProductsDetailResponseBody>(
-    {
-      method: 'GET',
-      url: `/api/v1/products/${productsId}/detail`,
-    },
-    ['products', productsId],
   );
 }

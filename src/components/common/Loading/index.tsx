@@ -1,23 +1,14 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { ReactComponent as Spinner } from '@/assets/Spinner.svg';
 
 export type LoadingProps = {
   isLoading: boolean;
   error: boolean;
-  errorRedirect?: string;
   children: React.ReactNode;
 };
 
-function Loading({ isLoading, children, error, errorRedirect }: LoadingProps) {
-  const navigate = useNavigate();
-
-  if (error && errorRedirect) {
-    navigate(errorRedirect);
-    return null;
-  }
-
+function Loading({ isLoading, children, error }: LoadingProps) {
   if (error) {
     return (
       <div

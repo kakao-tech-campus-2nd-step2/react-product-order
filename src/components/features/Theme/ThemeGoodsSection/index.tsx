@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Link } from 'react-router-dom';
 
+import { useGetThemesProducts } from '@/api';
+import type { ProductData } from '@/api/type';
 import { useGetThemesProducts } from '@/api';
 import type { ProductData } from '@/api/type';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
 import { Container } from '@/components/common/layouts/Container';
 import { Grid } from '@/components/common/layouts/Grid';
+import ListMapper from '@/components/common/ListMapper';
+import Loading from '@/components/common/Loading';
 import ListMapper from '@/components/common/ListMapper';
 import Loading from '@/components/common/Loading';
 import { breakpoints } from '@/styles/variants';
@@ -28,7 +31,25 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
   } = useGetThemesProducts({
     themeKey,
   });
+  const { ref, inView } = useInView();
 
+  const {
+    data: productsPages,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetThemesProducts({
+    themeKey,
+  });
+
+  const products: ProductData[] = productsPages?.pages.flatMap((page) => page.products) || [];
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
   const products: ProductData[] = productsPages?.pages.flatMap((page) => page.products) || [];
 
   useEffect(() => {
@@ -44,15 +65,13 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
           <ListMapper<ProductData>
             items={products}
             ItemComponent={({ item }) => (
-              <Link to={`/products/${item.id}`}>
-                <DefaultGoodsItems
-                  key={item.id}
-                  imageSrc={item.imageURL}
-                  title={item.name}
-                  amount={item.price.sellingPrice}
-                  subtitle={item.brandInfo.name}
-                />
-              </Link>
+              <DefaultGoodsItems
+                key={item.id}
+                imageSrc={item.imageURL}
+                title={item.name}
+                amount={item.price.sellingPrice}
+                subtitle={item.brandInfo.name}
+              />
             )}
             Wrapper={Grid}
             wrapperProps={{
