@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
-import { Container } from '@/components/common/layouts/Container';
-import { useCurrentTheme } from '@/hooks/useCurrentTheme';
-import { breakpoints } from '@/styles/variants';
-import type { ThemeData } from '@/types';
+import { Container } from "@/components/common/layouts/Container";
+import { useCurrentTheme } from "@/hooks/useCurrentTheme";
+import { breakpoints } from "@/styles/variants";
+import type { ThemeData } from "@/types";
 
 type Props = {
   themeKey: string;

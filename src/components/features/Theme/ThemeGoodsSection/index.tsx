@@ -1,12 +1,12 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
-import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
-import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
-import { Container } from '@/components/common/layouts/Container';
-import { Grid } from '@/components/common/layouts/Grid';
-import { Spinner } from '@/components/common/Spinner';
-import { VisibilityLoader } from '@/components/common/VisibilityLoader';
-import { breakpoints } from '@/styles/variants';
+import { useGetThemesProducts } from "@/api/hooks/useGetThemesProducts";
+import { DefaultGoodsItems } from "@/components/common/GoodsItem/Default";
+import { Container } from "@/components/common/layouts/Container";
+import { Grid } from "@/components/common/layouts/Grid";
+import { Spinner } from "@/components/common/Spinner";
+import { VisibilityLoader } from "@/components/common/VisibilityLoader";
+import { breakpoints } from "@/styles/variants";
 
 type Props = {
   themeKey: string;

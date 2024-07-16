@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { useGetThemes } from '@/api/hooks/useGetThemes';
-import { getCurrentTheme } from '@/components/features/Theme/ThemeHeroSection';
+import { useGetThemes } from "@/api/hooks/useGetThemes";
+import { getCurrentTheme } from "@/components/features/Theme/ThemeHeroSection";
 
 type Props = { themeKey: string };
 

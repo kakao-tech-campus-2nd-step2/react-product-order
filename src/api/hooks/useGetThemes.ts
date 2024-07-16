@@ -1,14 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import type { ThemeData } from '@/types';
+import type { ThemeData } from "@/types";
 
-import { fetchInstance } from '../instance';
+import { fetchInstance } from "../instance";
 
 export type ThemeResponseData = {
   themes: ThemeData[];
 };
 
-const getThemesPath = () => '/v1/themes';
+const getThemesPath = () => "/v1/themes";
 const themesQueryKey = [getThemesPath()];
 
 export const getThemes = async () => {

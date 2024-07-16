@@ -2,11 +2,11 @@ import {
   type InfiniteData,
   useInfiniteQuery,
   type UseInfiniteQueryResult,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import type { GoodsData } from '@/types';
+import type { GoodsData } from "@/types";
 
-import { fetchInstance } from '../instance';
+import { fetchInstance } from "../instance";
 
 type RequestParams = {
   themeKey: string;
@@ -25,8 +25,8 @@ type ThemesProductsResponseData = {
 
 const getThemesProductsPath = ({ themeKey, pageToken, maxResults }: RequestParams) => {
   const params = new URLSearchParams();
-  if (pageToken) params.append('pageToken', pageToken);
-  if (maxResults) params.append('maxResults', maxResults.toString());
+  if (pageToken) params.append("pageToken", pageToken);
+  if (maxResults) params.append("maxResults", maxResults.toString());
   return `/v1/themes/${themeKey}/products?${params.toString()}`;
 };
 
@@ -37,14 +37,14 @@ export const getThemesProducts = async (params: RequestParams) => {
   return response.data;
 };
 
-type Params = Pick<RequestParams, 'maxResults' | 'themeKey'> & { initPageToken?: string };
+type Params = Pick<RequestParams, "maxResults" | "themeKey"> & { initPageToken?: string };
 export const useGetThemesProducts = ({
   themeKey,
   maxResults = 20,
   initPageToken,
 }: Params): UseInfiniteQueryResult<InfiniteData<ThemesProductsResponseData>> => {
   return useInfiniteQuery({
-    queryKey: ['themesProducts', themeKey, maxResults, initPageToken],
+    queryKey: ["themesProducts", themeKey, maxResults, initPageToken],
     queryFn: async ({ pageParam = initPageToken }) => {
       return getThemesProducts({ themeKey, pageToken: pageParam, maxResults });
     },

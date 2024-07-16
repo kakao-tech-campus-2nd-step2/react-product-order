@@ -1,18 +1,18 @@
-import styled from '@emotion/styled';
-import { useCallback, useState } from 'react';
+import styled from "@emotion/styled";
+import { useCallback, useState } from "react";
 
-import { useGetRankingProducts } from '@/api/hooks/useGetRankingProducts';
-import { Container } from '@/components/common/layouts/Container';
-import { breakpoints } from '@/styles/variants';
-import type { RankingFilterOption } from '@/types';
+import { useGetRankingProducts } from "@/api/hooks/useGetRankingProducts";
+import { Container } from "@/components/common/layouts/Container";
+import { breakpoints } from "@/styles/variants";
+import type { RankingFilterOption } from "@/types";
 
-import { GoodsRankingFilter } from './Filter';
-import { GoodsRankingList } from './List';
+import { GoodsRankingFilter } from "./Filter";
+import { GoodsRankingList } from "./List";
 
 export const GoodsRankingSection = () => {
   const [filterOption, setFilterOption] = useState<RankingFilterOption>({
-    targetType: 'ALL',
-    rankType: 'MANY_WISH',
+    targetType: "ALL",
+    rankType: "MANY_WISH",
   });
 
   const { data, isLoading, isError } = useGetRankingProducts(filterOption);
