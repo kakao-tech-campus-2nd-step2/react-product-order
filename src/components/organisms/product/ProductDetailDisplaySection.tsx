@@ -9,7 +9,7 @@ import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import Paths from '@constants/Paths';
 import { useNavigate } from 'react-router-dom';
-import ProductCounterArea from '@components/organisms/product/ProductCounterArea';
+import ProductCounterForm from '@components/organisms/product/ProductCounterForm';
 import { ProductDetailData } from '@/dto';
 
 interface ProductDetailSectionProps {
@@ -61,9 +61,7 @@ function ProductDetailDisplaySection({ productId }: ProductDetailSectionProps) {
         </Container>
       </Container>
 
-      <Container flexDirection="column" elementSize="full-width" maxWidth="360px">
-        <ProductCounterArea productDetails={product} />
-      </Container>
+      <ProductCounterForm productDetails={product} />
     </>
   );
 }
