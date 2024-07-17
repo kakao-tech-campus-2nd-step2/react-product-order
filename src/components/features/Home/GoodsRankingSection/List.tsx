@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import { RankingGoodsItems } from '@/components/common/GoodsItem/Ranking';
@@ -29,14 +30,16 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
         gap={16}
       >
         {currentGoodsList.map(({ id, imageURL, name, price, brandInfo }, index) => (
-          <RankingGoodsItems
-            key={id}
-            rankingIndex={index + 1}
-            imageSrc={imageURL}
-            title={name}
-            amount={price.sellingPrice}
-            subtitle={brandInfo.name}
-          />
+          <Link key={id} to={`/products/${id}`}>
+            <RankingGoodsItems
+              key={id}
+              rankingIndex={index + 1}
+              imageSrc={imageURL}
+              title={name}
+              amount={price.sellingPrice}
+              subtitle={brandInfo.name}
+            />
+          </Link>
         ))}
       </Grid>
       {goodsList.length > 6 && (
