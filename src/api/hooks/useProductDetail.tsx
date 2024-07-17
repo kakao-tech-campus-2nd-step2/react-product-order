@@ -2,11 +2,43 @@ import { useEffect, useState } from 'react';
 
 import { fetchInstance } from '../../api/instance';
 
-interface ProductDetailData {
-  imageUrl: string;
+
+interface Price {
+  basicPrice: number;
+  discountRate: number;
+  sellingPrice: number;
+}
+
+interface ProductDetail {
+  brandInfo: {
+    id: number;
+    name: string;
+    imageURL: string;
+  };
+  id: number;
+  imageURL: string;
+  isAccessibleProductPage: boolean;
   name: string;
-  price: number;
-  description: string;
+  price: Price;
+  productDescription: {
+    displayImage: string;
+  };
+  productDetailInfo: {
+    announcements: string[];
+    terms: string[];
+  };
+  review: {
+    averageRating: number;
+    totalReviewCount: number;
+  };
+  wish: {
+    isWished: boolean;
+    wishCount: number;
+  };
+}
+
+interface ProductDetailData {
+  detail: ProductDetail;
 }
 
 const useProductDetail = (productId: string): ProductDetailData | null => {

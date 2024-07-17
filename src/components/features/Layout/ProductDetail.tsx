@@ -1,5 +1,6 @@
-import { Box, Button, Flex, Image, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { Box, Button, Flex, IconButton, Image, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 
 import useProductDetail from '../../../api/hooks/useProductDetail';
 
@@ -10,36 +11,65 @@ interface ProductDetailProps {
 const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const productDetail = useProductDetail(productId);
   const [quantity, setQuantity] = useState<number>(1);
+  const [price, setPrice] = useState<number>(0);
 
+  useEffect(() => {
+    if (productDetail) {
+      setPrice(quantity * productDetail.detail.price.sellingPrice);
+    }
+  }, [productDetail, quantity]);
 
-  console.log('ProductDetail: ', productDetail)
-  
+  console.log('ProductDetail: ', productDetail);
+
   if (!productDetail) {
     return <Text>로딩 중...</Text>;
   }
 
-  const handleQuantityChange = (value: string) => {
-    setQuantity(Number(value));
+  const handleQuantityChange = (value: number) => {
+    if (value < 1 || value > 99) return;
+    setQuantity(value);
+    setPrice(value * productDetail.detail.price.sellingPrice);
   };
+
+  const { detail } = productDetail;
 
   return (
     <Box p={4}>
-      <Flex direction={{ base: 'column', md: 'row' }} align="center">
-        <Image src={productDetail.imageUrl} alt={productDetail.name} boxSize="300px" objectFit="cover" />
-        <Box ml={{ md: 4 }}>
-          <Text fontSize="2xl" fontWeight="bold">{productDetail.name}</Text>
-          <Text fontSize="xl" color="gray.500">{productDetail.price}원</Text>
-          <Text mt={4}>{productDetail.description}</Text>
-          <Flex mt={4} align="center">
-            <NumberInput value={quantity} onChange={(valueString) => handleQuantityChange(valueString)} min={1} max={99}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+      <Flex direction={{ base: 'column', md: 'row' }} justify="center">
+        <Image src={detail.imageURL} alt={detail.name} boxSize="300px" objectFit="cover" />
+        <Box ml={{ md: 4 }} w={{ base: '100%', md: 500 }} marginLeft={50}>
+          <Text fontSize={24} fontWeight="bold" m={20}>{detail.name}</Text>
+          <Text fontSize={23} color="gray.500" m={20}>{detail.price.sellingPrice}원</Text>
+          <Flex mt={4} align="center" marginTop={30} mx={20} marginBottom={10}>
+            <IconButton
+              aria-label="Decrease Quantity"
+              icon={<MinusIcon />}
+              onClick={() => handleQuantityChange(quantity - 1)}
+              disabled={quantity <= 1}
+              variant="outline"
+              padding={10}
+            />
+            <Text mx={4} fontSize="22" px={20} py={10}>
+              {quantity}
+            </Text>
+            <IconButton
+              aria-label="Increase Quantity"
+              icon={<AddIcon />}
+              onClick={() => handleQuantityChange(quantity + 1)}
+              disabled={quantity >= 99}
+              variant="outline"
+              padding={10}
+            />
           </Flex>
-          <Button mt={4} colorScheme="teal">나에게 선물하기</Button>
+          <Flex direction="column" align="flex-end" mt={4} mx={20} mb={10}>
+            <Flex justify="flex-end" width="100%">
+              <Text fontSize={20} fontWeight="bold" m={20}>총 결제 금액</Text>
+              <Text fontSize={20} fontWeight="bold" m={20}>{price}원</Text>
+            </Flex>
+            <Button mt={4} colorScheme="teal" color={'white'} bg={'black'} px={30} py={13} borderRadius={5}>
+              나에게 선물하기
+            </Button>
+          </Flex>
         </Box>
       </Flex>
     </Box>

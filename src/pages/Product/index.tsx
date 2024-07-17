@@ -1,4 +1,5 @@
 import { Box } from '@chakra-ui/react';
+import styled from '@emotion/styled';
 import { useParams } from 'react-router-dom';
 
 import ProductDetail from '../../components/features/Layout/ProductDetail';
@@ -11,10 +12,20 @@ const Product: React.FC = () => {
   }
 
   return (
-    <Box>
+    <Wrapper>
       <ProductDetail productId={productId} />
-    </Box>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled(Box)`
+  width: 100%;
+  margin: 50px 100px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 
 export default Product;
