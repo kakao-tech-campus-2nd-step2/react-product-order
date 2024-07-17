@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useGetDetail } from '@/api/hooks/useGetProductDetail';
@@ -8,10 +9,14 @@ import { Spinner } from '@/components/common/Spinner';
 import { ProductDescript } from '@/components/features/Detail/ProductDescript';
 import { QuantitySetting } from '@/components/features/Detail/QuantitySetting';
 import { TotalPrice } from '@/components/features/Detail/TotalPrice';
-import { BuyInfoProvider } from '@/provider/BuyInfo';
+import { useBuyInfo } from '@/provider/BuyInfo';
 import { breakpoints } from '@/styles/variants';
 
 export const DetailPage = () => {
+  const { setQuantity } = useBuyInfo();
+  useEffect(() => {
+    setQuantity(1);
+  }, [setQuantity]);
   const params = useParams();
 
   const { data, error, isLoading } = useGetDetail(params.productKey!);
@@ -27,16 +32,19 @@ export const DetailPage = () => {
 
   if (!data) return <></>;
   return (
-    <BuyInfoProvider>
-      <Container flexDirection="row" maxWidth={breakpoints.lg} style={{ marginTop: 30 }}>
-        <Image src={data.imageURL} width={450} />
-        <ProductDescript name={data.name} price={data.price.sellingPrice} />
-        <Wrapper>
-          <QuantitySetting name={data.name} />
-          <TotalPrice />
-        </Wrapper>
-      </Container>
-    </BuyInfoProvider>
+    <Container
+      flexDirection="row"
+      maxWidth={breakpoints.lg}
+      justifyContent="center"
+      style={{ marginTop: 30 }}
+    >
+      <Image src={data.imageURL} width={450} />
+      <ProductDescript name={data.name} price={data.price.sellingPrice} />
+      <Wrapper>
+        <QuantitySetting name={data.name} />
+        <TotalPrice />
+      </Wrapper>
+    </Container>
   );
 };
 const Wrapper = styled.div`
