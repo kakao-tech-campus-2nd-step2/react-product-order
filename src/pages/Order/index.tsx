@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import LoadingUI from '@/components/common/LoadingUI';
 import Header from '@/components/features/Header';
+import type { OrderReq } from '@/entities/Order';
 import type { ProductDetailData } from '@/entities/Product';
 import useData from '@/hooks/useData';
 import { orderHistoryStorage } from '@/lib/storage';
@@ -28,14 +29,45 @@ export default () => {
             navigate(`/error/${productDetail?.httpStatusCode}/order`, { replace: true });
     }, [navigate, orderHistory, productDetail?.httpStatusCode]);
 
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const formData = Object.fromEntries(new FormData(event.currentTarget));
+        // TODO Options 구현 후 수정
+        // TODO 메세지 탬플릿, 센더/리시버 id
+        const data: OrderReq = {
+            productId: orderHistory!.productId,
+            productOptionId: 0,
+            productQuantity: orderHistory!.productQuantity,
+            messageCardTemplateId: 0,
+            messageCardMessage: formData.messageCardMessage as string,
+            senderId: 0,
+            receiverId: 0,
+            hasCashReceipt: formData.hasCashReceipt !== undefined,
+        };
+        if (data.hasCashReceipt) {
+            // TODO validation
+            data.cashReceiptType = formData.cashReceiptType as string;
+            data.cashReceiptNumber = formData.cashReceiptNumber as string;
+        }
+
+        // TODO 백엔드 오리진 허용 요청
+        // axios.post('/order', data);
+        console.log(data);
+
+        orderHistoryStorage.set(undefined);
+        alert('주문이 완료되었습니다.');
+        navigate('/', { replace: true });
+    };
+
     if (!orderHistory) return <div></div>;
 
     if (productDetail?.isLoading) return <LoadingUI />;
-    // TODO post data 이후 orderHIstory 삭제
+
     return (
         <div>
             <Header />
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className={gridStyle}>
                     <div>
                         <InputMsg />

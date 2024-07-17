@@ -7,12 +7,12 @@ export default ({ price }: { price: number }) => {
         <div className={containerStyle}>
             <h2 className={h2Style}>결제 정보</h2>
             <div className={setReceiptStyle}>
-                <Checkbox id="hasCashReceipt">현금영수증 신청</Checkbox>
-                <Select id="cashReceiptType" defaultValue={1}>
+                <Checkbox name="hasCashReceipt">현금영수증 신청</Checkbox>
+                <Select name="cashReceiptType" defaultValue={1}>
                     <option value="1">개인소득공제</option>
                     <option value="2">사업자증빙용</option>
                 </Select>
-                <Input id="cashReceiptNumber" placeholder="(-없이) 숫자만 입력해주세요." />
+                <Input name="cashReceiptNumber" placeholder="(-없이) 숫자만 입력해주세요." />
             </div>
             <PriceBox>
                 <p>최종 결제금액</p>

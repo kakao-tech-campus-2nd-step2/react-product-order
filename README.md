@@ -28,13 +28,13 @@
     - [x] 현금영수증
     - [x] 최종 결재
     - [x] 결재버튼
-- [ ] 상품 상세 데이터 fetch `/api/v1/products/{productId}/detail`, `/api/v1/products/{productId}/options`
-- [ ] 상품 결제 기능 구현 `/api/v1/order` (React의 form, ref, state만 사용)
+- [x] 상품 상세 데이터 fetch `/api/v1/products/{productId}/detail`, `/api/v1/products/{productId}/options`
+- [x] 상품 결제 기능 구현 `/api/v1/order` (React의 form, ref, state만 사용)
 - 추가 구현해야할 기능
   - [x] localStorge 재사용성 높이기 (객체화)
   - [x] 로그인 후 이전페이지로 라우팅
   - [x] 상품이 없는 경우 메인으로 연결
-  - [ ] 주문페이지에서 로그인이 되어있지 않은 경우 로그인 요청
+  - [x] 주문페이지에서 로그인이 되어있지 않은 경우 로그인 요청
 
 ## 🎸
 
