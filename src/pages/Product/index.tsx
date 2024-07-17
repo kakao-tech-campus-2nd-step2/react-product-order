@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import ProductDetail from '../../components/features/Layout/ProductDetail';
 
-const Product: React.FC = () => {
+export const Product: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
 
   if (!productId) {

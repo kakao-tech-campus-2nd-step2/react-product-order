@@ -1,6 +1,9 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, IconButton, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { RouterPath } from '@/routes/path';
 
 import useProductDetail from '../../../api/hooks/useProductDetail';
 
@@ -12,14 +15,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const productDetail = useProductDetail(productId);
   const [quantity, setQuantity] = useState<number>(1);
   const [price, setPrice] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (productDetail) {
       setPrice(quantity * productDetail.detail.price.sellingPrice);
     }
   }, [productDetail, quantity]);
-
-  console.log('ProductDetail: ', productDetail);
 
   if (!productDetail) {
     return <Text>로딩 중...</Text>;
@@ -32,6 +34,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   };
 
   const { detail } = productDetail;
+
+  const handleOrder = () => {
+    navigate(RouterPath.order, { state: { productDetail: detail, quantity, price } });
+  };
 
   return (
     <Box p={4}>
@@ -66,7 +72,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               <Text fontSize={20} fontWeight="bold" m={20}>총 결제 금액</Text>
               <Text fontSize={20} fontWeight="bold" m={20}>{price}원</Text>
             </Flex>
-            <Button mt={4} colorScheme="teal" color={'white'} bg={'black'} px={30} py={13} borderRadius={5}>
+            <Button onClick={handleOrder} mt={4} colorScheme="teal" color={'white'} bg={'black'} px={70} py={13} borderRadius={5}>
               나에게 선물하기
             </Button>
           </Flex>
