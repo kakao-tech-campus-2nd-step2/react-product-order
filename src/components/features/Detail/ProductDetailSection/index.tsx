@@ -9,18 +9,18 @@ interface ProductDetailSectionProps {
   productId: string;
 }
 const ProductDetailSection = ({ productId }: ProductDetailSectionProps) => {
-  const { data, isLoading, error } = useGetProductDetail(productId);
+  const { data, isLoading, isError } = useGetProductDetail(productId);
   const [count, setCount] = useState(1);
   const navigate = useNavigate();
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return <div>loading...</div>;
   }
 
-  if (error) {
+  if (isError || !data) {
+    navigate('/');
     return <div>error...</div>;
   }
-
   const {
     imageURL,
     name,

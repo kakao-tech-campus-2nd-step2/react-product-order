@@ -36,6 +36,7 @@ export const getProductDetail = async (productId: string) => {
   const response = await fetchInstance.get<ProductDetaiResponseData>(
     getProductDetailPath(productId),
   );
+
   return response.data;
 };
 
@@ -43,7 +44,7 @@ export const useGetProductDetail = (productId: string) => {
   return useQuery({
     queryKey: productDetailQueryKey(productId),
     queryFn: async () => {
-      const res = await getProductDetail(productId as string);
+      const res = await getProductDetail(productId);
       return res;
     },
   });
