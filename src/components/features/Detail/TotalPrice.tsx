@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import { useAuth } from '@/provider/Auth';
 import { useBuyInfo } from '@/provider/BuyInfo';
-import { RouterPath } from '@/routes/path';
+import { getDynamicPath, RouterPath } from '@/routes/path';
 
 export const TotalPrice = () => {
+  const { productKey } = useParams();
   const { price, quantity } = useBuyInfo();
   const totalPrice = price * quantity;
   const auth = useAuth();
@@ -15,9 +16,11 @@ export const TotalPrice = () => {
   const handleFormeClick = () => {
     if (!auth) {
       const redirect = confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?');
-      if (redirect) navigate(RouterPath.order);
+      if (redirect)
+        navigate(getDynamicPath.login(productKey && getDynamicPath.detail(+productKey)));
+      return;
     }
-    navigate(RouterPath.order);
+    navigate(RouterPath.order, { state: productKey });
   };
   return (
     <div>
