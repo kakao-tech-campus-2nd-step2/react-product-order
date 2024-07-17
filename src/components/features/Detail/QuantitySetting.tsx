@@ -1,19 +1,29 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { Input } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { useState } from 'react';
 
 import { Button } from '@/components/common/Button';
+import { useBuyInfo } from '@/provider/BuyInfo';
 type Props = {
   name: string;
 };
 export const QuantitySetting = ({ name }: Props) => {
-  const [quantity, setQuantity] = useState(1);
+  const { quantity, setQuantity } = useBuyInfo();
+
+  const handleMinusClick = () => {
+    if (quantity === 0) return;
+    setQuantity(quantity - 1);
+  };
+
+  const handlePlusClick = () => {
+    setQuantity(quantity + 1);
+  };
+
   return (
     <Container>
       <Title>{name}</Title>
       <Wrapper>
-        <Button theme="lightGray" size="small">
+        <Button theme="lightGray" size="small" onClick={handleMinusClick}>
           <MinusIcon />
         </Button>
         <Input
@@ -21,7 +31,7 @@ export const QuantitySetting = ({ name }: Props) => {
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
         />
-        <Button theme="lightGray" size="small">
+        <Button theme="lightGray" size="small" onClick={handlePlusClick}>
           <AddIcon />
         </Button>
       </Wrapper>
