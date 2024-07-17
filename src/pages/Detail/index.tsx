@@ -1,0 +1,145 @@
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  Flex,
+  IconButton,
+  Image,
+  Input,
+  Text,
+} from '@chakra-ui/react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RouterPath } from '../../routes/path';
+import { authSessionStorage } from '@/utils/storage';
+
+interface PriceData {
+  basicPrice: number;
+}
+
+interface ProductDetailData {
+  id: string;
+  name: string;
+  price: PriceData;
+  imageURL: string;
+}
+
+export const DetailPage = () => {
+  const [productDetail, setProductDetail] = useState<ProductDetailData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [productCount, setProductCount] = useState(1);
+  const { productId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      try {
+        console.log('ID:', productId);
+        const res = await axios.get(
+          `https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`,
+        );
+        if (!res.data.detail) {
+          navigate(RouterPath.notFound);
+          return;
+        }
+        setProductDetail(res.data.detail);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchProductDetail();
+  }, [productId, navigate]);
+
+  const handleProductCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProductCount(parseInt(e.target.value));
+  };
+
+  const handleSubmit = () => {
+    const authToken = authSessionStorage.get();
+
+    if (!authToken) {
+      navigate(RouterPath.login);
+      return;
+    }
+  };
+
+  if (isLoading || !productDetail) {
+    return <Box>Loading...</Box>;
+  }
+
+  const { name, imageURL, price } = productDetail;
+  const basicPrice = price?.basicPrice ?? 0;
+  const totalPrice = basicPrice * productCount;
+  const priceString = `${basicPrice.toLocaleString()}원`;
+
+  return (
+    <Flex justify="space-between" align="center" direction="row" p={8}>
+      <Box>
+        <Image src={imageURL} alt={name} />
+      </Box>
+      <Box mx={8} display="flex" flexDirection="column">
+        <Text size="2xl" mb={4}>
+          {name}
+        </Text>
+        <Text fontSize="xl">{priceString}</Text>
+        <Divider my={4} borderColor="gray.300" />
+        <Text fontSize="md" fontWeight="bold" my={2}>
+          카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!
+        </Text>
+        <Divider my={4} borderColor="gray.300" />
+      </Box>
+      <Flex direction="column" align="flex-end">
+        <Flex
+          mb={4}
+          direction="column"
+          justifyContent="center"
+          border="1px"
+          borderColor="gray.200"
+          p={4}
+        >
+          <Text fontSize="2xl" fontWeight="bold" mb={4}>
+            {name}
+          </Text>
+          <ButtonGroup size="sm" isAttached variant="outline" mb={4}>
+            <IconButton
+              aria-label="-"
+              icon={<MinusIcon />}
+              onClick={() => {
+                if (productCount > 0) {
+                  setProductCount(productCount - 1);
+                }
+              }}
+              disabled={productCount <= 1}
+            />
+            <Input
+              type="number"
+              value={productCount}
+              onChange={handleProductCountChange}
+              w={60}
+              ml={4}
+              mr={4}
+            />
+            <IconButton
+              aria-label="+"
+              icon={<AddIcon />}
+              onClick={() => setProductCount(productCount + 1)}
+            />
+          </ButtonGroup>
+        </Flex>
+        <Flex w="full" p={4} bg="gray.100" justify="space-between">
+          <Text>총 결제 금액</Text>
+          <Text fontWeight="bold">{totalPrice.toLocaleString()}원</Text>
+        </Flex>
+        <Flex w="full" p={4} justify="space-between">
+          <Button backgroundColor="black" color="white" onClick={handleSubmit}>
+            나에게 선물하기
+          </Button>
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
