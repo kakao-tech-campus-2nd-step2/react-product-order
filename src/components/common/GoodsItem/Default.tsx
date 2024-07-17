@@ -29,14 +29,7 @@ export const DefaultGoodsItems = ({
 
   return (
     <Wrapper {...props} onClick={onClick}>
-      <Image
-        src={imageSrc}
-        alt={`${title} 소개`}
-        width="100%"
-        ratio="square"
-        radius={4}
-        cursor="pointer"
-      />
+      <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
       <InfoWrapper>
         <Subtitle>{subtitle}</Subtitle>
         <Title>{title}</Title>

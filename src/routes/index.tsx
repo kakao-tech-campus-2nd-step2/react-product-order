@@ -4,7 +4,6 @@ import { Layout } from '@/components/features/Layout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
-import { OrderPage } from '@/pages/Order';
 import { ThemePage } from '@/pages/Theme';
 import { ProductRoute } from '@/routes/components/ProductRoute';
 
@@ -29,16 +28,12 @@ const router = createBrowserRouter([
         element: <ProductRoute />,
       },
       {
-        path: '',
+        path: RouterPath.myAccount,
         element: <PrivateRoute />,
         children: [
           {
             path: RouterPath.myAccount,
             element: <MyAccountPage />,
-          },
-          {
-            path: RouterPath.order,
-            element: <OrderPage />,
           },
         ],
       },

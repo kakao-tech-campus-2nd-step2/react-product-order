@@ -1,20 +1,29 @@
+import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { Suspense } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
-import { EbSusBoundary } from '@/components/common/EbSusBoundary';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 import { Spinner } from '@/components/common/Spinner';
-import { ProductPage } from '@/pages/Products';
+import { ProductTemplate } from '@/pages/Product';
 import { RouterPath } from '@/routes/path';
 
 export const ProductRoute = () => {
   const { productKey } = useParams();
+  const { reset } = useQueryErrorResetBoundary();
 
   if (!productKey) {
     return <Navigate to={RouterPath.root} />;
   }
 
   return (
-    <EbSusBoundary ebFallback={<Navigate to={RouterPath.root} />} susFallback={<Spinner />}>
-      <ProductPage productKey={productKey} />
-    </EbSusBoundary>
+    <ErrorBoundary
+      fallback={<Navigate to={RouterPath.root} />}
+      onReset={reset}
+      resetKey={productKey}
+    >
+      <Suspense fallback={<Spinner />}>
+        <ProductTemplate productKey={productKey} />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
