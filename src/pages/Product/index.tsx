@@ -5,15 +5,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useGetProductDetails } from '@/api/hooks/useGetProductDetails';
 import { RouterPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
-import type { GoodsData } from '@/types';
 
 import { ProductDetailSection } from '../../components/features/Product/ProductDetailSection';
 import { ProductOrderSection } from '../../components/features/Product/ProductOrderSection';
 
 export const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
+
+  
   const { data, isError, isLoading } = useGetProductDetails(productId!);
-  const detail = data as GoodsData;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +49,13 @@ export const ProductDetailPage = () => {
     );
   }
 
+  if(!data) {
+    return null;
+  }
+
+  console.log('detail productId: ', productId);
+  console.log('detail data id: ', data.id);
+
   return (
     <Center
       w='100%'
@@ -62,8 +69,8 @@ export const ProductDetailPage = () => {
           w='100%'
           position='relative'
         >
-          <ProductDetailSection {...detail} />
-          <ProductOrderSection {...detail} />
+          <ProductDetailSection {...data} />
+          <ProductOrderSection {...data} />
         </Flex>
       </Flex>
     </Center>

@@ -13,11 +13,15 @@ export const ProductOrderSection = (data: GoodsData) => {
     setQuantity(parseInt(value));
   };
 
-  const handleGiftlick = () => {
+  const handleGiftClick = () => {
     const authToken = sessionStorage.getItem('authToken');
 
-    if (!authToken) navigate(getDynamicPath.login());
-    else navigate(getDynamicPath.order(data.id));
+    if (!authToken) {
+      navigate(getDynamicPath.login());
+    }
+    else {
+      navigate(getDynamicPath.order(data.id), { state: { quantity }});
+    }
   };
 
   return (
@@ -102,7 +106,7 @@ export const ProductOrderSection = (data: GoodsData) => {
             fontSize='16px'
             color='rgb(255, 255, 255)'
             backgroundColor='rgb(17, 17, 17)'
-            onClick={handleGiftlick}
+            onClick={handleGiftClick}
           >
             나에게 선물하기
           </Button>
