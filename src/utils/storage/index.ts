@@ -20,7 +20,14 @@ const initStorage = <T extends keyof StorageKey>(key: T, storage: Storage) => {
 };
 
 export const authSessionStorage = initStorage('authToken', sessionStorage);
+export const orderLocalStorage = initStorage('order', localStorage);
 
 interface StorageKey {
   authToken?: string;
+  order?: Order;
 }
+
+type Order = {
+  productId: string;
+  count: number;
+};
