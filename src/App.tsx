@@ -11,18 +11,20 @@ import Error from './pages/Error';
 import Login from './pages/Login';
 import Main from './pages/Main';
 import MyAccount from './pages/MyAccount';
+import Order from './pages/Order';
 import Product from './pages/Product';
 import Theme from './pages/Theme';
 
 axios.defaults.baseURL = 'https://react-gift-mock-api-self.vercel.app/api/v1';
 const queryClient = new QueryClient();
 
-const { Button, Input } = chakraTheme.components;
+const { Button, Input, Textarea } = chakraTheme.components;
 
 const theme = extendBaseTheme({
     components: {
         Button,
         Input,
+        Textarea,
     },
 });
 
@@ -60,7 +62,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/order',
-        element: <div>Order</div>,
+        element: <Order />,
     },
     {
         path: 'products/:productId',
