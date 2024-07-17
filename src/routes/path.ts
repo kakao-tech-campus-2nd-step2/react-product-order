@@ -1,10 +1,12 @@
 export const RouterPath = {
   root: '/',
   home: '/',
-  theme: '/theme/:themeKey',
   myAccount: '/my-account',
   login: '/login',
   notFound: '*',
+  theme: '/theme/:themeKey',
+  detail: '/detail/:productId',
+  order: '/order/:orderId',
 };
 
 export const getDynamicPath = {
@@ -13,4 +15,6 @@ export const getDynamicPath = {
     const currentRedirect = redirect ?? window.location.href;
     return `${RouterPath.login}?redirect=${encodeURIComponent(currentRedirect)}`;
   },
+  detail: (productId: string) => RouterPath.detail.replace(':productId', productId),
+  order: (orderId: string) => RouterPath.order.replace(':orderId', orderId),
 };

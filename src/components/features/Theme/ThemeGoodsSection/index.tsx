@@ -7,12 +7,15 @@ import { Grid } from '@/components/common/layouts/Grid';
 import { Spinner } from '@/components/common/Spinner';
 import { VisibilityLoader } from '@/components/common/VisibilityLoader';
 import { breakpoints } from '@/styles/variants';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   themeKey: string;
 };
 
 export const ThemeGoodsSection = ({ themeKey }: Props) => {
+  const navigate = useNavigate();
+
   const { data, isError, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useGetThemesProducts({
       themeKey,
@@ -47,6 +50,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
               title={name}
               amount={price.sellingPrice}
               subtitle={brandInfo.name}
+              onClick={() => navigate(`/detail/${id}`)}
             />
           ))}
         </Grid>
