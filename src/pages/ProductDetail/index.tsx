@@ -8,31 +8,14 @@ import { useCurrentProduct } from '@/hooks/useCurrentProduct';
 import { RouterPath } from '@/routes/path';
 
 export const ProductDetailPage = () => {
-
     const { productId = '' } = useParams<{ productId: string }>();
     const { isRender, currentProduct } = useCurrentProduct({ productId });
 
     if (!isRender) return null;
 
-    console.log('Current Product:', currentProduct);
-
     if (!currentProduct) {
-        console.log('Not accessible, redirecting...');
-        return <Navigate to={RouterPath.home} replace />;
+        return <Navigate to={RouterPath.notFound} />;
     }
-
-    console.log('Current Product is accessible:', currentProduct);
-
-    // console.log(currentProduct);
-
-    // if (currentProduct === false) {
-    //     console.log('false...');
-    //     return <Navigate to={RouterPath.home} replace />;
-    // }
-
-    // if (currentProduct) {
-    //     console.log(currentProduct);
-    // }
 
     return (
         <>
@@ -43,6 +26,7 @@ export const ProductDetailPage = () => {
         </>
     );
 };
+
 
 const Wrapper = styled.div`
   width: 100%;

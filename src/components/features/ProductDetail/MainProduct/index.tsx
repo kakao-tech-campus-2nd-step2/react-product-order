@@ -13,13 +13,16 @@ export const MainProduct = ({ productId }: Props) => {
       productId,
     });
 
+
+
   if (isLoading)
     return (
       <TextView>
         <Spinner />
       </TextView>
     );
-  if (isError) return <TextView>에러가 발생했습니다.</TextView>;
+  if (isError)
+    return <TextView>에러가 발생했습니다.</TextView>;
   if (!data) return <></>;
 
   return (

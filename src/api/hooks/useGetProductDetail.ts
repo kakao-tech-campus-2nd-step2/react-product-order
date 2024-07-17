@@ -1,6 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
-
-//   import type { GoodsData } from '@/types';
+import { useEffect, useState } from 'react';
 
 import { fetchInstance } from '../instance';
 
@@ -8,14 +6,7 @@ type RequestParams = {
     productId: string;
 };
 
-//   type ThemesProductsResponseData = {
-//     products: GoodsData[];
-//     nextPageToken?: string;
-//     pageInfo: {
-//       totalResults: number;
-//       resultsPerPage: number;
-//     };
-//   };
+import { ProductsData } from '@/types';
 
 const getProductsDetailPath = ({ productId }: RequestParams) => {
     const params = new URLSearchParams();
@@ -23,16 +14,39 @@ const getProductsDetailPath = ({ productId }: RequestParams) => {
 };
 
 export const getProductsDetail = async (params: RequestParams) => {
-    const response = await fetchInstance.get(
+    const response = await fetchInstance.get<ProductsData>(
         getProductsDetailPath(params),
     );
-    console.log(response.data);
     return response.data;
 };
 
 export const useGetProductsDetail = ({ productId }: RequestParams) => {
-    return useQuery({
-        queryKey: ['productsDetail', productId], // queryKey
-        queryFn: async () => getProductsDetail({ productId }) // queryFn
-    });
-};
+    const [data, setData] = useState<ProductsData | undefined>();
+    const [isLoading, setLoading] = useState(true);
+    const [isError, setError] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                setError(false);
+                const response = await getProductsDetail({ productId });
+
+                setData(response);
+                setLoading(false);
+            } catch {
+                setError(true);
+                setLoading(false);
+                setData(undefined);
+            }
+        };
+
+        fetchData();
+    }, [productId]);
+
+    return {
+        data,
+        isLoading,
+        isError,
+    };
+}
