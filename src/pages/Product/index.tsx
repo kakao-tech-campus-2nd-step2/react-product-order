@@ -4,23 +4,33 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetThemeProductDetail } from '@/api/hooks/useGetThemeProductDetail';
+import { useGetThemeProductOption } from '@/api/hooks/useGetThemeProductOption';
 import { Container } from '@/components/common/layouts/Container';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
 
 export const ProductPage = () => {
   const { productId = '' } = useParams<{ productId: string }>();
-  const { data } = useGetThemeProductDetail(productId);
+  const { data: productData } = useGetThemeProductDetail(productId);
+  const { data: optionData } = useGetThemeProductOption(productId);
+
   const navigate = useNavigate();
   const authInfo = useAuth();
 
-  const detail = data?.detail;
+  const detail = productData?.detail;
+  const orderLimit = optionData?.options.giftOrderLimit || 0;
 
   const [quantity, setQuantity] = useState(1);
   const price = detail?.price?.basicPrice ?? 0;
   const totalPrice = price * quantity;
 
-  const handleIncrease = () => setQuantity(quantity + 1);
+  const handleIncrease = () => {
+    if (quantity < orderLimit) {
+      setQuantity(quantity + 1);
+    } else {
+      alert(`최대 주문 가능 수량은 ${orderLimit}개 입니다.`);
+    }
+  };
 
   const handleDecrease = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
 
@@ -62,7 +72,7 @@ export const ProductPage = () => {
               </Text>
               <Flex align="center" justify="center" mb={10}>
                 <IconButton aria-label="-" icon={<MinusIcon />} onClick={handleDecrease} />
-                <Input width="50px" textAlign="center" value={quantity} readOnly mx={2} />
+                <Input width="100px" textAlign="center" value={quantity} readOnly mx={2} />
                 <IconButton aria-label="+" icon={<AddIcon />} onClick={handleIncrease} />
               </Flex>
             </Box>
