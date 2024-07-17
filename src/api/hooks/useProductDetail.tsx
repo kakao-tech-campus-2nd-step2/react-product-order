@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { fetchInstance } from '../../api/instance'
+import { fetchInstance } from '../../api/instance';
 
 interface ProductDetailData {
   imageUrl: string;
@@ -22,7 +22,9 @@ const useProductDetail = (productKey: string): ProductDetailData | null => {
       }
     };
 
-    fetchProductDetail();
+    if (productKey) {
+      fetchProductDetail();
+    }
   }, [productKey]);
 
   return productDetail;

@@ -7,7 +7,7 @@ interface ProductDetailProps {
   productKey: string;
 }
 
-export const ProductDetail: React.FC<ProductDetailProps> = ({ productKey }) => {
+const ProductDetail: React.FC<ProductDetailProps> = ({ productKey }) => {
   const productDetail = useProductDetail(productKey);
   const [quantity, setQuantity] = useState<number>(1);
 
