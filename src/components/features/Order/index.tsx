@@ -32,6 +32,12 @@ export const OrderForm = ({ orderHistory }: Props) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
+
+    if (name === 'cashReceiptNumber' && !/^\d*$/.test(value)) {
+      alert('현금영수증 번호는 숫자만 입력 가능합니다.');
+      return;
+    }
+
     if (name === 'cashReceiptType') {
       setFormData((prev) => ({ ...prev, [name]: value as 'PERSONAL' | 'BUSINESS' }));
     } else {
@@ -45,6 +51,22 @@ export const OrderForm = ({ orderHistory }: Props) => {
 
   const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (formData.messageCardTextMessage.length === 0) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
+
+    if (formData.messageCardTextMessage.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      return;
+    }
+
+    if (formData.hasCashReceipt && formData.cashReceiptNumber.length === 0) {
+      alert('현금영수증을 신청하셨습니다. 현금영수증 번호를 입력해주세요.');
+      return;
+    }
+
     console.log(formData);
     alert('결제가 완료되었습니다.');
   };
