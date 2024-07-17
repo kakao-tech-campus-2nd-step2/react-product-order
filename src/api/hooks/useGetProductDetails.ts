@@ -24,9 +24,10 @@ export const getProductDetails = async (params: RequestParams) => {
   return response.data.detail;
 };
 
-export const useGetProductDetails = (productId: string): UseQueryResult<GoodsData> => 
-  useQuery<GoodsData>({
+export const useGetProductDetails = (productId: string): UseQueryResult<GoodsData> => {
+  return useQuery<GoodsData>({
     queryKey: ['detail', productId],
     queryFn: () => getProductDetails({ productId }),
     enabled: !!productId,
   });
+};
