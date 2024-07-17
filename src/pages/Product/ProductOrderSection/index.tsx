@@ -1,13 +1,22 @@
 import { Button, Container, Flex, NumberDecrementStepper, NumberIncrementStepper, NumberInput,NumberInputField,NumberInputStepper,Text } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { RouterPath } from '@/routes/path';
 import type { GoodsData } from '@/types';
 
 export const ProductOrderSection = (data: GoodsData) => {
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
   const handleQuantityChange = (value: string) => {
     setQuantity(parseInt(value));
+  };
+
+  const handleGiftlick = () => {
+    const authToken = sessionStorage.getItem('authToken');
+
+    if (!authToken) navigate(RouterPath.login);
   };
 
   return (
@@ -92,6 +101,7 @@ export const ProductOrderSection = (data: GoodsData) => {
             fontSize='16px'
             color='rgb(255, 255, 255)'
             backgroundColor='rgb(17, 17, 17)'
+            onClick={handleGiftlick}
           >
             나에게 선물하기
           </Button>
