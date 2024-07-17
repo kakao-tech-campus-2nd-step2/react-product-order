@@ -1,13 +1,29 @@
 import { css } from '@emotion/css';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import Header from '@/components/features/Header';
+import { orderHistoryStorage } from '@/lib/storage';
 
 import InputMsg from './InputMsg';
 import OrderDetail from './OrderDetail';
 import PaymentInfo from './PaymentInfo';
 
 export default () => {
+    const orderHistory = orderHistoryStorage.get();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!orderHistory) {
+            alert('주문 내역이 없습니다.');
+            navigate('/', { replace: true });
+        }
+    }, [navigate, orderHistory]);
+
+    if (!orderHistory) return <div></div>;
+    // TODO fetch data
+    // TODO post data 이후 orderHIstory 삭제
     return (
         <div>
             <Header />
@@ -22,13 +38,15 @@ export default () => {
                             }
                             productName={'product'}
                             brandName={'brand'}
-                            quantity={1}
+                            quantity={orderHistory!.productQuantity}
                         />
                     </div>
                     <div className={layout1}>
                         {/* TODO price 가져오기 및 적용 */}
-                        <PaymentInfo />
-                        <Button type="submit">1000원 결제하기</Button>
+                        <PaymentInfo price={1000 * orderHistory!.productQuantity} />
+                        <Button type="submit">
+                            {1000 * orderHistory!.productQuantity}원 결제하기
+                        </Button>
                     </div>
                 </div>
             </form>

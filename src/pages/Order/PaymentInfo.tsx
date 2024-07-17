@@ -2,7 +2,7 @@ import { Checkbox, Input, Select } from '@chakra-ui/react';
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 
-export default () => {
+export default ({ price }: { price: number }) => {
     return (
         <div className={containerStyle}>
             <h2 className={h2Style}>결제 정보</h2>
@@ -16,7 +16,7 @@ export default () => {
             </div>
             <PriceBox>
                 <p>최종 결제금액</p>
-                <p>1000원</p>
+                <p>{price}원</p>
             </PriceBox>
         </div>
     );
