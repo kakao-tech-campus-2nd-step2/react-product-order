@@ -7,8 +7,8 @@ import { RouterPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
 import type { GoodsData } from '@/types';
 
-import { ProductDetailSection } from './ProductDetailSection';
-import { ProductOrderSection } from './ProductOrderSection';
+import { ProductDetailSection } from '../../components/features/Product/ProductDetailSection';
+import { ProductOrderSection } from '../../components/features/Product/ProductOrderSection';
 
 export const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
