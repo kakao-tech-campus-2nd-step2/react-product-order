@@ -11,6 +11,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const productDetail = useProductDetail(productId);
   const [quantity, setQuantity] = useState<number>(1);
 
+
+  console.log('ProductDetail: ', productDetail)
+  
   if (!productDetail) {
     return <Text>로딩 중...</Text>;
   }

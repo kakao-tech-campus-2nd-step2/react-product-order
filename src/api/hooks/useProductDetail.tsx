@@ -12,15 +12,18 @@ interface ProductDetailData {
 const useProductDetail = (productId: string): ProductDetailData | null => {
   const [productDetail, setProductDetail] = useState<ProductDetailData | null>(null);
 
+
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
         const response = await fetchInstance.get<ProductDetailData>(`/v1/products/${productId}/detail`);
         setProductDetail(response.data);
+        console.log(response.data)
       } catch (error) {
         console.error('제품 상세 정보를 가져오는 중 오류 발생:', error);
       }
     };
+
 
     if (productId) {
       fetchProductDetail();
