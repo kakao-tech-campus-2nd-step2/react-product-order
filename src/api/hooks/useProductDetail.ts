@@ -9,6 +9,8 @@ export const getProductDetailById = async (productId: string) => {
 };
 
 export const getProductOptionsById = async (productId: string) => {
-  const response = await fetchInstance.get(`/v1/products${productId}/options`);
+  const response = await fetchInstance.get<Products.GetProductOptionsByIdResp>(
+    `/v1/products/${productId}/options`,
+  );
   return response.data;
 };
