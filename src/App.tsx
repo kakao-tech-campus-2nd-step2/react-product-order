@@ -3,6 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import { queryClient } from './api/instance';
 import { AuthProvider } from './provider/Auth';
+import { BuyInfoProvider } from './provider/BuyInfo';
 import { Routes } from './routes';
 
 const App = () => {
@@ -10,7 +11,9 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
         <AuthProvider>
-          <Routes />
+          <BuyInfoProvider>
+            <Routes />
+          </BuyInfoProvider>
         </AuthProvider>
       </ChakraProvider>
     </QueryClientProvider>
