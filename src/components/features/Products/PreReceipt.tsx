@@ -18,8 +18,11 @@ export const PreReceipt = ({ productKey }: IPreReceipt) => {
     queryKey: ['options', productKey],
     queryFn: () => getProductOptionsById(productKey),
   });
+  const productName = data.options.productName;
   const productPrice = data.options.productPrice;
-  const [cntMap, setCntMap] = useState(new Map().set(productPrice, '1'));
+  const [cntMap, setCntMap] = useState(
+    new Map().set(productName, { price: productPrice, cnt: '1' }),
+  );
   const authInfo = useAuth();
   const navigate = useNavigate();
   const options: Products.ProductOption = data.options;
@@ -40,9 +43,10 @@ export const PreReceipt = ({ productKey }: IPreReceipt) => {
 
   const totalPriceMemo = useMemo(() => {
     let totalPrice = 0;
-    for (const [key, value] of cntMap) {
-      const cnt = parseInt(value);
-      totalPrice += key * cnt;
+    for (const [, value] of cntMap) {
+      const { price, cnt } = value;
+      const cntInt = parseInt(cnt);
+      totalPrice += price * cntInt;
     }
     return totalPrice;
   }, [cntMap]);
@@ -51,10 +55,10 @@ export const PreReceipt = ({ productKey }: IPreReceipt) => {
     throw new Error();
   }
 
-  const setProductCnt = (price: number, newCnt: string) => {
+  const setProductCnt = (name: string, newCnt: string) => {
     setCntMap((prev) => {
       const newMap = structuredClone(prev);
-      return newMap.set(price, newCnt);
+      return newMap.set(name, { ...newMap.get(name), cnt: newCnt });
     });
   };
 
