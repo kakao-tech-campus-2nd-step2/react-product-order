@@ -1,4 +1,4 @@
-import { Image, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Input, Text, useNumberInput, VStack } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useParams } from "react-router-dom";
 
@@ -6,40 +6,73 @@ import { useGetProductDetail } from "@/api/hooks/useGetProductDetail";
 import { Spinner } from "@/components/common/Spinner";
 
 const ProductDetailPage = () => {
-	const {productId} = useParams<{productId: string}>();
-	const validProductId = productId || "";
-	const {data, isLoading, isError } = useGetProductDetail(validProductId);
+  const { productId } = useParams<{ productId: string }>();
+  const validProductId = productId || "";
+  const { data, isLoading, isError } = useGetProductDetail(validProductId);
 
-	console.log(data);
-	console.log(validProductId)
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
+    step: 1,
+    defaultValue: 1,
+    min: 1,
+  });
 
-	
-	if (isLoading) {
-		return (
-			<TextView>
-				<Spinner />
-			</TextView>
-		)
-	}
-	if (isError || !data) {
-		return (
-			<TextView>
-				에러가 발생했습니다.
-			</TextView>
-		)
-	}
+  const inc = getIncrementButtonProps();
+  const dec = getDecrementButtonProps();
+  const input = getInputProps();
+
+  console.log(data);
+  console.log(validProductId);
+
+  if (isLoading) {
+    return (
+      <TextView>
+        <Spinner />
+      </TextView>
+    );
+  }
+  if (isError || !data) {
+    return (
+      <TextView>
+        에러가 발생했습니다.
+      </TextView>
+    );
+  }
 
   return (
-	<>
-		<Image src={data?.detail.imageURL} alt={data?.detail.name} />
-		<Text>
-		{data?.detail.name}
-		<br/>
-		{data?.detail.price.sellingPrice}
-		<br/>
-		{data?.detail.brandInfo.name}
-		</Text>
-	</>
+    <Box maxW="7xl" mx="auto" p={4}>
+      <HStack spacing={10} align="start">
+        <Box flex="1">
+		<VStack align="start" spacing={4} flex="2">
+          <Image
+            src={data.detail.imageURL}
+            alt="Product Image"
+            boxSize="500px"
+            objectFit="cover"
+          />
+		  </VStack>
+        </Box>
+		<VStack align="start" spacing={4} flex="1">
+          <Text fontSize="2xl" fontWeight="bold">{data.detail.name}</Text>
+          <Text fontSize="lg" color="gray.600">{data.detail.price.sellingPrice}원</Text>
+          <Text fontSize="xs" color="gray.600">카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Text>
+		</VStack>
+        <VStack align="start" spacing={4} flex="1">
+			<Box borderColor='gray.200' borderWidth='1px' p='10px' borderRadius='md'>
+			<Text fontWeight='bold' >{data.detail.name}</Text>
+			<HStack maxW="320px" spacing={4}>
+				<Button {...dec}>-</Button>
+				<Input {...input} />
+				<Button {...inc}>+</Button>
+			</HStack>
+			</Box>
+          <HStack w="100%" justifyContent="space-between">
+            <Text fontSize="xs" fontWeight="bold">총 결제 금액</Text>
+            <Text fontSize="2xl" fontWeight="bold">0원</Text>
+          </HStack>
+          <Button bg="black" color="white" w="90%" h="50px" fontSize="sm">나에게 선물하기</Button>
+        </VStack>
+      </HStack>
+    </Box>
   );
 };
 
