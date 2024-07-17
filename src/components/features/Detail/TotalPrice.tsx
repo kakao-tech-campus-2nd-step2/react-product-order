@@ -1,18 +1,33 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
+import { useAuth } from '@/provider/Auth';
 import { useBuyInfo } from '@/provider/BuyInfo';
+import { RouterPath } from '@/routes/path';
 
 export const TotalPrice = () => {
   const { price, quantity } = useBuyInfo();
   const totalPrice = price * quantity;
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  const handleFormeClick = () => {
+    if (!auth) {
+      const redirect = confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?');
+      if (redirect) navigate(RouterPath.order);
+    }
+    navigate(RouterPath.order);
+  };
   return (
     <div>
       <Banner>
         <div>총 결제 금액</div>
         <Price>{totalPrice}원</Price>
       </Banner>
-      <Button theme="darkGray">나에게 선물하기</Button>
+      <Button theme="darkGray" onClick={handleFormeClick}>
+        나에게 선물하기
+      </Button>
     </div>
   );
 };
