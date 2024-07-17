@@ -117,3 +117,7 @@ export type GetThemesProductsResponseBody = {
   nextPageToken: string;
   pageInfo: PageInfo;
 };
+
+export type GetProductsDetailResponseBody = {
+  detail: ProductDetailData;
+};
