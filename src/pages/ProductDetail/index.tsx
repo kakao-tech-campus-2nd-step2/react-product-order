@@ -10,8 +10,7 @@ import { getDynamicPath } from "@/routes/path";
 const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const validProductId = productId || "";
-  const { data, isLoading, isError } = useGetProductDetail
-  (validProductId);
+  const { data, isLoading, isError } = useGetProductDetail(validProductId);
 
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -26,15 +25,12 @@ const ProductDetailPage = () => {
     step: 1,
     defaultValue: 1,
     min: 1,
-	onChange: (_, valueAsNumber) => setQuantity(valueAsNumber),
+    onChange: (_, valueAsNumber) => setQuantity(valueAsNumber),
   });
 
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
-
-  console.log(data);
-  console.log(validProductId);
 
   if (isLoading) {
     return (
@@ -55,38 +51,38 @@ const ProductDetailPage = () => {
     <Box maxW="7xl" mx="auto" p={4}>
       <HStack spacing={10} align="start">
         <Box flex="1">
-		<VStack align="start" spacing={4} flex="2">
-          <Image
-            src={data.detail.imageURL}
-            alt="Product Image"
-            boxSize="500px"
-            objectFit="cover"
-          />
-		  </VStack>
+          <VStack align="start" spacing={4} flex="2">
+            <Image
+              src={data.detail.imageURL}
+              alt="Product Image"
+              boxSize="500px"
+              objectFit="cover"
+            />
+          </VStack>
         </Box>
-		<VStack align="start" spacing={4} flex="1">
+        <VStack align="start" spacing={4} flex="1">
           <Text fontSize="2xl" fontWeight="bold">{data.detail.name}</Text>
           <Text fontSize="lg" color="gray.600">{data.detail.price.sellingPrice}원</Text>
-		  <Box w="100%" borderTop="1px" borderBottom="1px" borderColor="gray.200" py={4}>
-			<Text fontSize="xs" color="gray.600" fontWeight="bold">카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Text>
-		  </Box>
-		</VStack>
+          <Box w="100%" borderTop="1px" borderBottom="1px" borderColor="gray.200" py={4}>
+            <Text fontSize="xs" color="gray.600" fontWeight="bold">카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Text>
+          </Box>
+        </VStack>
         <VStack align="start" spacing={4} flex="1">
-			<Box borderColor='gray.200' borderWidth='1px' p='10px' borderRadius='md'>
-			<Text fontWeight='bold' >{data.detail.name}</Text>
-			<HStack maxW="320px" spacing={4}>
-				<Button {...dec}>-</Button>
-				<Input {...input} />
-				<Button {...inc}>+</Button>
-			</HStack>
-			</Box>
+          <Box borderColor="gray.200" borderWidth="1px" p="10px" borderRadius='md'>
+            <Text fontWeight="bold" >{data.detail.name}</Text>
+            <HStack maxW="320px" spacing={4}>
+              <Button {...dec}>-</Button>
+              <Input {...input} />
+              <Button {...inc}>+</Button>
+            </HStack>
+          </Box>
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize="xs" fontWeight="bold">총 결제 금액</Text>
             <Text fontSize="2xl" fontWeight="bold">{totalPrice}원</Text>
           </HStack>
-            <Link to={getDynamicPath.order()}>
+          <Link to={getDynamicPath.order(productId || "")} key={productId}>
             <Button bg="black" color="white" w="90%" h="50px" fontSize="sm">나에게 선물하기</Button>
-            </Link>
+          </Link>
         </VStack>
       </HStack>
     </Box>

@@ -1,3 +1,4 @@
+
 export const RouterPath = {
   root: '/',
   home: '/',
@@ -5,7 +6,7 @@ export const RouterPath = {
   myAccount: '/my-account',
   login: '/login',
   product: '/products/:productId',
-  order: '/order',
+  order: '/order/:productId',
   notFound: '*',
 };
 
@@ -16,8 +17,8 @@ export const getDynamicPath = {
     return `${RouterPath.login}?redirect=${encodeURIComponent(currentRedirect)}`;
   },
   product: (productId: string) => RouterPath.product.replace(':productId', productId),
-  order: (redirect?: string) => {
+  order: (productId: string, redirect?: string) => {
     const currentRedirect = redirect ?? window.location.href;
-    return `${RouterPath.order}?redirect=${encodeURIComponent(currentRedirect)}`;
-  }
+    return RouterPath.order.replace(':productId', productId) + `?redirect=${encodeURIComponent(currentRedirect)}`;
+  },
 };
