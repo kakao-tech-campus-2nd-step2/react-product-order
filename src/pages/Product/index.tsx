@@ -1,8 +1,11 @@
-import { Box, Center, Flex } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import { Center, Flex, Spinner } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductDetails } from '@/api/hooks/useGetProductDetails';
+import { RouterPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
+import type { GoodsData } from '@/types';
 
 import { ProductDetailSection } from './ProductDetailSection';
 import { ProductOrderSection } from './ProductOrderSection';
@@ -10,17 +13,40 @@ import { ProductOrderSection } from './ProductOrderSection';
 export const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const { data, isError, isLoading } = useGetProductDetails(productId!);
+  const detail = data as GoodsData;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!data && !isLoading && !isError) {
+      navigate(RouterPath.home);
+    }
+  }, [data, isLoading, isError, navigate]);
 
   if (isLoading) {
-    return <Box>Loading!!!!</Box>
+    return (
+      <Flex
+        w='100%'
+        justifyContent='center'
+        alignItems='center'
+        padding='40px 16px 60px'
+      >
+        <Spinner />
+      </Flex>
+    );
   }
 
   if (isError) {
-    return <Box>Error!!!!</Box>
-  }
-
-  if (!data) {
-    return null;
+    return (
+      <Flex
+        w='100%'
+        justifyContent='center'
+        alignItems='center'
+        padding='40px 16px 60px'
+        fontSize='16px'
+      >
+        에러가 발생했습니다.
+      </Flex>
+    );
   }
 
   return (
@@ -36,8 +62,8 @@ export const ProductDetailPage = () => {
           w='100%'
           position='relative'
         >
-          <ProductDetailSection {...data} />
-          <ProductOrderSection {...data} />
+          <ProductDetailSection {...detail} />
+          <ProductOrderSection {...detail} />
         </Flex>
       </Flex>
     </Center>
