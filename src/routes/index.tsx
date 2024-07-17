@@ -4,6 +4,8 @@ import { Layout } from '@/components/features/Layout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
+import OrderPage from '@/pages/Order'; // 기본 export로 가져옵니다.
+import ProductPage from '@/pages/Product'; // 기본 export로 가져옵니다.
 import { ThemePage } from '@/pages/Theme';
 
 import { PrivateRoute } from './components/PrivateRoute';
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
             element: <MyAccountPage />,
           },
         ],
+      },
+      {
+        path: RouterPath.order,
+        element: <OrderPage />,
+      },
+      {
+        path: RouterPath.product,
+        element: <ProductPage />,
       },
       {
         path: RouterPath.notFound,
