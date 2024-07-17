@@ -1,3 +1,15 @@
+import { LoadingView } from '@/components/common/LoadingView/LoadingView';
+import { OrderForm } from '@/components/features/Order';
+import { useHandleOrderHistory } from '@/hooks/useHandleOrderHistory';
+
 export const OrderPage = () => {
-  return <>123</>;
+  const { orderHistory } = useHandleOrderHistory();
+
+  if (!orderHistory) return <LoadingView />;
+
+  return (
+    <>
+      <OrderForm orderHistory={orderHistory} />
+    </>
+  );
 };
