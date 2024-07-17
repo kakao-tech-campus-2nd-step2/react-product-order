@@ -65,6 +65,15 @@ export const DetailPage = () => {
       navigate(RouterPath.login);
       return;
     }
+
+    if (productId) {
+      const totalPrice = productDetail!.price.basicPrice * productCount;
+      navigate(`/order/${productId}`, {
+        state: totalPrice,
+      });
+    } else {
+      console.error('ProductId를 찾을 수 없습니다.');
+    }
   };
 
   if (isLoading || !productDetail) {
