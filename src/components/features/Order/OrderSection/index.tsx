@@ -11,10 +11,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
 import { usePostOrder } from '@/api/hooks/usePostOrder';
 import { Button } from '@/components/common/Button';
+import { useAuth } from '@/provider/Auth';
 import { orderLocalStorage } from '@/utils/storage';
 
 interface OrderSectionProps {
@@ -31,11 +33,19 @@ const OrderSection = ({ count, productId }: OrderSectionProps) => {
   const cashReceiptSelectRef = useRef<HTMLSelectElement>(null);
   const cashReceiptNumberRef = useRef<HTMLInputElement>(null);
 
-  if (isLoading || !data) {
+  const navigate = useNavigate();
+
+  const authInfo = useAuth();
+  if (!authInfo) {
+    navigate('/');
+    return <></>;
+  }
+
+  if (isLoading) {
     return <div>loading...</div>;
   }
 
-  if (error) {
+  if (error || !data) {
     return <div>error...</div>;
   }
 
