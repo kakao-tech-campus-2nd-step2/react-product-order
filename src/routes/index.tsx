@@ -9,6 +9,7 @@ import { ThemePage } from '@/pages/Theme';
 import { PrivateRoute } from './components/PrivateRoute';
 import { RouterPath } from './path';
 import { DetailPage } from '@/pages/Detail';
+import { OrderPage } from '@/pages/Order';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: RouterPath.detail,
         element: <DetailPage />,
+      },
+      {
+        path: RouterPath.order,
+        element: <OrderPage />,
       },
     ],
   },
