@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
 
 import { Button } from '@/components/common/Button';
+import { useBuyInfo } from '@/provider/BuyInfo';
 
 export const TotalPrice = () => {
+  const { price, quantity } = useBuyInfo();
+  const totalPrice = price * quantity;
   return (
     <div>
       <Banner>
         <div>총 결제 금액</div>
-        <Price>145000원</Price>
+        <Price>{totalPrice}원</Price>
       </Banner>
       <Button theme="darkGray">나에게 선물하기</Button>
     </div>

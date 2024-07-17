@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
+import { useEffect } from 'react';
+
+import { useBuyInfo } from '@/provider/BuyInfo';
 
 type Props = {
   name: string;
   price: number;
 };
 export const ProductDescript = ({ name, price }: Props) => {
+  const { setPrice } = useBuyInfo();
+  useEffect(() => {
+    setPrice(price);
+  }, [setPrice, price]);
   return (
     <Wrapper>
       <Title>{name}</Title>
