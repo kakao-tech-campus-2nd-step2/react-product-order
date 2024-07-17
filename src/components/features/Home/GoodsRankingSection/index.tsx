@@ -1,52 +1,46 @@
 import styled from '@emotion/styled';
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useGetRankingProducts } from '@/api/hooks/useGetRankingProducts';
+import { useRankingProducts } from '@/api/hooks/useRankingProducts';
 import { Container } from '@/components/common/layouts/Container';
-import { breakpoints } from '@/styles/variants';
-import type { RankingFilterOption } from '@/types';
-
-import { GoodsRankingFilter } from './Filter';
-import { GoodsRankingList } from './List';
+import { ErrorMessageContainer } from '@/styles';
+import { RankingFilterOption } from '@/types';
+import { GoodsRankingFilter } from './GoodsRankingFilter';
+import { GoodsRankingList } from './GoodsRankingList';
 
 export const GoodsRankingSection = () => {
-  const [filterOption, setFilterOption] = useState<RankingFilterOption>({
-    targetType: 'ALL',
-    rankType: 'MANY_WISH',
-  });
+  const { data, isLoading, isError, refetch } = useRankingProducts('ALL', 'MANY_WISH');
 
-  const { data, isLoading, isError } = useGetRankingProducts(filterOption);
+  const [selectedTarget, setSelectedTarget] = useState<RankingFilterOption['targetType']>('ALL');
+  const [selectedRank, setSelectedRank] = useState<RankingFilterOption['rankType']>('MANY_WISH');
 
-  const GoodRankingListView = useCallback(() => {
-    const goodsList = data?.products ?? [];
+  useEffect(() => {
+    refetch();
+  }, [selectedTarget, selectedRank, refetch]);
 
-    if (isError) {
-      return <TextView>데이터를 불러오는 중에 문제가 발생했습니다.</TextView>;
-    }
-    if (isLoading && !goodsList.length) {
-      return <TextView>로딩중</TextView>;
-    }
+  const handleFilterChange = (
+    targetType: RankingFilterOption['targetType'],
+    rankType: RankingFilterOption['rankType'],
+  ) => {
+    setSelectedTarget(targetType);
+    setSelectedRank(rankType);
+  };
 
-    return <GoodsRankingList goodsList={goodsList} />;
-  }, [isLoading, data, isError]);
+  if (isLoading) return <ErrorMessageContainer>Loading...</ErrorMessageContainer>;
 
   return (
-    <Wrapper>
+    <StyledGoodsRankingSection>
       <Container>
         <Title>실시간 급상승 선물랭킹</Title>
-        <GoodsRankingFilter filterOption={filterOption} onFilterOptionChange={setFilterOption} />
-        <GoodRankingListView />
+        <GoodsRankingFilter onFilterChange={handleFilterChange} />
+        <GoodsRankingList isError={isError} goodsList={data?.products ?? []} />
       </Container>
-    </Wrapper>
+    </StyledGoodsRankingSection>
   );
 };
 
-const Wrapper = styled.section`
-  padding: 0 16px 32px;
-
-  @media screen and (min-width: ${breakpoints.sm}) {
-    padding: 0 16px 80px;
-  }
+const StyledGoodsRankingSection = styled.section`
+  padding: 0px 16px 32px;
 `;
 
 const Title = styled.h2`
@@ -56,19 +50,4 @@ const Title = styled.h2`
   font-size: 20px;
   line-height: 30px;
   font-weight: 700;
-
-  @media screen and (min-width: ${breakpoints.sm}) {
-    text-align: center;
-    font-size: 35px;
-    line-height: 50px;
-  }
-`;
-
-const TextView = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 16px 60px;
-  font-size: 16px;
 `;
