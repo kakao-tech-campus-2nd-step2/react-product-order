@@ -25,9 +25,9 @@
   - [x] 메세지 입력 섹션
   - [x] 선물 내역 섹션
   - 결제 정보 섹션
-    - [ ] 현금영수증
-    - [ ] 최종 결재
-    - [ ] 결재버튼
+    - [x] 현금영수증
+    - [x] 최종 결재
+    - [x] 결재버튼
 - [ ] 상품 상세 데이터 fetch `/api/v1/products/{productId}/detail`, `/api/v1/products/{productId}/options`
 - [ ] 상품 결제 기능 구현 `/api/v1/order` (React의 form, ref, state만 사용)
 - 추가 구현해야할 기능

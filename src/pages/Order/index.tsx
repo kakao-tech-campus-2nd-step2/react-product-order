@@ -1,9 +1,11 @@
 import { css } from '@emotion/css';
 
+import { Button } from '@/components/common/Button';
 import Header from '@/components/features/Header';
 
 import InputMsg from './InputMsg';
 import OrderDetail from './OrderDetail';
+import PaymentInfo from './PaymentInfo';
 
 export default () => {
     return (
@@ -23,7 +25,11 @@ export default () => {
                             quantity={1}
                         />
                     </div>
-                    <div></div>
+                    <div className={layout1}>
+                        {/* TODO price 가져오기 및 적용 */}
+                        <PaymentInfo />
+                        <Button type="submit">1000원 결제하기</Button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -31,8 +37,16 @@ export default () => {
 };
 
 const gridStyle = css`
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    @media (min-width: 768px) {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+`;
+const layout1 = css`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
 `;
 
 const dividerStyle = css`

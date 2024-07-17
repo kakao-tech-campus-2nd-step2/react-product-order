@@ -18,13 +18,15 @@ import Theme from './pages/Theme';
 axios.defaults.baseURL = 'https://react-gift-mock-api-self.vercel.app/api/v1';
 const queryClient = new QueryClient();
 
-const { Button, Input, Textarea } = chakraTheme.components;
+const { Button, Input, Textarea, Select, Checkbox } = chakraTheme.components;
 
 const theme = extendBaseTheme({
     components: {
         Button,
         Input,
         Textarea,
+        Select,
+        Checkbox,
     },
 });
 
