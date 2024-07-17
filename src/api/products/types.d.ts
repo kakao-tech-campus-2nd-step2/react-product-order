@@ -29,25 +29,31 @@ declare namespace Products {
     // };
   }
 
-  interface ProductOptions {
-    options: {
-      productId: number;
-      productName: string;
-      productPrice: number;
-      hasOption: boolean;
-      giftOrderLimit: number;
-      names: [];
-      options: {
-        key: string;
-        value: string;
-        level: number;
-        options: [];
-        id: number;
-        usable: boolean;
-        price: number;
-        stockQuantity: number;
-        unlimitedStockQuantity: false;
-      }[];
-    };
+  interface SmallOption {
+    id: number;
+    key: string;
+    level: number;
+    options: [];
+    price: number;
+    stockQuantity: number;
+    unlimitedStockQuantity: false;
+    usable: boolean;
+    value: string;
   }
+
+  interface ProductOption {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    giftOrderLimit: number;
+    hasOption: boolean;
+    names: string[];
+    options: SmallOption[];
+  }
+
+  interface GetProductOptionsByIdResp {
+    options: ProductOption;
+  }
+
+  // }
 }
