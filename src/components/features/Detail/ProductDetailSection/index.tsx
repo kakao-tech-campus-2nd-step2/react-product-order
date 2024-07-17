@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+import { useAuth } from '@/provider/Auth';
+import { getDynamicPath } from '@/routes/path';
 import { orderLocalStorage } from '@/utils/storage';
 
 interface ProductDetailSectionProps {
@@ -11,6 +13,7 @@ interface ProductDetailSectionProps {
 const ProductDetailSection = ({ productId }: ProductDetailSectionProps) => {
   const { data, isLoading, isError } = useGetProductDetail(productId);
   const [count, setCount] = useState(1);
+  const authInfo = useAuth();
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -30,6 +33,13 @@ const ProductDetailSection = ({ productId }: ProductDetailSectionProps) => {
   const totalPrice = basicPrice * count;
 
   const handleOrder = () => {
+    if (!authInfo) {
+      const isOkToLogin = confirm('로그인이 필요합니다. 로그인 하시겠습니까?');
+      if (!isOkToLogin) return;
+
+      navigate(getDynamicPath.login());
+      return;
+    }
     orderLocalStorage.set({ productId, count });
     navigate('/order');
   };
