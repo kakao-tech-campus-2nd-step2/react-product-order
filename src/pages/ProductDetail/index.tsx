@@ -1,10 +1,11 @@
 import { Box, Button, HStack, Image, Input, Text, useNumberInput, VStack } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { useGetProductDetail } from "@/api/hooks/useGetProductDetail";
 import { Spinner } from "@/components/common/Spinner";
+import { getDynamicPath } from "@/routes/path";
 
 const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -83,7 +84,9 @@ const ProductDetailPage = () => {
             <Text fontSize="xs" fontWeight="bold">총 결제 금액</Text>
             <Text fontSize="2xl" fontWeight="bold">{totalPrice}원</Text>
           </HStack>
-          <Button bg="black" color="white" w="90%" h="50px" fontSize="sm">나에게 선물하기</Button>
+            <Link to={getDynamicPath.order()}>
+            <Button bg="black" color="white" w="90%" h="50px" fontSize="sm">나에게 선물하기</Button>
+            </Link>
         </VStack>
       </HStack>
     </Box>
