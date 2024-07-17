@@ -82,3 +82,14 @@ export type GoodsDetailOptionsData = {
     accessoryValue: string;
   }[];
 };
+
+export type FormData = {
+  cashReceiptNumber: string;
+  cashReceiptType: 'PERSONAL' | 'BUSINESS';
+  hasCashReceipt: boolean;
+  messageCardTextMessage: string;
+  productId: number;
+  productQuantity: number;
+  receiverId: number;
+  senderId: number;
+};
