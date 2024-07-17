@@ -4,11 +4,11 @@ import { useState } from 'react';
 import useProductDetail from '../../../api/hooks/useProductDetail';
 
 interface ProductDetailProps {
-  productKey: string;
+  productId: string;
 }
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ productKey }) => {
-  const productDetail = useProductDetail(productKey);
+const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
+  const productDetail = useProductDetail(productId);
   const [quantity, setQuantity] = useState<number>(1);
 
   if (!productDetail) {
