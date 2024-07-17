@@ -2,7 +2,7 @@ import { Button, Container, Flex, NumberDecrementStepper, NumberIncrementStepper
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { RouterPath } from '@/routes/path';
+import { getDynamicPath } from '@/routes/path';
 import type { GoodsData } from '@/types';
 
 export const ProductOrderSection = (data: GoodsData) => {
@@ -16,7 +16,8 @@ export const ProductOrderSection = (data: GoodsData) => {
   const handleGiftlick = () => {
     const authToken = sessionStorage.getItem('authToken');
 
-    if (!authToken) navigate(RouterPath.login);
+    if (!authToken) navigate(getDynamicPath.login());
+    else navigate(getDynamicPath.order(data.id));
   };
 
   return (
