@@ -41,5 +41,5 @@
 ### 과제 수행 일지
 
 - [0단계](https://www.notion.so/Day-17-36603129a52f4fa59bb99e0009819343?pvs=4#4db2c1d20c5d4b0a8f4722bdd044eb95)
-
-### 궁금한 점
+- [1단계: 초기 세팅 및 상품상세페이지 UI 구현](https://www.notion.so/Day-17-36603129a52f4fa59bb99e0009819343?pvs=4#4726de35512d466a96f6df72649bb9a2)
+- [1단계: 주문페이지 UI 구현 및 api 요청](https://www.notion.so/Day-18-a9bd5597c5ca48dab55074606256190a?pvs=4#479b338777ca406594622b3abbc87b4f)
