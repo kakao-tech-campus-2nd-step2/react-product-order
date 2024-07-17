@@ -12,7 +12,6 @@ import { ProductOrderSection } from '../../components/features/Product/ProductOr
 export const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
 
-  
   const { data, isError, isLoading } = useGetProductDetails(productId!);
   const navigate = useNavigate();
 
@@ -24,12 +23,7 @@ export const ProductDetailPage = () => {
 
   if (isLoading) {
     return (
-      <Flex
-        w='100%'
-        justifyContent='center'
-        alignItems='center'
-        padding='40px 16px 60px'
-      >
+      <Flex w="100%" justifyContent="center" alignItems="center" padding="40px 16px 60px">
         <Spinner />
       </Flex>
     );
@@ -38,18 +32,18 @@ export const ProductDetailPage = () => {
   if (isError) {
     return (
       <Flex
-        w='100%'
-        justifyContent='center'
-        alignItems='center'
-        padding='40px 16px 60px'
-        fontSize='16px'
+        w="100%"
+        justifyContent="center"
+        alignItems="center"
+        padding="40px 16px 60px"
+        fontSize="16px"
       >
         에러가 발생했습니다.
       </Flex>
     );
   }
 
-  if(!data) {
+  if (!data) {
     return null;
   }
 
@@ -57,18 +51,9 @@ export const ProductDetailPage = () => {
   console.log('detail data id: ', data.id);
 
   return (
-    <Center
-      w='100%'
-    >
-      <Flex
-        w='100%'
-        maxW={breakpoints.lg}
-        flexDirection='column'
-      >
-        <Flex
-          w='100%'
-          position='relative'
-        >
+    <Center w="100%">
+      <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
+        <Flex w="100%" position="relative">
           <ProductDetailSection {...data} />
           <ProductOrderSection {...data} />
         </Flex>

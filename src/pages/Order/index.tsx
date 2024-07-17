@@ -12,16 +12,11 @@ export const OrderPage = () => {
   const location = useLocation();
   const quantity = location.state?.quantity ?? 1;
 
-  const {data, isError, isLoading} = useGetProductDetails(productId!);
+  const { data, isError, isLoading } = useGetProductDetails(productId!);
 
   if (isLoading) {
     return (
-      <Flex
-        w='100%'
-        justifyContent='center'
-        alignItems='center'
-        padding='40px 16px 60px'
-      >
+      <Flex w="100%" justifyContent="center" alignItems="center" padding="40px 16px 60px">
         <Spinner />
       </Flex>
     );
@@ -30,64 +25,46 @@ export const OrderPage = () => {
   if (isError) {
     return (
       <Flex
-        w='100%'
-        justifyContent='center'
-        alignItems='center'
-        padding='40px 16px 60px'
-        fontSize='16px'
+        w="100%"
+        justifyContent="center"
+        alignItems="center"
+        padding="40px 16px 60px"
+        fontSize="16px"
       >
         에러가 발생했습니다.
       </Flex>
     );
   }
 
-  if(!data) {
+  if (!data) {
     return null;
   }
 
   return (
-      <Box w='100%'>
-        <Flex
-          w='100%'
-          justifyContent='center'
-          alignItems='center'
-        >
-          <Flex
-            w='100%'
-            maxW={breakpoints.lg}
-            flexDirection='column'
-          >
-            <Flex
-              w='100%'
-              position='relative'
+    <Box w="100%">
+      <Flex w="100%" justifyContent="center" alignItems="center">
+        <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
+          <Flex w="100%" position="relative">
+            <Box as="main" w="100%" maxW="900px">
+              <Box borderLeft="1px solid rgb(229, 229, 229)" h="calc(-54px + 100vh)">
+                <MessageSection />
+                <Box w="100%" backgroundColor="rgb(237, 237, 237)" h="8px" />
+                <GiftInfoSection data={data} quantity={quantity} />
+              </Box>
+            </Box>
+            <Box
+              as="aside"
+              position="sticky"
+              top="54px"
+              w="100%"
+              maxW="360px"
+              h="calc(-54px + 100vh)"
             >
-              <Box
-                as='main'
-                w='100%'
-                maxW='900px'
-              >
-                <Box
-                  borderLeft='1px solid rgb(229, 229, 229)'
-                  h='calc(-54px + 100vh)'
-                >
-                  <MessageSection />
-                  <Box w='100%' backgroundColor='rgb(237, 237, 237)' h='8px' />
-                  <GiftInfoSection data={data} quantity={quantity} />
-                </Box>
-              </Box>
-              <Box
-                as='aside'
-                position='sticky'
-                top='54px'
-                w='100%'
-                maxW='360px'
-                h='calc(-54px + 100vh)'
-              >
-                <PaymentInfoSection price={data.price.sellingPrice * quantity} />
-              </Box>
-            </Flex>
+              <PaymentInfoSection price={data.price.sellingPrice * quantity} />
+            </Box>
           </Flex>
         </Flex>
-      </Box>
+      </Flex>
+    </Box>
   );
 };
