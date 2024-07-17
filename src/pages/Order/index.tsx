@@ -3,7 +3,10 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
+import LoadingUI from '@/components/common/LoadingUI';
 import Header from '@/components/features/Header';
+import type { ProductDetailData } from '@/entities/Product';
+import useData from '@/hooks/useData';
 import { orderHistoryStorage } from '@/lib/storage';
 
 import InputMsg from './InputMsg';
@@ -13,16 +16,21 @@ import PaymentInfo from './PaymentInfo';
 export default () => {
     const orderHistory = orderHistoryStorage.get();
     const navigate = useNavigate();
+    const productDetail = useData<ProductDetailData>(`/products/${orderHistory?.productId}/detail`);
 
     useEffect(() => {
         if (!orderHistory) {
             alert('주문 내역이 없습니다.');
             navigate('/', { replace: true });
+            return;
         }
-    }, [navigate, orderHistory]);
+        if (productDetail?.httpStatusCode !== 200)
+            navigate(`/error/${productDetail?.httpStatusCode}/order`, { replace: true });
+    }, [navigate, orderHistory, productDetail?.httpStatusCode]);
 
     if (!orderHistory) return <div></div>;
-    // TODO fetch data
+
+    if (productDetail?.isLoading) return <LoadingUI />;
     // TODO post data 이후 orderHIstory 삭제
     return (
         <div>
@@ -33,19 +41,24 @@ export default () => {
                         <InputMsg />
                         <div className={dividerStyle} />
                         <OrderDetail
-                            imageURL={
-                                'https://st.kakaocdn.net/product/gift/product/20230823153529_37aa37bcef074955ab6548f7fc799c18.jpg'
-                            }
-                            productName={'product'}
-                            brandName={'brand'}
+                            imageURL={productDetail!.data!.detail.imageURL}
+                            productName={productDetail!.data!.detail.name}
+                            brandName={productDetail!.data!.detail.brandInfo.name}
                             quantity={orderHistory!.productQuantity}
                         />
                     </div>
                     <div className={layout1}>
                         {/* TODO price 가져오기 및 적용 */}
-                        <PaymentInfo price={1000 * orderHistory!.productQuantity} />
+                        <PaymentInfo
+                            price={
+                                productDetail!.data!.detail.price.sellingPrice *
+                                orderHistory!.productQuantity
+                            }
+                        />
                         <Button type="submit">
-                            {1000 * orderHistory!.productQuantity}원 결제하기
+                            {productDetail!.data!.detail.price.sellingPrice *
+                                orderHistory!.productQuantity}
+                            원 결제하기
                         </Button>
                     </div>
                 </div>

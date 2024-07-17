@@ -17,6 +17,31 @@ export interface ProductData {
         imageURL: string;
     }
 }
+interface ProductDetail extends ProductData {
+    isAccessableProductPage: boolean;
+    review: {
+        averageRating: number;
+        totalReviewCount: number;
+    }
+    productDescription: {
+        images: string[];
+    }
+    productDetailInfo: {
+        announcements: {
+            displayOrder: number;
+            name: string;
+            value: string;
+        }[]
+        terms: {
+            displayOrder: number;
+            title: string;
+            description: string;
+        }[]
+    }
+}
+export interface ProductDetailData {
+    detail: ProductDetail;
+}
 
 export interface RankedProducts {
     products: ProductData[];

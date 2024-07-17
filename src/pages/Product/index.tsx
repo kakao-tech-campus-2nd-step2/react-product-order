@@ -1,11 +1,14 @@
 import { css } from '@emotion/css';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import NumberField from '@/components/common/Form/Input/NumberField';
+import LoadingUI from '@/components/common/LoadingUI';
 import Header from '@/components/features/Header';
 import AuthContext from '@/context/AuthContext';
+import type { ProductDetailData } from '@/entities/Product';
+import useData from '@/hooks/useData';
 import { orderHistoryStorage } from '@/lib/storage';
 
 import ProductDetail from './ProductDetail';
@@ -15,8 +18,8 @@ export default () => {
     const { isAuthenticated } = useContext(AuthContext);
     const { productId } = useParams();
     const navigate = useNavigate();
-    //TODO fetch data
-    const price = 1000;
+    const productDetail = useData<ProductDetailData>(`/products/${productId}/detail`);
+
     const [count, setCount] = useState<number>(1);
     const onClick = () => {
         if (!isAuthenticated) {
@@ -28,6 +31,11 @@ export default () => {
         orderHistoryStorage.set({ productId: Number(productId), productQuantity: count });
         navigate('/order');
     };
+    useEffect(() => {
+        if (productDetail?.httpStatusCode !== 200) navigate('/');
+    }, [productDetail?.httpStatusCode, navigate]);
+
+    if (productDetail?.isLoading) return <LoadingUI />;
 
     return (
         <div>
@@ -35,9 +43,9 @@ export default () => {
             <div className={layout}>
                 <section>
                     <ProductDetail
-                        imageURL="https://st.kakaocdn.net/product/gift/product/20230823153529_37aa37bcef074955ab6548f7fc799c18.jpg"
-                        productName={'product name'}
-                        price={price}
+                        imageURL={productDetail!.data!.detail.imageURL}
+                        productName={productDetail!.data!.detail.name}
+                        price={productDetail!.data!.detail.price.sellingPrice}
                     />
                 </section>
                 <section className={purchaseLayout}>
@@ -48,7 +56,7 @@ export default () => {
                     <div>
                         <PriceBox>
                             <p>총 결제 금액</p>
-                            <p>{price * count}원</p>
+                            <p>{productDetail!.data!.detail.price.sellingPrice * count}원</p>
                         </PriceBox>
                         <Button theme="black" onClick={onClick}>
                             나에게 선물하기

@@ -38,6 +38,7 @@ export default ({ showMoreDetail, targetType, rankType }: Props) => {
                         subtitle={item.brandInfo.name}
                         title={item.name}
                         amount={item.price.sellingPrice}
+                        onClick={() => navigate(`/products/${item.id}`)}
                     />
                 ))}
         </Grid>
