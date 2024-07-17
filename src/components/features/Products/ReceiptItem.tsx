@@ -1,12 +1,14 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { Box, HStack, IconButton, Input, Text, useNumberInput } from '@chakra-ui/react';
 
-export interface IOptionItem {
+import { Price } from '@/components/features/Products/Price';
+
+export interface IReceiptItem {
   name: string;
   minValues?: number;
   maxValues?: number;
   value: number;
-  onChange: (price: number, value: string) => void;
+  onChange: (name: string, value: string) => void;
 }
 
 export const ReceiptItem = ({
@@ -15,14 +17,14 @@ export const ReceiptItem = ({
   maxValues = 100,
   value,
   onChange,
-}: IOptionItem) => {
+}: IReceiptItem) => {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
     min: minValues,
     max: maxValues,
     defaultValue: 1,
     onChange: (cntStr) => {
-      onChange(value, cntStr);
+      onChange(name, cntStr);
     },
   });
 
@@ -41,6 +43,7 @@ export const ReceiptItem = ({
       >
         {name}
       </Text>
+      <Price price={value} />
       <HStack justifyContent="center" pt="8px" spacing="8px">
         <IconButton {...decrement} aria-label="수량 1개 감소" icon={<MinusIcon />} />
         <Input {...input} />
