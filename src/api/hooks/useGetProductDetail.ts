@@ -39,14 +39,12 @@ export const getProductDetail = async (productId: string) => {
   return response.data;
 };
 
-export const useGetProductDetail = (productId: string | undefined) => {
-  if (!productId) {
-    productId = '';
-  }
-
+export const useGetProductDetail = (productId: string) => {
   return useQuery({
-    queryKey: productDetailQueryKey(productId as string),
-    queryFn: () => getProductDetail(productId as string),
-    enabled: !!productId,
+    queryKey: productDetailQueryKey(productId),
+    queryFn: async () => {
+      const res = await getProductDetail(productId as string);
+      return res;
+    },
   });
 };
