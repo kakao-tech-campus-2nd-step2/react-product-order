@@ -5,6 +5,7 @@ import {
 } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
+import { useAuth } from '@/provider/Auth';
 import { useNavigate } from 'react-router-dom';
 import { getDynamicPath } from '@/routes/path';
 
@@ -13,9 +14,16 @@ type Props = {
 };
 
 export const ProductOption = ({ productId }: Props) => {
+  const auth = useAuth();
   const navigate = useNavigate();
+
   const btnClickedHandler = () => {
-    navigate(getDynamicPath.productOption(productId));
+    console.log(auth);
+    if (auth === undefined) {
+      navigate(getDynamicPath.login());
+    } else {
+      navigate(getDynamicPath.productOption(productId));
+    }
   }
 
   return (
