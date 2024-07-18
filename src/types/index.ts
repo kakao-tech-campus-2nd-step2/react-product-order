@@ -59,3 +59,13 @@ export type ProductDetail = GoodsData & {
 export type ProductDetailResponse = {
   detail: ProductDetail;
 };
+
+export type ProductOption = {
+  id: number;
+  name: string;
+  additionalPrice: number;
+};
+
+export type ProductOptionsResponse = {
+  options: ProductOption[];
+};

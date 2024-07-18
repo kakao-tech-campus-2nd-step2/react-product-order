@@ -5,6 +5,8 @@ import {
   HStack,
   IconButton,
   Input,
+  Radio,
+  RadioGroup,
   Spacer,
   Text,
   useNumberInput,
@@ -13,23 +15,24 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type { ProductDetail } from '@/types';
+import type { ProductDetail, ProductOption } from '@/types';
 import { authSessionStorage } from '@/utils/storage';
 
 interface Props {
   product: ProductDetail;
+  productOptions: ProductOption[];
 }
 
-export const ProductOptionsSection = ({ product }: Props) => {
+export const ProductOptionsSection = ({ product, productOptions }: Props) => {
   const [quantity, setQuantity] = useState<number>(1);
-  const { name, price } = product;
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
     defaultValue: 1,
     min: 1,
-    onChange: (_valueAsString, valueAsNumber) => setQuantity(valueAsNumber),
+    onChange: (_valueAsString: string, valueAsNumber: number) => setQuantity(valueAsNumber),
   });
 
   const inc = getIncrementButtonProps();
@@ -46,12 +49,26 @@ export const ProductOptionsSection = ({ product }: Props) => {
     }
   };
 
+  const totalPrice =
+    product.price.sellingPrice * quantity +
+    (selectedOption
+      ? productOptions.find((option) => option.id === selectedOption)?.additionalPrice || 0
+      : 0);
+
   return (
     <VStack>
       <Box border="1px" borderColor="blackAlpha.100" p={4}>
         <Text fontSize="md" as="b">
-          {name}
+          {product.name}
         </Text>
+        <RadioGroup onChange={(value) => setSelectedOption(Number(value))}>
+          {Array.isArray(productOptions) &&
+            productOptions.map((option) => (
+              <Radio key={option.id} value={option.id.toString()}>
+                {option.name} (+{option.additionalPrice}원)
+              </Radio>
+            ))}
+        </RadioGroup>
         <HStack mt={2}>
           <IconButton aria-label="Add" icon={<MinusIcon />} {...dec} />
           <Input {...input} width="100%" />
@@ -72,7 +89,7 @@ export const ProductOptionsSection = ({ product }: Props) => {
           총 결제 금액
         </Text>
         <Text fontSize="xl" as="b">
-          {price.sellingPrice * quantity}원
+          {totalPrice}원
         </Text>
       </Box>
       <Button

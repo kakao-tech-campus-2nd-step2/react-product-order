@@ -3,15 +3,17 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import { ProductOptionsSection } from '@/components/features/ProductDetail/ProductOptionsSection';
 import { ProductOverviewSection } from '@/components/features/ProductDetail/ProductOverViewSection';
-import { useCurrentProduct } from '@/hooks/useCurrentProduct';
+import { useProductDetail } from '@/hooks/useProductDetail';
+import { useProductOptions } from '@/hooks/useProductOptions';
 import { RouterPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
 
 export const ProductDetailPage = () => {
   const { productId = '' } = useParams<{ productId: string }>();
-  const { isRender, currentProduct } = useCurrentProduct({ productId });
+  const { isRender: isDetailRender, currentProduct } = useProductDetail({ productId });
+  const { isRender: isOptionsRender, productOptions } = useProductOptions({ productId });
 
-  if (!isRender) return null;
+  if (!isDetailRender || !isOptionsRender) return null;
 
   if (!currentProduct) {
     return <Navigate to={RouterPath.home} />;
@@ -20,7 +22,7 @@ export const ProductDetailPage = () => {
   return (
     <Wrapper>
       <ProductOverviewSection product={currentProduct} />
-      <ProductOptionsSection product={currentProduct} />
+      <ProductOptionsSection product={currentProduct} productOptions={productOptions} />
     </Wrapper>
   );
 };
