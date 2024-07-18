@@ -11,9 +11,9 @@ import NumberInputWithButtons from './NumberInputWithButtons';
 type Props = GoodsDetailRequestParams;
 
 export const GoodsHeaderSection = ({ productId }: Props) => {
-  const { loading, error, data } = useGetGoodsDetail({ productId });
+  const { isLoading, error, data } = useGetGoodsDetail({ productId });
 
-  if (loading) {
+  if (isLoading) {
     return <div>로딩 중</div>;
   }
 

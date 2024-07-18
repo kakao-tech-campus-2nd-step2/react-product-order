@@ -22,7 +22,7 @@ export const getGoodsDetail = async (params: GoodsDetailRequestParams) => {
 };
 
 export const useGetGoodsDetail = ({ productId }: GoodsDetailRequestParams) => {
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState<GoodsData | null>(null);
 
@@ -42,5 +42,5 @@ export const useGetGoodsDetail = ({ productId }: GoodsDetailRequestParams) => {
     fetchData();
   }, [productId]);
 
-  return { loading, error, data };
+  return { isLoading, error, data };
 };
