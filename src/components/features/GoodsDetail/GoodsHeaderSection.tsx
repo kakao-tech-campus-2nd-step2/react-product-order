@@ -1,29 +1,37 @@
 import styled from '@emotion/styled';
 
+import type { GoodsDetailRequestParams } from '@/api/hooks/useGetProductsDetail';
+import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
 import { Image } from '@/components/common/Image';
 import { PaymentInfo } from '@/components/features/GoodsDetail/PaymentInfo';
 import { breakpoints } from '@/styles/variants';
 
 import NumberInputWithButtons from './NumberInputWithButtons';
 
-export const GoodsHeaderSection = () => {
-  const product = {
-    image:
-      'https://st.kakaocdn.net/product/gift/product/20231113112031_0bbb5618d41a4b758340af1df0ff4183.jpg',
-    label: '"말랑 쫀득 꿀잠 선물" 허그 오리 모찌 인형 /애착 쿠션 35cm',
-    price: 9900,
-  };
+type Props = GoodsDetailRequestParams;
+
+export const GoodsHeaderSection = ({ productId }: Props) => {
+  const { loading, error, data } = useGetGoodsDetail({ productId });
+
+  if (loading) {
+    return <div>로딩 중</div>;
+  }
+
+  if (error || !data) {
+    return <div>에러</div>;
+  }
+  console.log(data);
 
   return (
     <StyledDiv>
-      <GoodsThumnailImage src={product.image} alt={product.label} />
+      <GoodsThumnailImage src={data.imageURL} alt={data.name} />
       <SimpleInfoWrapper>
-        <GoodsTitle>{product.label}</GoodsTitle>
-        <GoodsPrice>{`${product.price}원`}</GoodsPrice>
+        <GoodsTitle>{data.name}</GoodsTitle>
+        <GoodsPrice>{`${data.price.basicPrice}원`}</GoodsPrice>
         <GiftDescription>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</GiftDescription>
       </SimpleInfoWrapper>
       <PaymentInfoWrapper>
-        <NumberInputWithButtons label={product.label} />
+        <NumberInputWithButtons label={data.name} />
         <PaymentInfo />
       </PaymentInfoWrapper>
     </StyledDiv>

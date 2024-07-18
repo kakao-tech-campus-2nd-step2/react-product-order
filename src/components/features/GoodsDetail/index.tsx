@@ -1,14 +1,17 @@
 import styled from '@emotion/styled';
 
+import type { GoodsDetailRequestParams } from '@/api/hooks/useGetProductsDetail';
 import { Container } from '@/components/common/layouts/Container';
 import { breakpoints } from '@/styles/variants';
 
 import { GoodsHeaderSection } from './GoodsHeaderSection';
 
-export const GoodsDetail = () => {
+type Props = GoodsDetailRequestParams;
+
+export const GoodsDetail = ({ productId }: Props) => {
   return (
     <Wrapper>
-      <GoodsHeaderSection />
+      <GoodsHeaderSection productId={productId} />
     </Wrapper>
   );
 };
