@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { OrderListWithMessage } from '@/components/features/Order/organisms/OrderListWithMessage';
@@ -11,11 +12,27 @@ export const OrderPage = () => {
   const { state } = location;
   const { defaultKey, cntMap, totalPrice } = state;
   const currentProduct = cntMap.get(defaultKey);
-  console.log(message, currentProduct, totalPrice);
+  const cacheReceiptRefs = [useRef<HTMLSelectElement>(null), useRef<HTMLInputElement>(null)];
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(message);
+    console.log(totalPrice);
+    console.log(cntMap);
+    cacheReceiptRefs.forEach((ref) => {
+      if (!(ref && ref?.current)) {
+        return;
+      }
+      console.log(ref?.current?.value);
+    });
+  };
+
   return (
-    <ProductTemplate
-      leftMain={<OrderListWithMessage setMessage={setMessage} orderList={[currentProduct]} />}
-      rightSide={<OrderReceipt totalPrice={totalPrice} />}
-    />
+    <form onSubmit={onSubmit}>
+      <ProductTemplate
+        leftMain={<OrderListWithMessage setMessage={setMessage} orderList={[currentProduct]} />}
+        rightSide={<OrderReceipt cacheReceiptRefs={cacheReceiptRefs} totalPrice={totalPrice} />}
+      />
+    </form>
   );
 };
