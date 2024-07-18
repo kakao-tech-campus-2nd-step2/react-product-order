@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 import { Image } from '@/components/common/Image';
 
@@ -7,6 +8,7 @@ export type DefaultGoodsItemsProps = {
   subtitle: string;
   title: string;
   amount: number;
+  productId: number;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const DefaultGoodsItems = ({
@@ -14,10 +16,12 @@ export const DefaultGoodsItems = ({
   subtitle,
   title,
   amount,
+  productId,
   ...props
 }: DefaultGoodsItemsProps) => {
   return (
     <Wrapper {...props}>
+      <Link to={`/product/${productId}`}>
       <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
       <InfoWrapper>
         <Subtitle>{subtitle}</Subtitle>
@@ -27,6 +31,7 @@ export const DefaultGoodsItems = ({
           <span>원</span>
         </Amount>
       </InfoWrapper>
+      </Link>
     </Wrapper>
   );
 };
