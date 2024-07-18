@@ -54,3 +54,15 @@ export type GoodsDataDetail = {
     };
   };
 };
+
+export type GoodsDataOptions = {
+  options: {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    hasOption: boolean;
+    giftOrderLimit: number;
+    names: [];
+    options: [];
+  };
+};

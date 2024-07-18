@@ -2,10 +2,12 @@ import { Box, Image, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Container } from 'src/components/common/layouts/Container';
 
 import { fetchInstance } from '@/api/instance';
+import { useAuth } from '@/provider/Auth';
+import { RouterPath } from '@/routes/path';
 import type { GoodsDataDetail } from '@/types';
 
 const fetchGoodsDetail = async (productId: string | undefined) => {
@@ -16,6 +18,9 @@ const fetchGoodsDetail = async (productId: string | undefined) => {
 };
 
 export const GoodsDetail = () => {
+  const navigate = useNavigate();
+  const authInfo = useAuth();
+
   const { productId } = useParams();
   const { data } = useQuery({
     queryKey: ['GoodsDetail', productId],
@@ -30,6 +35,23 @@ export const GoodsDetail = () => {
     const newCount = Number(e.target.value);
     if (isNaN(newCount) || newCount < 0) return;
     setCount(newCount);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!authInfo) {
+      if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
+        navigate(`${RouterPath.login}`);
+      }
+    } else {
+      navigate(`${RouterPath.order}`, {
+        state: {
+          data,
+          count,
+          price,
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -65,7 +87,7 @@ export const GoodsDetail = () => {
           </Box>
         </ArticleWrapper>
       </LeftContainer>
-      <RightContainer width="100%" maxW="360px" height="856px">
+      <RightContainer>
         <Box
           width="100%"
           height="100%"
@@ -98,7 +120,7 @@ export const GoodsDetail = () => {
               <Text>총 결제 금액</Text>
               <Text fontWeight="700">{price}</Text>
             </PriceBox>
-            <GiveButton>나에게 선물하기</GiveButton>
+            <GiveButton onClick={handleSubmit}>나에게 선물하기</GiveButton>
           </SubmitBox>
         </Box>
       </RightContainer>
@@ -112,6 +134,9 @@ const LeftContainer = styled(Box)`
 
 const RightContainer = styled(Box)`
   padding: 30px 12px 30px 30px;
+  width: 100%;
+  max-width: 360px;
+  height: 856px;
 `;
 
 const ArticleWrapper = styled.div`
