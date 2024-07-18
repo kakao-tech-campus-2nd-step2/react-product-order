@@ -1,8 +1,9 @@
 import { Box, Button, Flex, Heading, HStack, Image, Input, Spinner, Text, VStack } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+import { useAuth } from '@/provider/Auth';
 
 import { Header } from '../Layout/Header';
 
@@ -13,9 +14,12 @@ type ProductDetailParams = {
 const ProductDetail: React.FC = () => {
   const { id } = useParams<ProductDetailParams>();
   const productId = Number(id);
+  const navigate = useNavigate(); 
+  const authInfo = useAuth(); 
 
   const { data, isLoading, isError } = useGetProductDetail(productId);
   const [quantity, setQuantity] = useState(1);
+  const quantityInputRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) return <Spinner />;
   if (isError) return <Text>에러가 발생했습니다.</Text>;
@@ -23,6 +27,14 @@ const ProductDetail: React.FC = () => {
 
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => Math.max(1, prev - 1));
+
+  const handleGiftClick = () => {
+    if (!authInfo) {
+      navigate('/login');
+    } else {
+      alert('선물하기 기능 실행'); // 임시코드
+    }
+  };
 
   return (
     <Box>
@@ -46,6 +58,7 @@ const ProductDetail: React.FC = () => {
           <HStack>
             <Button onClick={handleDecrease} size="sm">-</Button>
             <Input 
+              ref={quantityInputRef}
               value={quantity} 
               readOnly 
               textAlign="center" 
@@ -58,7 +71,7 @@ const ProductDetail: React.FC = () => {
           <Text fontSize="xl" fontWeight="bold">총 결제 금액</Text>
           <Text fontSize="xl" fontWeight="bold">{data.price.sellingPrice * quantity}원</Text>
         </HStack>
-        <Button mt={5} bg="yellow.400" color="black" width="full" _hover={{ bg: 'yellow.500' }}>
+        <Button mt={5} bg="yellow.400" color="black" width="full" _hover={{ bg: 'yellow.500' }} onClick={handleGiftClick}>
           나에게 선물하기
         </Button>
       </Box>
