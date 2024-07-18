@@ -1,6 +1,10 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { IconButton, Input, useNumberInput, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '@/provider/Auth';
+import { getDynamicPath, RouterPath } from '@/routes/path';
 
 interface PaymentInfoProps {
   label: string;
@@ -16,6 +20,29 @@ const PaymentInfo = ({ label }: PaymentInfoProps) => {
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
+  const navigate = useNavigate();
+  const authInfo = useAuth();
+
+  const handleLogin = () => {
+    navigate(getDynamicPath.login());
+  };
+
+  const handleOrder = () => {
+    navigate(RouterPath.order);
+  };
+
+  const handleGiftBtnClick = () => {
+    if (!authInfo) {
+      const userConfirmed = window.confirm(
+        '로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?',
+      );
+      if (userConfirmed) {
+        handleLogin();
+      }
+    } else {
+      handleOrder();
+    }
+  };
 
   return (
     <>
@@ -29,7 +56,7 @@ const PaymentInfo = ({ label }: PaymentInfoProps) => {
       </VStack>
       <Wrapper>
         <TotalPrice>총 결제 금액</TotalPrice>
-        <GiftForMeButton>나에게 선물하기</GiftForMeButton>
+        <GiftForMeButton onClick={handleGiftBtnClick}>나에게 선물하기</GiftForMeButton>
       </Wrapper>
     </>
   );
