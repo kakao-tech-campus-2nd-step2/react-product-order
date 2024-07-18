@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import type { GoodsDetailRequestParams } from '@/api/hooks/useGetProductsDetail';
 import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
 import { Image } from '@/components/common/Image';
+import { Spinner } from '@/components/common/Spinner';
 import { PaymentInfo } from '@/components/features/GoodsDetail/PaymentInfo';
 import { breakpoints } from '@/styles/variants';
 
@@ -14,11 +15,15 @@ export const GoodsHeaderSection = ({ productId }: Props) => {
   const { isLoading, error, data } = useGetGoodsDetail({ productId });
 
   if (isLoading) {
-    return <div>로딩 중</div>;
+    return (
+      <TextView>
+        <Spinner />
+      </TextView>
+    );
   }
 
   if (error || !data) {
-    return <div>에러</div>;
+    return <TextView>에러가 발생했습니다.</TextView>;
   }
   console.log(data);
 
@@ -106,4 +111,13 @@ const PaymentInfoWrapper = styled.div`
   flex-direction: column;
   -webkit-box-pack: justify;
   justify-content: space-between;
+`;
+
+const TextView = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px 60px;
+  font-size: 16px;
 `;
