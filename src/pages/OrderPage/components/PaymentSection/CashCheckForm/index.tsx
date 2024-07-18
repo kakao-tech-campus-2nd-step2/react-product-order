@@ -1,9 +1,8 @@
+import { Checkbox, Input, Select } from '@chakra-ui/react';
+
 import { OrderFormType } from '@/types/orderType';
 
-import { Checkbox } from '@/components/ui/Input/Checkbox';
-import { Input } from '@/components/ui/Input/Default';
 import { Container } from '@/components/ui/Layout/Container';
-import { Select } from '@/components/ui/Select';
 import { Text } from '@/components/ui/Text';
 
 type CashCheckFormProps = {
@@ -19,16 +18,12 @@ export const CashCheckForm = ({
 }: CashCheckFormProps) => {
   return (
     <Container flexDirection="column" gap="1rem">
-      <>
-        <Checkbox
-          id="cashCheck"
-          checked={formData.isCashChecked}
-          onChange={() => handleCheckboxChange('isCashChecked')}
-        />
-        <label htmlFor="cashCheck">
-          <Text isBold>현금영수증 신청</Text>
-        </label>
-      </>
+      <Checkbox
+        size="lg"
+        onChange={() => handleCheckboxChange('isCashChecked')}
+      >
+        <Text isBold>현금영수증 신청</Text>
+      </Checkbox>
       <Container flexDirection="column" gap="0.5rem">
         <Select
           value={formData.cashReceiptType}
@@ -38,7 +33,6 @@ export const CashCheckForm = ({
           <option value="사업자증빙용">사업자증빙용</option>
         </Select>
         <Input
-          type="text"
           placeholder="(-없이) 숫자만 입력해주세요."
           value={formData.cashReceiptNumber}
           onChange={(e) =>

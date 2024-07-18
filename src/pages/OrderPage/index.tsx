@@ -18,7 +18,7 @@ export const OrderPage = () => {
 
   return (
     <BaseLayout>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <Content height="92vh" maxWidth="1280px">
           <Divider direction="vertical" />
           <GiftSection

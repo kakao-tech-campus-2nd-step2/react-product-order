@@ -21,13 +21,12 @@
 - 상품 상세 페이지
 
   - [x] Icon Button
-  - [x] Number Input
+  - [x] Input
 
 - 주문하기 페이지
 
-  - [ ] Form Control
-  - [ ] Checkbox
-  - [ ] Select
-  - [ ] Input
+  - [x] Checkbox
+  - [x] Select
+  - [x] Input
 
 - [ ] Alert Dialog
