@@ -51,6 +51,7 @@ export const GoodsDetail = () => {
     if (count <= orderLimit) {
       setCount(newCount);
     } else {
+      setCount(orderLimit);
       alert(`최대 가능 주문 수량은 ${orderLimit}입니다.`);
     }
   };
