@@ -12,12 +12,15 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useGetProductOptions } from '@/api/hooks/useGetProductOptions';
 import { getDynamicPath } from '@/routes/path';
 import type { GoodsData } from '@/types';
 
-export const ProductOrderSection = (data: GoodsData) => {
+export const ProductOrderSection = (ProductData: GoodsData) => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+
+  const { data: options } = useGetProductOptions(ProductData.id.toString());
 
   const handleQuantityChange = (value: string) => {
     setQuantity(parseInt(value));
@@ -29,7 +32,7 @@ export const ProductOrderSection = (data: GoodsData) => {
     if (!authToken) {
       navigate(getDynamicPath.login());
     } else {
-      navigate(getDynamicPath.order(data.id), { state: { quantity } });
+      navigate(getDynamicPath.order(ProductData.id), { state: { quantity } });
     }
   };
 
@@ -62,14 +65,14 @@ export const ProductOrderSection = (data: GoodsData) => {
             overflowWrap="break-word"
             wordBreak="break-all"
           >
-            {data.name}
+            {ProductData.name}
           </Text>
           <Flex justifyContent="center" paddingTop="8px" gap="8px">
             <NumberInput
               w="100%"
               defaultValue={1}
               min={1}
-              max={100}
+              max={options?.giftOrderLimit}
               onChange={handleQuantityChange}
             >
               <NumberInputField />
@@ -94,7 +97,7 @@ export const ProductOrderSection = (data: GoodsData) => {
           >
             총 결제 금액
             <Text fontSize="20px" fontWeight={700} lineHeight="14px" color="rgb(17, 17, 17)">
-              {data.price.sellingPrice * quantity}원
+              {ProductData.price.sellingPrice * quantity}원
             </Text>
           </Flex>
           <Button

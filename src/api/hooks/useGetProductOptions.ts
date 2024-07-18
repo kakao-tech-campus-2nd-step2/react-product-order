@@ -1,9 +1,9 @@
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { UseQueryResult } from "@tanstack/react-query";
 import { useQuery } from '@tanstack/react-query';
 
-import type { OptionData } from '@/types';
+import type { OptionData } from "@/types";
 
-import { fetchInstance } from '../instance';
+import { fetchInstance } from "../instance";
 
 type RequestParams = {
   productId: string;
