@@ -17,10 +17,30 @@ export const Order = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const message = formData.get('message');
+    const message = formData.get('message')?.toString();
     const cashReceipts = formData.get('cash_receipts') ? true : false;
     const select = formData.get('select');
     const phone = formData.get('phone');
+
+    if (message === '') {
+      alert('메시지를 입력하세요.');
+      return;
+    }
+    if (message && message.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      return;
+    }
+    if (cashReceipts) {
+      if (!phone) {
+        alert('전화번호를 입력해주세요.');
+        return;
+      } else {
+        if (!Number(phone)) {
+          alert('전화번호는 숫자만 입력해주세요.');
+          return;
+        }
+      }
+    }
     console.log(message, cashReceipts, select, phone);
   };
   return (
