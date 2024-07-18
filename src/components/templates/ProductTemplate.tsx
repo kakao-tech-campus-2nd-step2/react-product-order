@@ -2,8 +2,8 @@ import { Flex } from '@chakra-ui/react';
 import type { ReactElement } from 'react';
 
 import { Container } from '@/components/common/layouts/Container';
+import { Sidebar } from '@/components/common/SideBar';
 import { HEADER_HEIGHT } from '@/components/features/Layout/Header';
-import { Sidebar } from '@/components/features/Products/SideBar';
 
 export interface IProductOrderTemplate {
   leftMain: ReactElement;
