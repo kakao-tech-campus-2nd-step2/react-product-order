@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useGetDetail } from '@/api/hooks/useGetProductDetail';
+import { useGetOption } from '@/api/hooks/useGetProductOptions';
 import { Image } from '@/components/common/Image';
 import { Container } from '@/components/common/layouts/Container';
 import { Spinner } from '@/components/common/Spinner';
@@ -19,8 +20,8 @@ export const DetailPage = () => {
   }, [setQuantity]);
   const params = useParams();
 
-  const { data, error, isLoading } = useGetDetail(params.productKey!);
-
+  const { data: detailData, error, isLoading } = useGetDetail(params.productKey!);
+  const { data: optionData } = useGetOption(params.productKey!);
   if (isLoading)
     return (
       <View>
@@ -30,7 +31,7 @@ export const DetailPage = () => {
 
   if (error) return <div>에러입니다.</div>;
 
-  if (!data) return <></>;
+  if (!detailData) return <></>;
   return (
     <Container
       flexDirection="row"
@@ -38,10 +39,10 @@ export const DetailPage = () => {
       justifyContent="center"
       style={{ marginTop: 30 }}
     >
-      <Image src={data.imageURL} width={450} />
-      <ProductDescript name={data.name} price={data.price.sellingPrice} />
+      <Image src={detailData.imageURL} width={450} />
+      <ProductDescript name={detailData.name} price={detailData.price.sellingPrice} />
       <Wrapper>
-        <QuantitySetting name={data.name} />
+        <QuantitySetting name={detailData.name} giftOrderLimit={optionData?.giftOrderLimit} />
         <TotalPrice />
       </Wrapper>
     </Container>

@@ -20,6 +20,10 @@ const Wrapper = styled.button<Pick<Props, 'theme' | 'size'>>(
     alignItems: 'center',
     cursor: 'pointer',
     transition: 'background-color 200ms',
+    '&:disabled': {
+      cursor: 'not-allowed',
+      opacity: 0.4,
+    },
   },
   ({ size = 'responsive' }) => {
     const largeStyle = {

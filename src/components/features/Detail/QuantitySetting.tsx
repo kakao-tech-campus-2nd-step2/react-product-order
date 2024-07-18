@@ -6,8 +6,9 @@ import { Button } from '@/components/common/Button';
 import { useBuyInfo } from '@/provider/BuyInfo';
 type Props = {
   name: string;
+  giftOrderLimit: number;
 };
-export const QuantitySetting = ({ name }: Props) => {
+export const QuantitySetting = ({ name, giftOrderLimit }: Props) => {
   const { quantity, setQuantity } = useBuyInfo();
 
   const handleMinusClick = () => {
@@ -23,7 +24,7 @@ export const QuantitySetting = ({ name }: Props) => {
     <Container>
       <Title>{name}</Title>
       <Wrapper>
-        <Button theme="lightGray" size="small" onClick={handleMinusClick}>
+        <Button theme="lightGray" size="small" onClick={handleMinusClick} disabled={quantity === 0}>
           <MinusIcon />
         </Button>
         <Input
@@ -31,7 +32,12 @@ export const QuantitySetting = ({ name }: Props) => {
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
         />
-        <Button theme="lightGray" size="small" onClick={handlePlusClick}>
+        <Button
+          theme="lightGray"
+          size="small"
+          onClick={handlePlusClick}
+          disabled={quantity === giftOrderLimit}
+        >
           <AddIcon />
         </Button>
       </Wrapper>
