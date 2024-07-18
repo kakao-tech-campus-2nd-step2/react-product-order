@@ -1,11 +1,28 @@
+import { useNavigate } from 'react-router-dom';
+
 import * as S from './styles';
+import { RouterPath } from '@/routes/path';
 import { Text, Button, Input } from '@chakra-ui/react';
 
 type Props = {
   title: string;
   amount: number;
+  imageSrc: string;
+  subtitle: string;
 };
-const ProductBuySection = ({ title, amount }: Props) => {
+const ProductBuySection = ({ title, amount, imageSrc, subtitle }: Props) => {
+  const navigate = useNavigate();
+
+  const handleOrder = () => {
+    navigate(RouterPath.orders, {
+      state: {
+        title,
+        imageSrc,
+        amount,
+        subtitle,
+      },
+    });
+  };
   return (
     <S.AsideBox>
       <S.AsideWrapper>
@@ -61,7 +78,7 @@ const ProductBuySection = ({ title, amount }: Props) => {
           <S.TotalPriceBox>
             총 결제 금액 <S.PriceText>{amount}원</S.PriceText>
           </S.TotalPriceBox>
-          <S.ButtonItem>나에게 선물하기</S.ButtonItem>
+          <S.ButtonItem onClick={handleOrder}>나에게 선물하기</S.ButtonItem>
         </S.ButtonBox>
       </S.AsideWrapper>
     </S.AsideBox>

@@ -2,7 +2,13 @@ import * as S from './styles';
 import { MainBox } from '@/components/features/Product/ProductInfoSection/styles.ts';
 import { Box, Divider, Image, Text, Textarea } from '@chakra-ui/react';
 
-const OrderDetailSection = () => {
+type Props = {
+  imageSrc: string;
+  title: string;
+  subtitle: string;
+};
+
+const OrderDetailSection = ({ imageSrc, title, subtitle }: Props) => {
   return (
     <MainBox>
       <S.giftBox>
@@ -54,7 +60,7 @@ const OrderDetailSection = () => {
           <Box display='flex'>
             <S.giftImgBox>
               <Image
-                src='https://st.kakaocdn.net/product/gift/product/20230719172408_647e86454c9a4b11990595786acd7405.jpg'
+                src={imageSrc}
                 objectFit='cover'
                 objectPosition='center center'
                 borderRadius='0px'
@@ -69,7 +75,7 @@ const OrderDetailSection = () => {
                 color='rgb(136, 136, 136)'
                 fontWeight={400}
               >
-                빤쮸토끼
+                {subtitle}
               </Text>
               <Text
                 fontSize='14px'
@@ -79,7 +85,7 @@ const OrderDetailSection = () => {
                 fontWeight={400}
                 overflow='hidden'
               >
-                빤쮸토끼 얼굴 파우치 키링 X 1개
+                {title} x 1개
               </Text>
             </Box>
           </Box>

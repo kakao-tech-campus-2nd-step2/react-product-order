@@ -2,7 +2,10 @@ import * as S from './styles';
 import { AsideBox } from '@/components/features/Product/ProductBuySection/styles.ts';
 import { Box, Checkbox, Divider, Input, Select, Text } from '@chakra-ui/react';
 
-const OrderBuySection = () => {
+type Props = {
+  price: number;
+};
+const OrderBuySection = ({ price }: Props) => {
   return (
     <AsideBox>
       <Box
@@ -63,12 +66,12 @@ const OrderBuySection = () => {
             color='rgb(34, 34, 34)'
             boxSizing='border-box'
           >
-            11500원
+            {price}원
           </Text>
         </S.PriceBox>
         <Divider />
         <Box width='100%' height='32px' backgroundColor='inherit'></Box>
-        <S.SubmitButton>11500원 결제하기</S.SubmitButton>
+        <S.SubmitButton>{price}원 결제하기</S.SubmitButton>
       </Box>
     </AsideBox>
   );
