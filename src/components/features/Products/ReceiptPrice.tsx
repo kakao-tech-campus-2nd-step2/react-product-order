@@ -16,7 +16,7 @@ export const ReceiptPrice = ({ price }: IReceiptPrice) => {
       width="100%"
     >
       <Text fontSize="14px" fontWeight="700" lineHeight="14px" color="#111">
-        총 결제 금액{' '}
+        총 결제 금액
         <Text as="span" fontSize="20px" letterSpacing="-0.02em">
           {price}원
         </Text>

@@ -55,5 +55,11 @@ declare namespace Products {
     options: ProductOption;
   }
 
+  interface PaymentThumbnail extends SmallOption {
+    brandName: string;
+    imageUrl: string;
+    cnt: string;
+  }
+
   // }
 }

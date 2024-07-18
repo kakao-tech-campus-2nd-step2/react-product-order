@@ -11,21 +11,22 @@ import type { IProductPage } from '@/pages/Products';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
 
-export interface IPreReceipt extends IProductPage {}
+export interface IPreReceipt extends IProductPage {
+  currentProductInfo: Products.PaymentThumbnail;
+}
 
-export const PreReceipt = ({ productKey }: IPreReceipt) => {
+export const PreReceipt = ({ productKey, currentProductInfo }: IPreReceipt) => {
   const { data, isError, isLoading } = useSuspenseQuery({
     queryKey: ['options', productKey],
     queryFn: () => getProductOptionsById(productKey),
   });
-  const productName = data.options.productName;
-  const productPrice = data.options.productPrice;
+  const options: Products.ProductOption = data.options;
+  const productName = options.productName;
   const [cntMap, setCntMap] = useState(
-    new Map().set(productName, { price: productPrice, cnt: '1' }),
+    new Map().set(productName, { ...currentProductInfo, cnt: '1' }),
   );
   const authInfo = useAuth();
   const navigate = useNavigate();
-  const options: Products.ProductOption = data.options;
 
   /**
    * TODO: UI 관련 없는 부분 다 훅으로
@@ -38,7 +39,7 @@ export const PreReceipt = ({ productKey }: IPreReceipt) => {
       }
       return;
     }
-    navigate(RouterPath.order, { state: { cntMap } });
+    navigate(RouterPath.order, { state: { cntMap, defaultKey: productName } });
   };
 
   const totalPriceMemo = useMemo(() => {
@@ -61,11 +62,6 @@ export const PreReceipt = ({ productKey }: IPreReceipt) => {
       return newMap.set(name, { ...newMap.get(name), cnt: newCnt });
     });
   };
-
-  /**
-   * 요청으로 받아오는 nested Options의 가격이 왜 다 0??
-   */
-  // const nestedOptions: Products.SmallOption[] = options?.options ?? [];
 
   return (
     <Box

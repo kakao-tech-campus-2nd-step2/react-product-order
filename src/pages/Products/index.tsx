@@ -9,7 +9,7 @@ import { Name } from '@/components/features/Products/Name';
 import { Notice } from '@/components/features/Products/Notice';
 import { PreReceipt } from '@/components/features/Products/PreReceipt';
 import { Price } from '@/components/features/Products/Price';
-import { ProductOrderTemplate } from '@/components/templates/ProductOrderTemplate';
+import { ProductTemplate } from '@/components/templates/ProductTemplate';
 
 const tempNotice = '카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!';
 
@@ -26,10 +26,17 @@ export const ProductPage = ({ productKey }: IProductPage) => {
   if (isError) {
     throw new Error();
   }
+
   const product: Products.ProductDetailData = data?.detail;
+  const currentProductInfo = {
+    price: product.price.sellingPrice,
+    key: product.name,
+    brandName: product.brandInfo.name,
+    imageUrl: product.imageURL,
+  } as Products.PaymentThumbnail;
 
   return (
-    <ProductOrderTemplate
+    <ProductTemplate
       leftMain={
         <Flex maxWidth="900px">
           <Image
@@ -56,7 +63,7 @@ export const ProductPage = ({ productKey }: IProductPage) => {
               ebFallback={<button onClick={() => reset()}>다시 시도하기</button>}
               susFallback={<Spinner />}
             >
-              <PreReceipt productKey={productKey} />
+              <PreReceipt productKey={productKey} currentProductInfo={currentProductInfo} />
             </EbSusBoundary>
           )}
         </QueryErrorResetBoundary>
