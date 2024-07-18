@@ -58,6 +58,15 @@ export const ProductPage: React.FC = () => {
         setGiftOrderLimit(options.giftOrderLimit);
       } catch (error) {
         console.error('Error fetching product options:', error);
+        if (axios.isAxiosError(error)) {
+          if (error.response && error.response.status === 500) {
+            navigate(RouterPath.home);
+          } else {
+            console.error('Error fetching product detail:', error.response?.statusText);
+          }
+        } else {
+          console.error('Error fetching product detail:', error);
+        }
       }
     };
 

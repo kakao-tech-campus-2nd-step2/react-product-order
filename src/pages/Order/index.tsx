@@ -30,7 +30,7 @@ export const OrderPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const { state } = useLocation();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true
   const [message, setMessage] = useState('');
   const [receiptRequested, setReceiptRequested] = useState(false);
   const [receiptNumber, setReceiptNumber] = useState('');
@@ -90,7 +90,8 @@ export const OrderPage: React.FC = () => {
   const handleReceiptRequestChange = () => {
     setReceiptRequested(!receiptRequested);
   };
-
+    alert('결제가 완료되었습니다.');
+  };
   return (
     <Flex justifyContent="space-between" padding="20px" height="100vh">
       <Box flex="3" borderRight="1px solid rgb(237, 237, 237)">
