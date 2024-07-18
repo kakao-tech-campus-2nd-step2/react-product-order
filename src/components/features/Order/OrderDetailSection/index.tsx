@@ -6,9 +6,10 @@ type Props = {
   imageSrc: string;
   title: string;
   subtitle: string;
+  quantity: number;
 };
 
-const OrderDetailSection = ({ imageSrc, title, subtitle }: Props) => {
+const OrderDetailSection = ({ imageSrc, title, subtitle, quantity }: Props) => {
   return (
     <MainBox>
       <S.giftBox>
@@ -85,7 +86,7 @@ const OrderDetailSection = ({ imageSrc, title, subtitle }: Props) => {
                 fontWeight={400}
                 overflow='hidden'
               >
-                {title} x 1개
+                {title} x {quantity}개
               </Text>
             </Box>
           </Box>
