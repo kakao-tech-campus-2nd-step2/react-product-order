@@ -33,15 +33,10 @@ export const ProductPreReceipt = ({ productKey, currentProductInfo }: IPreReceip
    * TODO: UI 관련 없는 부분 다 훅으로
    */
 
-  const totalPriceMemo = useMemo(() => {
-    let totalPrice = 0;
-    for (const [, value] of cntMap) {
-      const { price, cnt } = value;
-      const cntInt = parseInt(cnt);
-      totalPrice += price * cntInt;
-    }
-    return totalPrice;
-  }, [cntMap]);
+  const totalPriceMemo = useMemo(
+    () => [...cntMap.values()].reduce((total, { price, cnt }) => total + price * parseInt(cnt), 0),
+    [cntMap],
+  );
 
   if (isError || (!isLoading && !data)) {
     throw new Error();
