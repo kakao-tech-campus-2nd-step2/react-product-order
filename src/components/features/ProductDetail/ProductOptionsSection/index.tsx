@@ -1,5 +1,16 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
-import { Box, Button, HStack, IconButton, Input, Spacer, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  HStack,
+  IconButton,
+  Input,
+  Spacer,
+  Text,
+  useNumberInput,
+  VStack,
+} from '@chakra-ui/react';
+import { useState } from 'react';
 
 import type { GoodsData } from '@/types';
 
@@ -8,7 +19,19 @@ interface Props {
 }
 
 export const ProductOptionsSection = ({ product }: Props) => {
+  const [quantity, setQuantity] = useState<number>(1);
   const { name, price } = product;
+
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
+    step: 1,
+    defaultValue: 1,
+    min: 1,
+    onChange: (_valueAsString, valueAsNumber) => setQuantity(valueAsNumber),
+  });
+
+  const inc = getIncrementButtonProps();
+  const dec = getDecrementButtonProps();
+  const input = getInputProps();
 
   return (
     <VStack>
@@ -17,9 +40,9 @@ export const ProductOptionsSection = ({ product }: Props) => {
           {name}
         </Text>
         <HStack mt={2}>
-          <IconButton aria-label="Add" icon={<MinusIcon />} />
-          <Input width="100%" />
-          <IconButton aria-label="Add" icon={<AddIcon />} />
+          <IconButton aria-label="Add" icon={<MinusIcon />} {...dec} />
+          <Input {...input} width="100%" />
+          <IconButton aria-label="Add" icon={<AddIcon />} {...inc} />
         </HStack>
       </Box>
       <Spacer />
@@ -36,7 +59,7 @@ export const ProductOptionsSection = ({ product }: Props) => {
           총 결제 금액
         </Text>
         <Text fontSize="xl" as="b">
-          {price.sellingPrice}원
+          {price.sellingPrice * quantity}원
         </Text>
       </Box>
       <Button borderRadius="md" bg="blackAlpha.900" width="100%" color="white" p={2} mb={16}>
