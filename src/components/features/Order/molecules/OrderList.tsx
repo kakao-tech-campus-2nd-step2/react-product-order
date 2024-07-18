@@ -1,7 +1,7 @@
 import { Box, HStack } from '@chakra-ui/react';
 
 import type { Products } from '@/api/products/types';
-import { OrderListItem } from '@/components/features/Order/OrderListItem';
+import { OrderListItem } from '@/components/features/Order/atoms/OrderListItem';
 
 export interface IOrderList {
   orderList: Products.PaymentThumbnail[];
