@@ -1,10 +1,11 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import { Layout } from '@/components/features/Layout';
-import ProductDetail from '@/components/features/Product';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
+import OrderPage from '@/pages/Order';
+import ProductDetailPage from '@/pages/Product';
 import { ThemePage } from '@/pages/Theme';
 
 import { PrivateRoute } from './components/PrivateRoute';
@@ -45,7 +46,11 @@ const router = createBrowserRouter([
   },
   {
     path: RouterPath.productDetail,
-    element: <ProductDetail />
+    element: <ProductDetailPage />
+  },
+  {
+    path: RouterPath.order,
+    element: <OrderPage />
   }
 ]);
 

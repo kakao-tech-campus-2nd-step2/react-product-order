@@ -43,7 +43,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
           gap={16}
         >
           {flattenGoodsList.map(({ id, imageURL, name, price, brandInfo }) => (
-            <Link key={id} to={getDynamicPath.productDetail(id)}>
+            <Link key={id} to={getDynamicPath.productDetailPage(id)}>
               <DefaultGoodsItems
                 key={id}
                 imageSrc={imageURL}
