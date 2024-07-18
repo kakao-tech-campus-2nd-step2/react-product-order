@@ -23,16 +23,6 @@ export const OrderPage = () => {
       alert("선물 메시지를 입력해주세요.");
       return;
     }
-
-    console.log({
-      productDetail,
-      productQuantity,
-      message,
-      cashReceipt,
-      cashReceiptType,
-      cashReceiptNumber,
-    });
-
     alert("주문이 완료되었습니다.");
   };
 
