@@ -75,5 +75,9 @@
   },
   "overrides": {
     "react-refresh": "0.11.0"
-  }
+  },
+  "description": "",
+  "main": ".eslintrc.js",
+  "author": "",
+  "license": "ISC"
 }
