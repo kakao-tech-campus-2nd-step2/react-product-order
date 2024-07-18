@@ -1,27 +1,23 @@
-import { Box, Checkbox, Divider, VStack } from '@chakra-ui/react';
-import React from 'react';
+import { Box, Checkbox, Divider, Input, Select, VStack } from '@chakra-ui/react';
 
-import { OrderCacheReceiptInput } from '@/components/features/Order/atoms/OrderCacheReceiptInput';
-import { OrderCashReceiptSelect } from '@/components/features/Order/atoms/OrderCacheReceiptSelect';
-
-export interface IOrderRequestCashReceipt {
-  cacheReceiptRefs: (
-    | React.ForwardedRef<HTMLSelectElement>
-    | React.ForwardedRef<HTMLInputElement>
-  )[];
-}
-
-export const OrderRequestCashReceipt = ({ cacheReceiptRefs }: IOrderRequestCashReceipt) => {
+export const OrderRequestCashReceipt = () => {
   return (
     <Box width="100%" padding="16px">
       <VStack spacing="16px" align="start">
         <Checkbox colorScheme="yellow" size="lg">
           현금영수증 신청
         </Checkbox>
+
         <Divider />
-        <OrderCashReceiptSelect ref={cacheReceiptRefs[0]} />
+
+        <Select placeholder="현금영수증 타입을 선택해주세요">
+          <option value="PERSONAL">개인소득공제</option>
+          <option value="BUSINESS">사업자증빙용</option>
+        </Select>
+
         <Divider />
-        <OrderCacheReceiptInput ref={cacheReceiptRefs[1]} />
+
+        <Input placeholder="(-없이) 숫자만 입력해주세요." />
       </VStack>
     </Box>
   );
