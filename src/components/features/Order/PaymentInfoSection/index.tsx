@@ -12,9 +12,10 @@ import {
 
 type PaymentInfoProps = {
   price: number;
+  onPaymentClick: () => void;
 };
 
-export const PaymentInfoSection = ({ price }: PaymentInfoProps) => {
+export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) => {
   return (
     <Box
       w="100%"
@@ -76,6 +77,7 @@ export const PaymentInfoSection = ({ price }: PaymentInfoProps) => {
         color="rgb(17, 17, 17)"
         backgroundColor="rgb(254, 229, 0)"
         boxSizing="border-box"
+        onClick={onPaymentClick}
       >
         {price}원 결제하기
       </Button>
