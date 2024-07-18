@@ -3,6 +3,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { authSessionStorage } from '@/utils/storage';
 
+import { ProductDetailData } from '../../types';
+
 // Auth 관련 타입 및 컨텍스트 정의
 type AuthInfo = {
   id: string;
@@ -37,8 +39,8 @@ export const useAuth = () => useContext(AuthContext);
 
 // Gift 관련 타입 및 컨텍스트 정의
 type GiftContextType = {
-  selectedProduct: unknown;
-  setSelectedProduct: (product: unknown) => void;
+  selectedProduct: ProductDetailData | null;
+  setSelectedProduct: (product: ProductDetailData | null) => void;
   quantity: number;
   setQuantity: (quantity: number) => void;
   message: string;
@@ -48,7 +50,7 @@ type GiftContextType = {
 export const GiftContext = createContext<GiftContextType | undefined>(undefined);
 
 export const GiftProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedProduct, setSelectedProduct] = useState<unknown>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductDetailData | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState('');
 
@@ -68,10 +70,3 @@ export const useGift = () => {
   }
   return context;
 };
-
-// Combined Provider
-export const AppProvider = ({ children }: { children: ReactNode }) => (
-  <AuthProvider>
-    <GiftProvider>{children}</GiftProvider>
-  </AuthProvider>
-);
