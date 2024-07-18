@@ -7,12 +7,14 @@ import { useAuth } from '@/provider/Auth';
 import { getDynamicPath } from '@/routes/path';
 import { orderLocalStorage } from '@/utils/storage';
 
+const DEFAULT_COUNT = 1;
+
 interface ProductDetailSectionProps {
   productId: string;
 }
 const ProductDetailSection = ({ productId }: ProductDetailSectionProps) => {
   const { data, isLoading, isError } = useGetProductDetail(productId);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(DEFAULT_COUNT);
   const authInfo = useAuth();
   const navigate = useNavigate();
 
