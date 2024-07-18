@@ -31,6 +31,7 @@ export const OrderPage: React.FC = () => {
   const { state } = useLocation();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchProductOrder = async () => {
@@ -65,6 +66,10 @@ export const OrderPage: React.FC = () => {
   }
 
   const handleSubmit = () => {
+    if (!message.trim()) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
     alert('결제가 완료되었습니다.');
   };
 
@@ -87,6 +92,8 @@ export const OrderPage: React.FC = () => {
               mt="4"
               bgColor="#EDF2F7"
               height="100px"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
           </Box>
         </Flex>
