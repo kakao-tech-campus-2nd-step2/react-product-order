@@ -11,8 +11,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import type { ProductDetail } from '@/types';
+import { authSessionStorage } from '@/utils/storage';
 
 interface Props {
   product: ProductDetail;
@@ -21,6 +23,7 @@ interface Props {
 export const ProductOptionsSection = ({ product }: Props) => {
   const [quantity, setQuantity] = useState<number>(1);
   const { name, price } = product;
+  const navigate = useNavigate();
 
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
@@ -32,6 +35,16 @@ export const ProductOptionsSection = ({ product }: Props) => {
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
+
+  const handleGiftClick = () => {
+    if (authSessionStorage.get()) {
+      navigate('/order');
+    } else {
+      if (window.confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+        navigate('/login');
+      }
+    }
+  };
 
   return (
     <VStack>
@@ -62,7 +75,15 @@ export const ProductOptionsSection = ({ product }: Props) => {
           {price.sellingPrice * quantity}원
         </Text>
       </Box>
-      <Button borderRadius="md" bg="blackAlpha.900" width="100%" color="white" p={2} mb={16}>
+      <Button
+        borderRadius="md"
+        bg="blackAlpha.900"
+        width="100%"
+        color="white"
+        p={2}
+        onClick={handleGiftClick}
+        mb={16}
+      >
         나에게 선물하기
       </Button>
     </VStack>
