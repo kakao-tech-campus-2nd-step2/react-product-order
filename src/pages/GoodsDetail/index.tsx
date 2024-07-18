@@ -8,7 +8,7 @@ import { Container } from 'src/components/common/layouts/Container';
 import { fetchInstance } from '@/api/instance';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
-import type { GoodsDataDetail } from '@/types';
+import type { GoodsDataDetail, GoodsDataOptions } from '@/types';
 
 const fetchGoodsDetail = async (productId: string | undefined) => {
   if (!productId) return null;
@@ -17,24 +17,50 @@ const fetchGoodsDetail = async (productId: string | undefined) => {
   return response.data;
 };
 
+const fetchGoodsOption = async (productId: string | undefined) => {
+  if (!productId) return null;
+
+  const response = await fetchInstance.get<GoodsDataOptions>(`/v1/products/${productId}/options`);
+  return response.data;
+};
+
 export const GoodsDetail = () => {
   const navigate = useNavigate();
   const authInfo = useAuth();
 
   const { productId } = useParams();
-  const { data } = useQuery({
+  const { data: productData } = useQuery({
     queryKey: ['GoodsDetail', productId],
     queryFn: () => fetchGoodsDetail(productId),
     enabled: !!productId,
   });
 
+  const { data: optionData } = useQuery({
+    queryKey: ['GoodsOption', productId],
+    queryFn: () => fetchGoodsOption(productId),
+    enabled: !!productId,
+  });
+
   const [count, setCount] = useState(1);
-  const [price, setPrice] = useState(data?.detail.price.basicPrice);
+  const [price, setPrice] = useState(productData?.detail.price.basicPrice);
+  const orderLimit = optionData?.options.giftOrderLimit ?? 0;
 
   const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCount = Number(e.target.value);
     if (isNaN(newCount) || newCount < 0) return;
-    setCount(newCount);
+    if (count <= orderLimit) {
+      setCount(newCount);
+    } else {
+      alert(`최대 가능 주문 수량은 ${orderLimit}입니다.`);
+    }
+  };
+
+  const handlePlusButton = () => {
+    if (count >= orderLimit) {
+      alert(`최대 가능 주문 수량은 ${orderLimit}입니다.`);
+      return;
+    }
+    setCount(count + 1);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,7 +72,7 @@ export const GoodsDetail = () => {
     } else {
       navigate(`${RouterPath.order}`, {
         state: {
-          data,
+          productData,
           count,
           price,
         },
@@ -55,19 +81,19 @@ export const GoodsDetail = () => {
   };
 
   useEffect(() => {
-    if (data?.detail.price.basicPrice && count) {
-      setPrice(data?.detail.price.basicPrice * count);
+    if (productData?.detail.price.basicPrice && count) {
+      setPrice(productData?.detail.price.basicPrice * count);
     }
     if (count === 0) {
       setPrice(0);
     }
-  }, [count, data?.detail.price.basicPrice]);
+  }, [count, productData?.detail.price.basicPrice]);
 
   return (
     <Container maxWidth="1280px" flexDirection="row" justifyContent="center">
       <LeftContainer width="100%" maxW="900px" height="562px">
         <ArticleWrapper>
-          <Image src={data?.detail.imageURL} width="450px" height="450px"></Image>
+          <Image src={productData?.detail.imageURL} width="450px" height="450px"></Image>
           <Box
             maxWidth="385px"
             height="450px"
@@ -76,10 +102,10 @@ export const GoodsDetail = () => {
             flexDirection="column"
           >
             <Text paddingTop="24px" fontSize="24px" fontWeight={400}>
-              {data?.detail.name}
+              {productData?.detail.name}
             </Text>
             <Text paddingTop="16px" fontSize="30px" height="120px">
-              {data?.detail.price.basicPrice}
+              {productData?.detail.price.basicPrice}
             </Text>
             <TextBox maxWidth="360px" height="70px" display="flex" alignContent="center">
               카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!
@@ -102,7 +128,7 @@ export const GoodsDetail = () => {
             padding="12px 14px 16px"
             flexDirection="column"
           >
-            <Text fontWeight="700px">{data?.detail.name}</Text>
+            <Text fontWeight="700px">{productData?.detail.name}</Text>
             <ContorllNumberBox>
               <ControllButton
                 disabled={count === 1}
@@ -112,7 +138,12 @@ export const GoodsDetail = () => {
                 -
               </ControllButton>
               <ControllInput value={count} onChange={handleCountChange} />
-              <ControllButton onClick={() => setCount(count + 1)}>+</ControllButton>
+              <ControllButton
+                style={{ opacity: count === orderLimit ? 0.5 : 1 }}
+                onClick={handlePlusButton}
+              >
+                +
+              </ControllButton>
             </ContorllNumberBox>
           </FormBox>
           <SubmitBox width="100%" height="142px">

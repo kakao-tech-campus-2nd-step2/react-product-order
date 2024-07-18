@@ -65,17 +65,17 @@ export const Order = () => {
           <GiftHistoryTitle>선물내역</GiftHistoryTitle>
           <GiftHistorySection>
             <Image
-              src={location.state.data.detail.imageURL}
+              src={location.state.productData.detail.imageURL}
               alt="이미지"
               width="86px"
               height="86px"
             ></Image>
             <GiftHistoryDescription>
               <Text color="rgb(136,136,136)" fontSize="13px" fontWeight="400">
-                {location.state.data.detail.brandInfo.name}
+                {location.state.productData.detail.brandInfo.name}
               </Text>
               <Text color="rgb(34,34,34)" fontSize="14px" overflow="hidden">
-                {location.state.data.detail.name}
+                {location.state.productData.detail.name}
               </Text>
             </GiftHistoryDescription>
           </GiftHistorySection>
