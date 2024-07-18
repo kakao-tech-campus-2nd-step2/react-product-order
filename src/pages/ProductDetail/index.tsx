@@ -19,7 +19,7 @@ export const ProductDetailPage = () => {
   const handleOrder = (event: React.FormEvent) => {
     event.preventDefault();
     if (!authInfo) {
-      navigate("/login");
+      navigate(`/login?redirect=${window.location.pathname}`);
       return;
     }
 
