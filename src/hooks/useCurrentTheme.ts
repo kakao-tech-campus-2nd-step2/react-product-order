@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useGetThemes } from '@/api/hooks/useGetThemes';
+import { useGetThemes } from '@/api/hooks/Theme/useGetThemes.ts';
 import { getCurrentTheme } from '@/components/features/Theme/ThemeHeroSection';
 
 type Props = { themeKey: string };

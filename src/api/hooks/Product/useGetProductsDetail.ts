@@ -1,4 +1,4 @@
-import { fetchInstance } from '../instance';
+import { fetchInstance } from '../../instance';
 import { GoodsData } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 

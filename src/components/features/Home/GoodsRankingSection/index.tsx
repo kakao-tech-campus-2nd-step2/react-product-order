@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { GoodsRankingFilter } from './Filter';
 import { GoodsRankingList } from './List';
-import { useGetRankingProducts } from '@/api/hooks/useGetRankingProducts';
+import { useGetRankingProducts } from '@/api/hooks/Home/useGetRankingProducts.ts';
 import { Container } from '@/components/common/layouts/Container';
 import { breakpoints } from '@/styles/variants';
 import type { RankingFilterOption } from '@/types';

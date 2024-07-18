@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { ThemeCategoryItem } from './ThemeCategoryItem';
-import { useGetThemes } from '@/api/hooks/useGetThemes';
+import { useGetThemes } from '@/api/hooks/Theme/useGetThemes.ts';
 import { Container } from '@/components/common/layouts/Container';
 import { Grid } from '@/components/common/layouts/Grid';
 import { getDynamicPath } from '@/routes/path';

@@ -1,4 +1,4 @@
-import { fetchInstance } from '../instance';
+import { fetchInstance } from '../../instance';
 import type { ThemeData } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 

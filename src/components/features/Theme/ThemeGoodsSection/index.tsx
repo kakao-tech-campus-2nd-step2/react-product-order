@@ -1,4 +1,4 @@
-import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
+import { useGetThemesProducts } from '@/api/hooks/Theme/useGetThemesProducts.ts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
 import { Spinner } from '@/components/common/Spinner';
 import { VisibilityLoader } from '@/components/common/VisibilityLoader';

@@ -1,8 +1,8 @@
 // import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 
-import { useGetProductDetails } from '@/api/hooks/useGetProductsDetail';
-import { useGetProductOptions } from '@/api/hooks/useGetProductsOptions';
+import { useGetProductDetails } from '@/api/hooks/Product/useGetProductsDetail.ts';
+import { useGetProductOptions } from '@/api/hooks/Product/useGetProductsOptions.ts';
 import { Container } from '@/components/common/layouts/Container';
 import ProductBuySection from '@/components/features/Product/ProductBuySection';
 import ProductInfoSection from '@/components/features/Product/ProductInfoSection';
