@@ -10,7 +10,7 @@ export type OrderFormType = {
   gitfMessage: string;
   isCashChecked: boolean;
   cashReceiptType: '개인소득공제' | '사업자증빙용';
-  cashReceiptNumber: string;
+  cashReceiptNumber?: string;
 };
 
 export type OrderDetail = {

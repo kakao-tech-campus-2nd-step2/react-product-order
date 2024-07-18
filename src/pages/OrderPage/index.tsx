@@ -12,12 +12,13 @@ export const OrderPage = () => {
     formData,
     handleCheckboxChange,
     handleInputChange,
-    handleClickButton,
+    handleSubmit,
+    setProductDetail,
   } = useOrderForm();
 
   return (
     <BaseLayout>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit}>
         <Content height="92vh" maxWidth="1280px">
           <Divider direction="vertical" />
           <GiftSection
@@ -29,7 +30,7 @@ export const OrderPage = () => {
             formData={formData}
             handleCheckboxChange={handleCheckboxChange}
             handleInputChange={handleInputChange}
-            handleClickButton={handleClickButton}
+            setProductDetail={setProductDetail}
           />
           <Divider direction="vertical" />
         </Content>

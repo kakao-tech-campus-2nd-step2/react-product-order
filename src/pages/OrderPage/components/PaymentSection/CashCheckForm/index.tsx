@@ -19,14 +19,16 @@ export const CashCheckForm = ({
 }: CashCheckFormProps) => {
   return (
     <Container flexDirection="column" gap="1rem">
-      <Checkbox
-        id="cashCheck"
-        checked={formData.isCashChecked}
-        onChange={() => handleCheckboxChange('isCashChecked')}
-      />
-      <label htmlFor="cashCheck">
-        <Text isBold>현금영수증 신청</Text>
-      </label>
+      <>
+        <Checkbox
+          id="cashCheck"
+          checked={formData.isCashChecked}
+          onChange={() => handleCheckboxChange('isCashChecked')}
+        />
+        <label htmlFor="cashCheck">
+          <Text isBold>현금영수증 신청</Text>
+        </label>
+      </>
       <Container flexDirection="column" gap="0.5rem">
         <Select
           value={formData.cashReceiptType}
