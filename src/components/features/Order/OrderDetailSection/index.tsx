@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import * as S from './styles';
 import { MainBox } from '@/components/features/Product/ProductInfoSection/styles.ts';
 import { Box, Divider, Image, Text, Textarea } from '@chakra-ui/react';
@@ -10,6 +12,17 @@ type Props = {
 };
 
 const OrderDetailSection = ({ imageSrc, title, subtitle, quantity }: Props) => {
+  const [message, setMessage] = useState<string>('');
+
+  const handleChangeMessage = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { value } = event.target;
+    if (value.length <= 100) {
+      setMessage(value);
+    }
+  };
+
   return (
     <MainBox>
       <S.giftBox>
@@ -37,7 +50,14 @@ const OrderDetailSection = ({ imageSrc, title, subtitle, quantity }: Props) => {
                 borderWidth='2px'
                 borderColor='var(--chakra-colors-transparent)'
                 borderStyle='solid'
+                onChange={handleChangeMessage}
               ></Textarea>
+              {message.length > 100 && ( // 100자 초과 시 안내 표시
+                <Text fontSize='12px' color='red'>
+                  카드 메시지가 100글자를 초과하였습니다. 100자 이내로
+                  입력해주세요.
+                </Text>
+              )}
             </Box>
           </Box>
         </S.giftSection>
