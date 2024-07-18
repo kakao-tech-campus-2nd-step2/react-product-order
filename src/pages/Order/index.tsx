@@ -80,6 +80,10 @@ export const OrderPage: React.FC = () => {
       alert('현금 영수증 번호를 입력해주세요.');
       return;
     }
+    if (isNaN(Number(receiptNumber))) {
+      alert('현금 영수증 번호를 숫자만 입력해주세요.');
+      return;
+    }
     alert('결제가 완료되었습니다.');
   };
 
