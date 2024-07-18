@@ -11,6 +11,7 @@ import {
 import { Navigate } from 'react-router-dom';
 
 import { useCurrentProduct } from '@/api/hooks/useGetProduct';
+import { useOrderContext } from '@/pages/Order';
 import { RouterPath } from '@/routes/path';
 
 type Props = {
@@ -19,15 +20,27 @@ type Props = {
 
 export const OrderInfoSection = ({ productKey, count }: { productKey: string; count: number }) => {
   const { isRender, currentProduct } = useCurrentProduct(productKey);
+  const { message } = useOrderContext();
   if (!isRender) return null;
 
   if (!currentProduct) {
     return <Navigate to={RouterPath.notFound} />;
   }
-  const price = currentProduct.price.sellingPrice * count;
+  const totalPrice = currentProduct.price.sellingPrice * count;
+  const handlePayment = () => {
+    if (!message) {
+      alert('메세지를 입력해주세요.');
+      return;
+    } else if (message.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      return;
+    }
+    // 결제 로직 처리
+    console.log('Processing payment for:', totalPrice);
+  };
 
   const product: Props = {
-    totalPrice: price,
+    totalPrice: totalPrice,
   };
   return (
     <>
@@ -48,7 +61,9 @@ export const OrderInfoSection = ({ productKey, count }: { productKey: string; co
           <Text as="b">{product.totalPrice}원</Text>
         </Box>
         <Box>
-          <Button colorScheme="yellow">{product.totalPrice}원 결제하기</Button>
+          <Button colorScheme="yellow" onClick={handlePayment}>
+            {product.totalPrice}원 결제하기
+          </Button>
         </Box>
         <Divider />
       </Container>
