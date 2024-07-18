@@ -1,4 +1,4 @@
-import { fetchInstance } from '../instance';
+import { fetchInstance } from "../instance";
 
 type OptionsData = {
   key: string;

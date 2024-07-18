@@ -1,6 +1,8 @@
-import type { GoodsData } from '@/types';
+import { useQuery } from "@tanstack/react-query";
 
-import { fetchInstance } from '../instance';
+import type { GoodsData } from "@/types";
+
+import { fetchInstance } from "../instance";
 
 type AnnouncementsData = {
   name: string;
@@ -29,15 +31,24 @@ type ProductDetailData = GoodsData & {
   };
 };
 
-type ProductDetailResponseData = {
+export type ProductDetailResponseData = {
   detail: ProductDetailData;
 };
 
-const getProductDetail = (productId: string) => {
+const getProductDetailPath = (productId: string) => {
   return `/v1/products/${productId}/detail`;
 };
 
-export const useGetProductDetail = async (productId: string) => {
-  const response = await fetchInstance.get<ProductDetailResponseData>(getProductDetail(productId));
+const getProductDetail = async (productId: string) => {
+  const response = await fetchInstance.get<ProductDetailResponseData>(
+    getProductDetailPath(productId),
+  );
   return response.data;
+};
+
+export const useGetProductDetail = (productId: string) => {
+  return useQuery<ProductDetailResponseData, Error>({
+    queryKey: ["productsDetail", productId],
+    queryFn: () => getProductDetail(productId),
+  });
 };
