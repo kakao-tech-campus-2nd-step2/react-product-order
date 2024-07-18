@@ -82,7 +82,6 @@ function ProductOrderForm({
       cashReceiptNumber,
     };
 
-    // console.log(body);
     let hasError = false;
 
     if (cardMessage === '') {
