@@ -7,7 +7,7 @@ import { Container } from 'src/components/common/layouts/Container';
 
 import { fetchInstance } from '@/api/instance';
 import { useAuth } from '@/provider/Auth';
-import { RouterPath } from '@/routes/path';
+import { getDynamicPath, RouterPath } from '@/routes/path';
 import type { GoodsDataDetail } from '@/types';
 
 const fetchGoodsDetail = async (productId: string | undefined) => {
@@ -41,7 +41,7 @@ export const GoodsDetail = () => {
     e.preventDefault();
     if (!authInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        navigate(`${RouterPath.login}`);
+        navigate(getDynamicPath.login());
       }
     } else {
       navigate(`${RouterPath.order}`, {
