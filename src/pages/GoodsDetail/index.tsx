@@ -1,9 +1,5 @@
-import { GoodsHeaderSection } from '@/components/features/GoodsDetail/GoodsHeaderSection';
+import { GoodsDetail } from '@/components/features/GoodsDetail/';
 
 export const GoodsDetailPage = () => {
-  return (
-    <>
-      <GoodsHeaderSection />
-    </>
-  );
+  return <GoodsDetail />;
 };

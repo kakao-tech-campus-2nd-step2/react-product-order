@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
-import { Container } from '@/components/common/layouts/Container';
 import { PaymentInfo } from '@/components/features/GoodsDetail/PaymentInfo';
 import { breakpoints } from '@/styles/variants';
 
@@ -16,31 +15,20 @@ export const GoodsHeaderSection = () => {
   };
 
   return (
-    <Wrapper>
-      <StyledDiv>
-        <GoodsThumnailImage src={product.image} alt={product.label} />
-        <SimpleInfoWrapper>
-          <GoodsTitle>{product.label}</GoodsTitle>
-          <GoodsPrice>{`${product.price}원`}</GoodsPrice>
-          <GiftDescription>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</GiftDescription>
-        </SimpleInfoWrapper>
-        <PaymentInfoWrapper>
-          <NumberInputWithButtons label={product.label} />
-          <PaymentInfo />
-        </PaymentInfoWrapper>
-      </StyledDiv>
-    </Wrapper>
+    <StyledDiv>
+      <GoodsThumnailImage src={product.image} alt={product.label} />
+      <SimpleInfoWrapper>
+        <GoodsTitle>{product.label}</GoodsTitle>
+        <GoodsPrice>{`${product.price}원`}</GoodsPrice>
+        <GiftDescription>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</GiftDescription>
+      </SimpleInfoWrapper>
+      <PaymentInfoWrapper>
+        <NumberInputWithButtons label={product.label} />
+        <PaymentInfo />
+      </PaymentInfoWrapper>
+    </StyledDiv>
   );
 };
-
-const Wrapper = styled(Container)`
-  margin: 0 auto;
-  padding: 14px 14px 3px;
-
-  @media screen and (min-width: ${breakpoints.sm}) {
-    padding: 45px 52px 23px;
-  }
-`;
 
 const StyledDiv = styled.div`
   display: flex;
