@@ -32,3 +32,32 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductDetailData = GoodsData & {
+  isAccessableProductPage: boolean;
+  review: {
+    averageRating: number;
+    totalReviewCount: number;
+  };
+  productDescription: {
+    images: string[];
+  };
+  productDetailInfo: {
+    announcements: {
+      displayOrder: number;
+      name: string;
+      value: string;
+    }[];
+    terms: {
+      displayOrder: number;
+      title: string;
+      description: string;
+    }[];
+  };
+};
+
+export type ProductOptionData = {
+  id: number;
+  name: string;
+  price: number;
+};
