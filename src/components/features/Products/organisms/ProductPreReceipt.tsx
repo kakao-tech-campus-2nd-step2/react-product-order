@@ -3,7 +3,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getProductOptionsById } from '@/api/hooks/useProductDetail';
+import { getProductOptionsById } from '@/api/instance/apis';
 import type { Products } from '@/api/products/types';
 import { PreReceiptButton } from '@/components/features/Products/atoms/PreReceiptButton';
 import { ReceiptPrice } from '@/components/features/Products/atoms/ReceiptPrice';

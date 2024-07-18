@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { getProductDetailById } from '@/api/hooks/useProductDetail';
+import { getProductDetailById } from '@/api/instance/apis';
 import type { Products } from '@/api/products/types';
 import { ProductInfo } from '@/components/features/Products/organisms/ProductInfo';
 import { ProductReceipt } from '@/components/features/Products/organisms/ProductReceipt';
