@@ -27,21 +27,36 @@ export const OrderPage = () => {
   );
 };
 
-type OrderContextType = {
+type OrderMessageContextType = {
   message: string;
   setMessage: (message: string) => void;
+  isRecipt: boolean;
+  setIsRecipt: (isRecipt: boolean) => void;
+  receiptNumber: string;
+  setReciptNumber: (receiptNumber: string) => void;
 };
+// type OrderReciptContextType = {
+// };
 
-const OrderContext = createContext<OrderContextType | undefined>(undefined);
+const OrderMessageContext = createContext<OrderMessageContextType | undefined>(undefined);
+// const OrderReciptContext = createContext<OrderReciptContextType | undefined>(undefined);;
 
 export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [message, setMessage] = useState<string>('');
+  const [isRecipt, setIsRecipt] = useState<boolean>(false);
+  const [receiptNumber, setReciptNumber] = useState<string>('');
 
-  return <OrderContext.Provider value={{ message, setMessage }}>{children}</OrderContext.Provider>;
+  return (
+    <OrderMessageContext.Provider
+      value={{ message, setMessage, isRecipt, setIsRecipt, receiptNumber, setReciptNumber }}
+    >
+      {children}
+    </OrderMessageContext.Provider>
+  );
 };
 
-export const useOrderContext = () => {
-  const context = useContext(OrderContext);
-  if (!context) throw new Error('useOrderContext must be used within a OrderProvider');
+export const useOrderMessageContext = () => {
+  const context = useContext(OrderMessageContext);
+  if (!context) throw new Error('useOrderMessageContext must be used within a OrderProvider');
   return context;
 };

@@ -1,9 +1,9 @@
 import { Container, Text, Textarea } from '@chakra-ui/react';
 
-import { useOrderContext } from '@/pages/Order';
+import { useOrderMessageContext } from '@/pages/Order';
 
 export const OrderMessageSection = () => {
-  const { setMessage } = useOrderContext();
+  const { setMessage } = useOrderMessageContext();
   return (
     <Container>
       <Text as="b">나에게 주는 선물</Text>
