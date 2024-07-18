@@ -1,4 +1,5 @@
 import { Button, Divider, Flex, Image, Input, Text } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductsDetail } from '@/api';
@@ -9,6 +10,7 @@ import { authSessionStorage } from '@/utils/storage';
 export const ProductsPage = () => {
   const { productsId = '' } = useParams<{ productsId: string }>();
   const { data: productsDetail, isError, isLoading } = useGetProductsDetail({ productsId });
+  const [count, setCount] = useState<number>(1);
   const currentAuthToken = authSessionStorage.get();
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,7 +21,26 @@ export const ProductsPage = () => {
         navigate(RouterPath.login + `?redirect=${location.pathname}`);
       }
     } else if (productsDetail?.detail) {
-      navigate(RouterPath.order, { state: { ...productsDetail.detail, count: 3 } });
+      navigate(RouterPath.order, { state: { ...productsDetail.detail, count: count } });
+    }
+  };
+
+  const changeCount = (addCount: number) => {
+    if (count + addCount < 1) return;
+    setCount((prevCount) => prevCount + addCount);
+  };
+
+  const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const regExp = /^[0-9\b]+$/;
+    if (regExp.test(e.key)) {
+      const nowCount = parseInt(e.currentTarget.value + e.key);
+      if (nowCount < 1) setCount(1);
+      else setCount(nowCount);
+    } else if (e.key === 'Backspace') {
+      const nowCount = parseInt(e.currentTarget.value.slice(0, -1)) || 1;
+      if (nowCount < 1) setCount(1);
+      else setCount(nowCount);
     }
   };
 
@@ -49,11 +70,20 @@ export const ProductsPage = () => {
             <Flex w="100%" p="5" border="2px" borderColor="#eeeeee" flexDir="column">
               <Text fontWeight="800">{productsDetail?.detail.name}</Text>
               <Flex w="100%" justify="space-between" mt="2">
-                <Button w="36px" h="36px" boxSizing="border-box">
+                <Button onClick={() => changeCount(-1)} w="36px" h="36px" boxSizing="border-box">
                   -
                 </Button>
-                <Input type="number" mx="3" w="100%" h="36px" textAlign="center" />
-                <Button w="36px" h="36px" boxSizing="border-box">
+                <Input
+                  value={count}
+                  onKeyDown={handleInputKey}
+                  type="number"
+                  min="1"
+                  mx="3"
+                  w="100%"
+                  h="36px"
+                  textAlign="center"
+                />
+                <Button onClick={() => changeCount(1)} w="36px" h="36px" boxSizing="border-box">
                   +
                 </Button>
               </Flex>
