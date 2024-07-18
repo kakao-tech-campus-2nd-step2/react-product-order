@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate,useParams } from "react-router-dom";
 
 import { useGetProductDetail } from "@/api/hooks/useGetProductDetail";
+import { useGetProductOption } from "@/api/hooks/useGetProductOption";
 import { Spinner } from "@/components/common/Spinner";
 import { getDynamicPath } from "@/routes/path";
 
@@ -12,6 +13,7 @@ const ProductDetailPage = () => {
   const navigate = useNavigate();
   const validProductId = productId || "";
   const [data, { loading, errorMessage }] = useGetProductDetail(validProductId);
+  const { optionData, optionLoading, optionErrorMessage } = useGetProductOption(validProductId);
 
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -84,12 +86,12 @@ const ProductDetailPage = () => {
           state={{
             data: {
               options: {
-                productName: data?.detail.name,
-                productPrice: totalPrice,
+                productName: optionData?.options?.productName,
+                productPrice: optionData?.options?.productPrice,
               },
             },
-            loading: false,
-            errorMessage: '',
+            loading: optionLoading,
+            errorMessage: optionErrorMessage,
           }}
           >
             <Button bg="black" color="white" w="90%" h="50px" fontSize="sm">나에게 선물하기</Button>

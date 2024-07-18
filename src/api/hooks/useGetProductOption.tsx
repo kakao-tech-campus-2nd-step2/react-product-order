@@ -41,5 +41,5 @@ export const useGetProductOption = (productId: string) => {
     () => fetchProductOption(productId),
   );
 
-  return { data: query.data, loading: query.isLoading, errorMessage: query.error?.message };
+  return { optionData: query.data, optionLoading: query.isLoading, optionErrorMessage: query.error?.message };
 };
