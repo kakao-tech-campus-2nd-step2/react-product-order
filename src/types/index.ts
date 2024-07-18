@@ -55,3 +55,23 @@ export type ProductDetailData = GoodsData & {
     }[];
   };
 };
+
+export type ProductOptionData = {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  hasOption: boolean;
+  giftOrderLimit: number;
+  names: string[];
+  options: {
+    key: string;
+    value: string;
+    level: number;
+    options: [];
+    id: number;
+    usable: boolean;
+    price: number;
+    stockQuantity: number;
+    unlimitedStockQuantity: boolean;
+  }[];
+};
