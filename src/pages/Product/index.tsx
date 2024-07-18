@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 
 const ProductPage = () => {
   const location = useLocation();
-  const { imageSrc, title, amount } = location.state;
+  const { imageSrc, title, amount, subtitle } = location.state;
   return (
     <ProductPageLayout>
       <Container maxWidth='1280px'>
@@ -24,7 +24,12 @@ const ProductPage = () => {
             title={title}
             amount={amount}
           />
-          <ProductBuySection title={title} amount={amount} />
+          <ProductBuySection
+            title={title}
+            imageSrc={imageSrc}
+            amount={amount}
+            subtitle={subtitle}
+          />
         </Box>
       </Container>
     </ProductPageLayout>
