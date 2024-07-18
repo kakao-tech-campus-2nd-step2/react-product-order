@@ -14,6 +14,7 @@ export type RankingFilterOption = {
 };
 
 export type GoodsData = {
+  description: string;
   id: number;
   name: string;
   imageURL: string;
