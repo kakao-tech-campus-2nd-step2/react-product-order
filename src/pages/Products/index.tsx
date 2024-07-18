@@ -11,7 +11,7 @@ export const ProductsPage = () => {
 
   const handleOrderClick = () => {
     if (productsDetail?.detail) {
-      navigate('/order', { state: { ...productsDetail.detail } });
+      navigate('/order', { state: { ...productsDetail.detail, count: 3 } });
     }
   };
 
@@ -19,7 +19,7 @@ export const ProductsPage = () => {
     <Flex h="calc(100vh - 54px)" w="100%" justify="center" py="10">
       <Loading isLoading={isLoading} error={isError} errorRedirect="/">
         <Flex w="100%" maxW="1280px">
-          <Flex w="100%" maxW="980px" align="start">
+          <Flex w="100%" maxW="920px" align="start">
             <Image w="45%" aspectRatio="1/1" src={productsDetail?.detail.imageURL} />
             <Flex w="50%" aspectRatio="1/1" flexDir="column" px="5" py="10">
               <Text fontSize="2xl" fontWeight="500">
@@ -37,7 +37,7 @@ export const ProductsPage = () => {
               </Flex>
             </Flex>
           </Flex>
-          <Flex w="300px" h="100%" flexDir="column" justify="space-between">
+          <Flex w="360px" h="100%" flexDir="column" justify="space-between">
             <Flex w="100%" p="5" border="2px" borderColor="#eeeeee" flexDir="column">
               <Text fontWeight="800">{productsDetail?.detail.name}</Text>
               <Flex w="100%" justify="space-between" mt="2">
