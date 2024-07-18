@@ -19,13 +19,13 @@ import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import useGetProductOption from "@/api/hooks/useGetProductOption";
+import {useGetProductOption} from "@/api/hooks/useGetProductOption";
 import useForm from "@/hooks/useForm";
 
 const PaymentPage = () => {
 	const { productId } = useParams<{ productId: string }>();
 	const validProductId = productId || "";
-	const { data, isLoading, isError } = useGetProductOption(validProductId);
+	const [data, { loading, errorMessage}] = useGetProductOption(validProductId);
 	const {
 		message,
 		setMessage,
@@ -41,17 +41,18 @@ const PaymentPage = () => {
 			console.log(data?.productName);
 	}, [data?.productName])
 	
-	if (isLoading) {
+	if (loading) {
 		return (
 		<TextView>
 			<Spinner />
 		</TextView>
 		);
 	}
-	if (isError || !data) {
+	if (errorMessage || !data) {
 		return (
 		<TextView>
 			에러가 발생했습니다.
+			{errorMessage}
 		</TextView>
 		);
 	}
