@@ -21,6 +21,7 @@ export const ProductPage: React.FC = () => {
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [giftOrderLimit, setGiftOrderLimit] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -48,8 +49,27 @@ export const ProductPage: React.FC = () => {
       }
     };
 
+    const fetchProductOptions = async () => {
+      try {
+        const response = await axios.get(
+          `https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/options`,
+        );
+        const options = response.data.options;
+        setGiftOrderLimit(options.giftOrderLimit);
+      } catch (error) {
+        console.error('Error fetching product options:', error);
+      }
+    };
+
     fetchProductDetail();
+    fetchProductOptions();
   }, [productId, navigate]);
+
+  useEffect(() => {
+    if (giftOrderLimit !== null && quantity > giftOrderLimit) {
+      setQuantity(giftOrderLimit);
+    }
+  }, [quantity, giftOrderLimit]);
 
   if (isLoading || !productDetail) {
     return (
@@ -60,7 +80,9 @@ export const ProductPage: React.FC = () => {
   }
 
   const handleIncreaseQuantity = () => {
-    setQuantity(quantity + 1);
+    if (giftOrderLimit === null || quantity < giftOrderLimit) {
+      setQuantity(quantity + 1);
+    }
   };
 
   const handleDecreaseQuantity = () => {
@@ -126,9 +148,7 @@ export const ProductPage: React.FC = () => {
               <Input
                 type="number"
                 value={quantity}
-                min={1}
-                max={100}
-                onChange={(e) => setQuantity(Number(e.target.value))}
+                onChange={(e) => setQuantity(Math.min(Number(e.target.value), giftOrderLimit || 0))}
                 textAlign="center"
                 mx="2"
               />
