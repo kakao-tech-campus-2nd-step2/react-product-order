@@ -1,12 +1,13 @@
-import { Box, Button } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { getProductOptionsById } from '@/api/hooks/useProductDetail';
 import type { Products } from '@/api/products/types';
-import { ReceiptItem } from '@/components/features/Products/ReceiptItem';
-import { ReceiptPrice } from '@/components/features/Products/ReceiptPrice';
+import { PreReceiptButton } from '@/components/features/Products/atoms/PreReceiptButton';
+import { ReceiptPrice } from '@/components/features/Products/atoms/ReceiptPrice';
+import { ReceiptItem } from '@/components/features/Products/molecules/ReceiptItem';
 import type { IProductPage } from '@/pages/Products';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
@@ -15,7 +16,7 @@ export interface IPreReceipt extends IProductPage {
   currentProductInfo: Products.PaymentThumbnail;
 }
 
-export const PreReceipt = ({ productKey, currentProductInfo }: IPreReceipt) => {
+export const ProductPreReceipt = ({ productKey, currentProductInfo }: IPreReceipt) => {
   const { data, isError, isLoading } = useSuspenseQuery({
     queryKey: ['options', productKey],
     queryFn: () => getProductOptionsById(productKey),
@@ -31,16 +32,6 @@ export const PreReceipt = ({ productKey, currentProductInfo }: IPreReceipt) => {
   /**
    * TODO: UI 관련 없는 부분 다 훅으로
    */
-  const onClick = () => {
-    if (!authInfo) {
-      const answer = confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?');
-      if (answer) {
-        navigate(getDynamicPath.login());
-      }
-      return;
-    }
-    navigate(RouterPath.order, { state: { cntMap, defaultKey: productName } });
-  };
 
   const totalPriceMemo = useMemo(() => {
     let totalPrice = 0;
@@ -63,6 +54,19 @@ export const PreReceipt = ({ productKey, currentProductInfo }: IPreReceipt) => {
     });
   };
 
+  const onClick = () => {
+    if (!authInfo) {
+      const answer = confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?');
+      if (answer) {
+        navigate(getDynamicPath.login());
+      }
+      return;
+    }
+    navigate(RouterPath.order, {
+      state: { cntMap, defaultKey: productName, totalPrice: totalPriceMemo },
+    });
+  };
+
   return (
     <Box
       width="100%"
@@ -77,25 +81,9 @@ export const PreReceipt = ({ productKey, currentProductInfo }: IPreReceipt) => {
         value={options.productPrice}
         onChange={setProductCnt}
       />
-      {/*{nestedOptions.map((option) => (*/}
-      {/*  <ReceiptItem*/}
-      {/*    name={option.value}*/}
-      {/*    value={option.price}*/}
-      {/*    onChange={(str) => console.log(str)}*/}
-      {/*  />*/}
-      {/*))}*/}
       <Box pt="12px">
         <ReceiptPrice price={totalPriceMemo} />
-        <Button
-          padding={'0'}
-          width="100%"
-          backgroundColor="rgb(17, 17, 17)"
-          colorScheme="blackAlpha"
-          size="lg"
-          onClick={onClick}
-        >
-          나에게 선물하기
-        </Button>
+        <PreReceiptButton onClick={onClick} />
       </Box>
     </Box>
   );

@@ -1,7 +1,7 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { Box, HStack, IconButton, Input, Text, useNumberInput } from '@chakra-ui/react';
 
-import { Price } from '@/components/features/Products/Price';
+import { Price } from '@/components/features/Products/atoms/Price';
 
 export interface IReceiptItem {
   name: string;
