@@ -80,7 +80,18 @@ const ProductDetailPage = () => {
             <Text fontSize="xs" fontWeight="bold">총 결제 금액</Text>
             <Text fontSize="2xl" fontWeight="bold">{totalPrice}원</Text>
           </HStack>
-          <Link to={getDynamicPath.order(productId || "")} key={productId}>
+          <Link to={getDynamicPath.order(productId || "")} key={productId}
+          state={{
+            data: {
+              options: {
+                productName: data?.detail.name,
+                productPrice: totalPrice,
+              },
+            },
+            loading: false,
+            errorMessage: '',
+          }}
+          >
             <Button bg="black" color="white" w="90%" h="50px" fontSize="sm">나에게 선물하기</Button>
           </Link>
         </VStack>

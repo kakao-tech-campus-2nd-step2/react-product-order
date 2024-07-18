@@ -9,23 +9,29 @@ import {
 	Image,
 	Input,
 	Select,
-	Spinner,
+	// Spinner,
 	Stack,
 	Text,
 	Textarea,
 	VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 
-import {useGetProductOption} from "@/api/hooks/useGetProductOption";
+import { Spinner } from "@/components/common/Spinner";
 import useForm from "@/hooks/useForm";
 
-const PaymentPage = () => {
-	const { productId } = useParams<{ productId: string }>();
-	const validProductId = productId || "";
-	const [data, { loading, errorMessage}] = useGetProductOption(validProductId);
+interface PaymentPageProps {
+	data: {
+		options: {
+			productName: string;
+			productPrice: number;
+		};
+	};
+	loading: boolean;
+	errorMessage: string;
+}
+
+const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }) => {
 	const {
 		message,
 		setMessage,
@@ -37,9 +43,6 @@ const PaymentPage = () => {
 		handleReceiptTypeChange,
 	} = useForm();
 	
-	useEffect(() => {
-			console.log(data?.options);
-	}, [data?.options]);
 	
 	if (loading) {
 		return (
@@ -58,7 +61,8 @@ const PaymentPage = () => {
 	}
 	
 	return (
-		<Box maxW="1200px" mx="auto" p={4}>
+		<>
+		{data && <Box maxW="1200px" mx="auto" p={4}>
 		<HStack spacing={8} align="flex-start">
 			<VStack spacing={8} align="stretch" flex={2}>
 			<Box>
@@ -82,7 +86,7 @@ const PaymentPage = () => {
 					alt="선물 이미지"
 					/>
 					<VStack align="start" spacing={1}>
-					<Text fontWeight="bold">{data.productName}</Text>
+					<Text fontWeight="bold">{data?.options.productName}</Text>
 					<Text> X 1개</Text>
 					</VStack>
 				</HStack>
@@ -117,26 +121,26 @@ const PaymentPage = () => {
 				<Divider />
 				<HStack w="100%" justifyContent="space-between">
 				<Text fontWeight="bold">최종 결제금액</Text>
-				<Text fontSize="2xl" fontWeight="bold">{data.productPrice}원</Text>
+				<Text fontSize="2xl" fontWeight="bold">{data?.options.productPrice}원</Text>
 				</HStack>
 				<Button colorScheme="yellow" size="lg" w="100%">
-				{data.productPrice}원 결제하기
+				{data?.options.productPrice}원 결제하기
 				</Button>
 			</Stack>
 			</VStack>
 		</HStack>
-		</Box>
+		</Box>}
+		</>
 	);
 };
 	
 export default PaymentPage;
 	
-	const TextView = styled.div`
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 40px 16px 60px;
-	font-size: 16px;
-	`;
-	
+const TextView = styled.div`
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 40px 16px 60px;
+font-size: 16px;
+`;

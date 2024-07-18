@@ -7,6 +7,10 @@ import createErrorMessage from '@/utils/createErrorMessage';
 import { fetchInstance } from '../instance';
 
 export type ProductOptionsResponse = {
+  options: ProductData;
+};
+
+export type ProductData = {
   productId: number;
   productName: string;
   productPrice: number;
@@ -14,7 +18,7 @@ export type ProductOptionsResponse = {
   giftOrderLimit: number;
   names: string[];
   options: ProductOptionData[];
-};
+}
 
 const fetchProductOption = async (productId: string) => {
 	try {
@@ -32,10 +36,10 @@ const fetchProductOption = async (productId: string) => {
 
 
 export const useGetProductOption = (productId: string) => {
-	const query = useQuery<ProductOptionsResponse, Error>(
-		['productDetail', productId],
-		() => fetchProductOption(productId),
-	);
+  const query = useQuery<ProductOptionsResponse, Error>(
+    ['productDetail', productId],
+    () => fetchProductOption(productId),
+  );
 
-	return [query.data, { loading: query.isLoading, errorMessage: query.error?.message }] as const;
+  return { data: query.data, loading: query.isLoading, errorMessage: query.error?.message };
 };
