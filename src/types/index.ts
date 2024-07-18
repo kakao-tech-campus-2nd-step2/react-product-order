@@ -55,3 +55,7 @@ export type ProductDetailData = GoodsData & {
     }[];
   };
 };
+
+export type ProductDetailResponseData = {
+  detail: ProductDetailData;
+};
