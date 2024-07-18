@@ -10,12 +10,48 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+
+type OrderInfo = {
+  message: string;
+  needReceipt: boolean;
+  receiptType: '개인소득공제' | '사업자증빙용';
+  receiptNumber: string;
+};
+
+const defaultOrderInfo: OrderInfo = {
+  message: '',
+  needReceipt: false,
+  receiptType: '개인소득공제',
+  receiptNumber: '',
+};
 
 export const OrderPage = () => {
   const location = useLocation();
+  const [orderInfo, setOrderInfo] = useState<OrderInfo>(defaultOrderInfo);
 
   const orderPrice = location.state.price.basicPrice * location.state.count;
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setOrderInfo({ ...orderInfo, message: e.target.value });
+  };
+
+  const handleNeedReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOrderInfo({ ...orderInfo, needReceipt: e.target.checked });
+  };
+
+  const handleReceiptTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setOrderInfo({ ...orderInfo, receiptType: e.target.value as OrderInfo['receiptType'] });
+  };
+
+  const handleReceiptNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOrderInfo({ ...orderInfo, receiptNumber: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    console.log(orderInfo);
+  };
 
   return (
     <Flex h="calc(100vh - 54px)" w="100%" justify="center" pt="10">
@@ -42,6 +78,8 @@ export const OrderPage = () => {
               resize="none"
               _focus={{ bg: 'white' }}
               placeholder="선물과 함께 보낼 메세지를 적어보세요"
+              value={orderInfo.message}
+              onChange={handleMessageChange}
             />
           </Flex>
           <Divider w="100%" borderWidth="4px" opacity="1" borderColor="#eeeeee" />
@@ -74,16 +112,27 @@ export const OrderPage = () => {
           </Text>
           <Divider opacity="1" borderColor="#eeeeee" />
           <Flex w="100%" flexDir="column" p="5" gap="2">
-            <Checkbox size="lg" mb="3" colorScheme="yellow">
+            <Checkbox
+              size="lg"
+              mb="3"
+              colorScheme="yellow"
+              checked={orderInfo.needReceipt}
+              onChange={handleNeedReceiptChange}
+            >
               <Text fontSize="md" fontWeight="700">
                 현금영수증 신청
               </Text>
             </Checkbox>
-            <Select>
+            <Select value={orderInfo.receiptType} onChange={handleReceiptTypeChange}>
               <option>개인소득공제</option>
               <option>사업자증빙용</option>
             </Select>
-            <Input pattern="[0-9]*" placeholder="(-없이) 숫자만 입력해주세요" />
+            <Input
+              value={orderInfo.receiptNumber}
+              onChange={handleReceiptNumberChange}
+              pattern="[0-9]*"
+              placeholder="(-없이) 숫자만 입력해주세요"
+            />
           </Flex>
           <Divider opacity="1" borderColor="#eeeeee" />
           <Flex w="100%" justify="space-between" p="5">
@@ -92,6 +141,7 @@ export const OrderPage = () => {
           </Flex>
           <Divider opacity="1" borderColor="#eeeeee" />
           <Button
+            onClick={handleSubmit}
             mt="10"
             bg="#fee500"
             py="2"
