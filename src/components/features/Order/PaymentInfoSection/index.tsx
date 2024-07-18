@@ -9,6 +9,7 @@ import {
   Select,
   Text,
 } from '@chakra-ui/react';
+import { useRef, useState } from 'react';
 
 type PaymentInfoProps = {
   price: number;
@@ -16,6 +17,29 @@ type PaymentInfoProps = {
 };
 
 export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) => {
+  const [isCashReceipt, setIsCashReceipt] = useState(false);
+  const cashReceiptNumberRef = useRef<HTMLInputElement>(null);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCashReceipt(event.target.checked);
+  };
+
+  const handlePaymentClick = () => {
+    const cashReceiptNumber = cashReceiptNumberRef.current?.value || '';
+
+    if (isCashReceipt) {
+      if (!cashReceiptNumber) {
+        alert('현금영수증 번호를 입력해주세요.');
+        return;
+      }
+      if (!/^\d*$/.test(cashReceiptNumber)) {
+        alert('현금영수증 번호는 숫자만 입력할 수 있습니다.');
+        return;
+      }
+    }
+    onPaymentClick();
+  };
+
   return (
     <Box
       w="100%"
@@ -37,7 +61,13 @@ export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) 
       </Heading>
       <Divider opacity={0.6} borderWidth="0px 0px 1px" w="100%" color="rgb(237, 237, 237)" />
       <Box w="100%" padding="16px">
-        <Checkbox cursor="pointer" display="inline-flex" alignItems="center" position="relative">
+        <Checkbox
+          cursor="pointer"
+          display="inline-flex"
+          alignItems="center"
+          position="relative"
+          onChange={handleCheckboxChange}
+        >
           현금영수증 신청
         </Checkbox>
         <Box w="100%" h="16px" />
@@ -77,7 +107,7 @@ export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) 
         color="rgb(17, 17, 17)"
         backgroundColor="rgb(254, 229, 0)"
         boxSizing="border-box"
-        onClick={onPaymentClick}
+        onClick={handlePaymentClick}
       >
         {price}원 결제하기
       </Button>
