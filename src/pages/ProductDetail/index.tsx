@@ -2,12 +2,15 @@ import { Box, Button, Center, Flex, HStack,Image, Input, Text, VStack } from "@c
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
+import { useAuth } from '@/provider/Auth';
+
 import { useGetProductDetail } from "../../api/hooks/useGetProductDetail";
 
 export const ProductDetailPage = () => {
   const { productDetail, loading, error, notFound } = useGetProductDetail();
   const [productQuantity, setProductQuantity] = useState<number>(1);
   const navigate = useNavigate();
+  const authInfo = useAuth();
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProductQuantity(Number(event.target.value));
@@ -15,6 +18,11 @@ export const ProductDetailPage = () => {
 
   const handleOrder = (event: React.FormEvent) => {
     event.preventDefault();
+    if (!authInfo) {
+      navigate("/login");
+      return;
+    }
+
     if (productDetail) {
       navigate("/order", {
         state: {
