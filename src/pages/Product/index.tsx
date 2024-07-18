@@ -44,7 +44,15 @@ export const ProductPage: React.FC = () => {
         });
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching product detail:', error);
+        if (axios.isAxiosError(error)) {
+          if (error.response && error.response.status === 500) {
+            navigate(RouterPath.home);
+          } else {
+            console.error('Error fetching product detail:', error.response?.statusText);
+          }
+        } else {
+          console.error('Error fetching product detail:', error);
+        }
       }
     };
 
