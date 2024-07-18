@@ -3,6 +3,7 @@ import { Box, Button, Flex, IconButton, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from '@/provider/Auth';
 import { RouterPath } from '@/routes/path';
 
 import useProductDetail from '../../../api/hooks/useProductDetail';
@@ -16,6 +17,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [price, setPrice] = useState<number>(0);
   const navigate = useNavigate();
+  const authInfo = useAuth()
 
   useEffect(() => {
     if (productDetail) {
@@ -36,7 +38,11 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const { detail } = productDetail;
 
   const handleOrder = () => {
-    navigate(RouterPath.order, { state: { productDetail: detail, quantity, price } });
+    if (!authInfo) {  // 로그인하지 않은 경우 로그인 페이지로 이동
+      navigate(RouterPath.login)
+    } else {  // 로그인 되어 있는 경우 상품 주문페이지로 이동
+      navigate(RouterPath.order, { state: { productDetail: detail, quantity, price } });
+    }
   };
 
   return (
