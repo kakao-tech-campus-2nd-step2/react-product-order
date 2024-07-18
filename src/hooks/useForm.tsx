@@ -23,12 +23,13 @@ const useForm = () => {
 		if (message.length > 100) {
 			messageError = "메시지는 100자 이내로 입력해주세요.";
 		}
-		if (receiptRequested && receiptNumber.length == 0) {
+		if (receiptRequested) {
+      if (receiptNumber.length == 0) {
 			receiptError = "현금영수증 번호를 입력해주세요.";
-		}
-		if (receiptRequested && !isNumeric(receiptNumber) ) {
+      } else if (!isNumeric(receiptNumber) ) {
 			receiptError = "현금영수증 번호는 숫자만 입력해주세요.";
-		}
+      }
+    }
 
 		if (messageError) {
 			alert(messageError);
