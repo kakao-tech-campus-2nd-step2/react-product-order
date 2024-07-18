@@ -20,8 +20,8 @@
 
 - 상품 상세 페이지
 
-  - [ ] Icon Button
-  - [ ] Number Input
+  - [x] Icon Button
+  - [x] Number Input
 
 - 주문하기 페이지
 

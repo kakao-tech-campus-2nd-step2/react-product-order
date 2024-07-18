@@ -1,14 +1,13 @@
-import { useRef } from 'react';
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { IconButton, Input, useNumberInput } from '@chakra-ui/react';
 
 import { ProductOptions } from '@/types/productType';
 
 import { Card } from '@/components/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input/Default';
 import { Container } from '@/components/ui/Layout/Container';
 import { Text } from '@/components/ui/Text';
 
-import { buttonStyle, cardStyle } from './styles';
+import { cardStyle } from './styles';
 
 type SelectQuantityProps = {
   productOptions: ProductOptions;
@@ -22,65 +21,37 @@ export const SelectQuantity = ({
   setQuantity,
 }: SelectQuantityProps) => {
   const maxQuantity = productOptions.giftOrderLimit;
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleDecreaseButton = () => {
-    if (inputRef.current) {
-      const updateQuantity = Math.max(1, quantity - 1);
-      setQuantity(updateQuantity);
-      inputRef.current.value = String(updateQuantity);
-    }
-  };
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
+    useNumberInput({
+      step: 1,
+      defaultValue: quantity,
+      min: 1,
+      max: maxQuantity,
+      onChange: (valueAsNumber) => {
+        setQuantity(Number(valueAsNumber));
+      },
+    });
 
-  const handleIncreaseButton = () => {
-    if (inputRef.current) {
-      const updateQuantity = Math.min(maxQuantity, quantity + 1);
-      setQuantity(updateQuantity);
-      inputRef.current.value = String(updateQuantity);
-    }
-  };
-
-  const handleInputBlur = () => {
-    if (inputRef.current) {
-      const inputValue = inputRef.current.value;
-      const validateValue = Math.max(
-        1,
-        Math.min(Number(inputValue), maxQuantity)
-      );
-      setQuantity(validateValue);
-      inputRef.current.value = String(validateValue);
-    }
-  };
+  const dec = getDecrementButtonProps();
+  const inc = getIncrementButtonProps();
+  const input = getInputProps();
 
   return (
     <Card flexDirection="column" gap="0.5rem" css={cardStyle}>
       <Text isBold>{productOptions.productName}</Text>
       <Container flexDirection="row" gap="0.5rem">
-        <Button
-          theme="lightGray"
-          size="medium"
-          onClick={handleDecreaseButton}
-          disabled={quantity <= 1}
-          css={buttonStyle}
-        >
-          -
-        </Button>
-        <Input
-          name="quantity"
-          type="number"
-          defaultValue={String(quantity)}
-          ref={inputRef}
-          onBlur={handleInputBlur}
+        <IconButton
+          aria-label="Decrease Quantity"
+          icon={<MinusIcon />}
+          {...dec}
         />
-        <Button
-          theme="lightGray"
-          size="medium"
-          onClick={handleIncreaseButton}
-          disabled={quantity >= maxQuantity}
-          css={buttonStyle}
-        >
-          +
-        </Button>
+        <Input {...input} />
+        <IconButton
+          aria-label="Decrease Quantity"
+          icon={<AddIcon />}
+          {...inc}
+        />
       </Container>
     </Card>
   );
