@@ -6,7 +6,7 @@ export const RouterPath = {
   login: '/login',
   notFound: '*',
   product: '/product/:productId',
-  orders: '/orders',
+  orders: '/order',
 };
 
 export const getDynamicPath = {
