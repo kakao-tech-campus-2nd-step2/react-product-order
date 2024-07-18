@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { useRef } from 'react';
 
 import { ProductOptions } from '@/types/productType';
 
@@ -21,21 +21,35 @@ export const SelectQuantity = ({
   quantity,
   setQuantity,
 }: SelectQuantityProps) => {
-  const limitQuantity = productOptions.giftOrderLimit;
+  const maxQuantity = productOptions.giftOrderLimit;
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.trim();
-    const valueToNumber = Number(inputValue.match(/\d+/g));
-    setQuantity(valueToNumber);
+  const handleDecreaseButton = () => {
+    if (inputRef.current) {
+      const updateQuantity = Math.max(1, quantity - 1);
+      setQuantity(updateQuantity);
+      inputRef.current.value = String(updateQuantity);
+    }
   };
 
-  const handleInputBlur = (value: string) => {
-    if (Number(value) > limitQuantity) {
-      setQuantity(100);
-      return;
+  const handleIncreaseButton = () => {
+    if (inputRef.current) {
+      const updateQuantity = Math.min(maxQuantity, quantity + 1);
+      setQuantity(updateQuantity);
+      inputRef.current.value = String(updateQuantity);
     }
+  };
 
-    setQuantity(Number(value));
+  const handleInputBlur = () => {
+    if (inputRef.current) {
+      const inputValue = inputRef.current.value;
+      const validateValue = Math.max(
+        1,
+        Math.min(Number(inputValue), maxQuantity)
+      );
+      setQuantity(validateValue);
+      inputRef.current.value = String(validateValue);
+    }
   };
 
   return (
@@ -45,7 +59,7 @@ export const SelectQuantity = ({
         <Button
           theme="lightGray"
           size="medium"
-          onClick={() => setQuantity(quantity - 1)}
+          onClick={handleDecreaseButton}
           disabled={quantity <= 1}
           css={buttonStyle}
         >
@@ -53,15 +67,16 @@ export const SelectQuantity = ({
         </Button>
         <Input
           name="quantity"
-          value={String(quantity)}
-          onChange={handleInputChange}
-          onBlur={(e) => handleInputBlur(e.target.value)}
+          type="number"
+          defaultValue={String(quantity)}
+          ref={inputRef}
+          onBlur={handleInputBlur}
         />
         <Button
           theme="lightGray"
           size="medium"
-          onClick={() => setQuantity(quantity + 1)}
-          disabled={quantity >= limitQuantity}
+          onClick={handleIncreaseButton}
+          disabled={quantity >= maxQuantity}
           css={buttonStyle}
         >
           +
