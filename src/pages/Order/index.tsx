@@ -1,20 +1,46 @@
-import { OrderListWithMessage } from '@/components/features/Order/organisms/OrderListWithMessage';
-import { OrderReceipt } from '@/components/features/Order/organisms/OrderReceipt';
-import { ProductTemplate } from '@/components/templates/ProductTemplate';
-import { useOrderPage } from '@/hooks/useOrderPage';
+import { Box, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
-export const orderLetterPlaceHolder = `선물과 함께 보낼 메시지를 적어보세요`;
+import { Spacing } from '@/components/common/layouts/Spacing';
+import { OrderLetter } from '@/components/features/Order/OrderLetter';
+import { OrderList } from '@/components/features/Order/OrderList';
+import { OrderSubTitle } from '@/components/features/Order/OrderSubTitle';
+import { ProductTemplate } from '@/components/templates/ProductTemplate';
+
+const tempPlaceHolder = `선물과 함께 보낼 메시지를 적어보세요`;
 
 export const OrderPage = () => {
-  const { onSubmit, memState, setMessage, cacheReceiptRefs } = useOrderPage();
+  const location = useLocation();
+  const [message, setMessage] = useState('');
+  const { state } = location;
+  const { defaultKey, cntMap } = state;
+  const currentProduct = cntMap.get(defaultKey);
+  console.log(message, currentProduct);
   return (
-    <form onSubmit={onSubmit}>
-      <ProductTemplate
-        leftMain={<OrderListWithMessage setMessage={setMessage} orderList={memState.orderList} />}
-        rightSide={
-          <OrderReceipt cacheReceiptRefs={cacheReceiptRefs} totalPrice={memState.totalPrice} />
-        }
-      />
-    </form>
+    <ProductTemplate
+      leftMain={
+        <Box
+          width="100%"
+          padding="44px 0 32px"
+          border="1px solid #e5e5e5"
+          borderTop="0"
+          borderBottom="0"
+          height="100%"
+        >
+          <OrderSubTitle subtitle="나에게 주는 선물" />
+          <OrderLetter setMessage={setMessage} placeholder={tempPlaceHolder} />
+          <Spacing height={8} backgroundColor="#ededed" />
+          <Box width="100%" padding="16px">
+            <Text fontSize="lg" fontWeight="bold">
+              선물내역
+            </Text>
+            <Box height="16px" />
+            <OrderList orderList={[currentProduct]} />
+          </Box>
+        </Box>
+      }
+      rightSide={<div>right side hi</div>}
+    />
   );
 };
