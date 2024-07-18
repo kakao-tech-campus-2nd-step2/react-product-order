@@ -18,7 +18,7 @@
 
 ### 🚀 2단계 - Validation 구현하기
 
-- [ ] 상품 상세 페이지에서 상품의 개수를 option API의 giftOrderLimit을 초과한 경우 선택이 불가하게 해요.
+- [x] 상품 상세 페이지에서 상품의 개수를 option API의 giftOrderLimit을 초과한 경우 선택이 불가하게 해요.
 
 - [x] 결제 페이지의 Form을 validation 해요. (4주차 미션 결과물 참고)
 
