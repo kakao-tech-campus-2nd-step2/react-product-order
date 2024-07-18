@@ -26,7 +26,7 @@ export const OrderPage = () => {
       isChecked: false,
       cashReceiptNumber: '',
     },
-    mode: 'onSubmit',
+    mode: 'onBlur',
   });
 
   const isChecked = watch('isChecked');
