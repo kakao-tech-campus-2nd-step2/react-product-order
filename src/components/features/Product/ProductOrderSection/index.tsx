@@ -19,7 +19,7 @@ import { authSessionStorage } from '@/utils/storage';
 
 type Props = {
   name: string;
-  totalPrice: string;
+  totalPrice: number;
   giftOrderLimit: number;
 };
 
@@ -50,7 +50,7 @@ export const ProductOrderSection = ({ productKey }: { productKey: string }) => {
 
   const product: Props = {
     name: currentProduct.name,
-    totalPrice: currentProduct.price.sellingPrice,
+    totalPrice: currentProduct.price.sellingPrice * count,
     giftOrderLimit: currentOption.giftOrderLimit,
   };
 
