@@ -122,7 +122,7 @@ export const ProductDetailPage = () => {
             </Flex>
           </Box>
           <Text color="gray.500">{product.price.sellingPrice}원</Text>
-          <Button mt={4} colorScheme="blue" onClick={handleProceedToPayment}>
+          <Button mt={4} colorScheme="black" bg="black" color="white" onClick={handleProceedToPayment} position="absolute" right={50} bottom={0} p={20} width="260px">
             나에게 선물하기
           </Button>
         </Box>
