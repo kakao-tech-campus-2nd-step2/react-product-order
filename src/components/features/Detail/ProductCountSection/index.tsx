@@ -80,39 +80,37 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
       setCount(giftOrderLimit);
       return;
     }
-    if (value < 1) {
+
+    if (newCount < 1) {
       setCount(1);
       return;
     }
-    setCount(value);
 
     setCount(newCount);
   };
 
   return (
-    <>
-      <Stack direction="column" justifyContent="space-between">
-        <Box border="1px solid" height="fit-content">
-          <Text fontWeight="bold">{name}</Text>
-          <Stack direction="row">
-            <Button width={10} onClick={() => handleCountButtonClick(1)}>
-              +
-            </Button>
-            <Input type="number" value={count} onChange={handleCountInputChange} />
-            <Button onClick={() => handleCountButtonClick(-1)}>-</Button>
-          </Stack>
-        </Box>
-
-        <Stack>
-          <Text width="100%" padding="1rem" backgroundColor="whitesmoke">
-            총 가격: {totalPrice}
-          </Text>
-          <Button flex="grow" onClick={handleOrder}>
-            선물하기
+    <Stack direction="column" justifyContent="space-between">
+      <Box border="1px solid" height="fit-content">
+        <Text fontWeight="bold">{name}</Text>
+        <Stack direction="row">
+          <Button width={10} onClick={() => handleCountButtonClick(1)}>
+            +
           </Button>
+          <Input type="number" value={count} onChange={handleCountInputChange} />
+          <Button onClick={() => handleCountButtonClick(-1)}>-</Button>
         </Stack>
+      </Box>
+
+      <Stack>
+        <Text width="100%" padding="1rem" backgroundColor="whitesmoke">
+          총 가격: {totalPrice}
+        </Text>
+        <Button flex="grow" onClick={handleOrder}>
+          선물하기
+        </Button>
       </Stack>
-    </>
+    </Stack>
   );
 };
 
