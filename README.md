@@ -1,27 +1,33 @@
 # 카카오 테크 캠퍼스 - 프론트엔드 카카오 선물하기 편
 
-## Week 4. 2단계 - validation 구현하기
+## Week 4. 3단계 - React Hook Form으로 form 리팩터링
 
 ### 📝 요구사항
 
-- 상품 상세 페이지에서 상품의 개수를 option API의 giftOrderLimit을 초과한 경우 선택이 불가하게 해요.
-- 결제 페이지의 Form을 validation 해요.
-  - 카드 메시지를 입력하지 않으면 메시지를 입력하라고 안내해요.
-  - 카드 메시지가 100글자가 넘어가면 100자 이내로 입력하라고 안내해요.
-  - 현금 영수증 checkbox 클릭 시 현금영수증 번호가 입력되었는지 확인해요.
-  - 현금 영수증 입력은 숫자만 입력하도록 안내해요.
+- 기존에 만든 form / input을 react-hook-form으로 변경해요.
+- validate 또한 react-hook-form 기능을 적극적으로 활용해요.
+- zod를 사용해도 좋아요.
 
 ### 🚀 구현할 기능 목록
 
-#### 상품 상세 페이지
+#### react-hook-form와 zod
 
-- [x] 상품 개수 유효성 검사
-  - 1 ~ giftOrderLimt-1
+- [ ] 세팅하기
+- [ ] 상품 상세 페이지의 number input 변경하기
+- [ ] form 변경하기
 
-#### 결제 페이지
+#### Chakra UI
 
-- [x] 카드 메세지
-  - [x] 입력 여부
-  - [x] 100글자 이내
-- [x] checkbox 클릭 시 현금 영수증 번호 입력 여부
-- [x] 현금 영수증 번호 숫자만 입력
+- 상품 상세 페이지
+
+  - [ ] Icon Button
+  - [ ] Number Input
+
+- 주문하기 페이지
+
+  - [ ] Form Control
+  - [ ] Checkbox
+  - [ ] Select
+  - [ ] Input
+
+- [ ] Alert Dialog
