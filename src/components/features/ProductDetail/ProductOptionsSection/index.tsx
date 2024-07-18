@@ -16,14 +16,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import type { ProductDetail, ProductOption } from '@/types';
-import { authSessionStorage } from '@/utils/storage';
+import { authSessionStorage, orderLocalStorage } from '@/utils/storage';
 
 interface Props {
   product: ProductDetail;
   productOptions: ProductOption[];
 }
 
-export const ProductOptionsSection = ({ product, productOptions }: Props) => {
+export const ProductOptionsSection = ({ product, productOptions = [] }: Props) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const navigate = useNavigate();
@@ -40,6 +40,16 @@ export const ProductOptionsSection = ({ product, productOptions }: Props) => {
   const input = getInputProps();
 
   const handleGiftClick = () => {
+    const selectedProduct = {
+      product: {
+        ...product,
+        selectedOption: Array.isArray(productOptions)
+          ? productOptions.find((option) => option.id === selectedOption) || null
+          : null,
+        quantity,
+      },
+    };
+    orderLocalStorage.set(selectedProduct);
     if (authSessionStorage.get()) {
       navigate('/order');
     } else {
@@ -52,7 +62,9 @@ export const ProductOptionsSection = ({ product, productOptions }: Props) => {
   const totalPrice =
     product.price.sellingPrice * quantity +
     (selectedOption
-      ? productOptions.find((option) => option.id === selectedOption)?.additionalPrice || 0
+      ? Array.isArray(productOptions)
+        ? productOptions.find((option) => option.id === selectedOption)?.additionalPrice || 0
+        : 0
       : 0);
 
   return (
