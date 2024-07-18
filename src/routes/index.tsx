@@ -4,7 +4,7 @@ import { Layout } from '@/components/features/Layout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
-import Order  from '@/pages/Order';
+import Order from '@/pages/Order';
 import Product from '@/pages/Product';
 import { ThemePage } from '@/pages/Theme';
 
@@ -26,11 +26,11 @@ const router = createBrowserRouter([
       },
       {
         path: RouterPath.products,
-        element: <Product />
+        element: <Product />,
       },
       {
         path: RouterPath.order,
-        element: <Order />
+        element: <Order />,
       },
       {
         path: RouterPath.myAccount,

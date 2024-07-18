@@ -52,7 +52,6 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
                 subtitle={brandInfo.name}
               />
             </Link>
-
           ))}
         </Grid>
         {hasNextPage && (
