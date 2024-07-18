@@ -4,7 +4,7 @@ import type { GoodsData } from '@/types';
 
 import { fetchInstance } from '../instance';
 
-type ProductDetaiResponseData = {
+interface ProductDetaiResponseData {
   detail: GoodsData & {
     isAccessableProductPage: boolean;
     review: {
@@ -27,7 +27,7 @@ type ProductDetaiResponseData = {
       }[];
     };
   };
-};
+}
 
 const getProductDetailPath = (productId: string) => `/v1/products/${productId}/detail`;
 const productDetailQueryKey = (productId: string) => [getProductDetailPath(productId)];

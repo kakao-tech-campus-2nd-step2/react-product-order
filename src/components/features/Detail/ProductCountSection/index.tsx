@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+import { useGetProductOption } from '@/api/hooks/useGetProductOption';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath } from '@/routes/path';
 import { orderLocalStorage } from '@/utils/storage';
@@ -13,17 +14,26 @@ interface ProductCountSectionProps {
   productId: string;
 }
 const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
-  const { data, isPending, isError } = useGetProductDetail(productId);
+  const {
+    data: detailData,
+    isPending: isDetailPending,
+    isError: inDetailError,
+  } = useGetProductDetail(productId);
+  const {
+    data: optionData,
+    isPending: isOptionPending,
+    isError: isOptionError,
+  } = useGetProductOption(productId);
 
   const [count, setCount] = useState(DEFAULT_COUNT);
   const authInfo = useAuth();
   const navigate = useNavigate();
 
-  if (isPending) {
+  if (isDetailPending || isOptionPending) {
     return <div>loading...</div>;
   }
 
-  if (isError) {
+  if (inDetailError || isOptionError) {
     navigate('/');
     return <div>error...</div>;
   }
@@ -31,7 +41,9 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
   const {
     name,
     price: { basicPrice },
-  } = data.detail;
+  } = detailData.detail;
+
+  const { giftOrderLimit } = optionData.options;
 
   const totalPrice = basicPrice * count;
 
@@ -47,25 +59,47 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
     navigate('/order');
   };
 
+  const handleCountInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+
+    if (value > giftOrderLimit) {
+      alert('선물 주문 가능 수량을 초과하였습니다.');
+      setCount(giftOrderLimit);
+      return;
+    }
+    if (value < 1) {
+      setCount(1);
+      return;
+    }
+    setCount(value);
+  };
+  const handleCountButtonClick = (value: number) => {
+    const newCount = count + value;
+    if (newCount > giftOrderLimit) {
+      alert('선물 주문 가능 수량을 초과하였습니다.');
+      setCount(giftOrderLimit);
+      return;
+    }
+    if (value < 1) {
+      setCount(1);
+      return;
+    }
+    setCount(value);
+
+    setCount(newCount);
+  };
+
   return (
     <>
       <Stack direction="column" justifyContent="space-between">
         <Box border="1px solid" height="fit-content">
           <Text fontWeight="bold">{name}</Text>
           <Stack direction="row">
-            <Button width={10} onClick={() => setCount((prev) => prev + 1)}>
+            <Button width={10} onClick={() => handleCountButtonClick(1)}>
               +
             </Button>
-            <Input type="number" value={count} onChange={(e) => setCount(Number(e.target.value))} />
-            <Button
-              onClick={() => {
-                if (count > 1) {
-                  setCount((prev) => prev - 1);
-                }
-              }}
-            >
-              -
-            </Button>
+            <Input type="number" value={count} onChange={handleCountInputChange} />
+            <Button onClick={() => handleCountButtonClick(-1)}>-</Button>
           </Stack>
         </Box>
 
