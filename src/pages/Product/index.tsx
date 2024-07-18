@@ -75,6 +75,8 @@ export const ProductDetailPage = () => {
     return <Text>상품을 찾을 수 없습니다.</Text>;
   }
 
+  const totalPrice = product.price.sellingPrice * quantity;
+
   return (
     <Box p={14} position="relative">
       <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'center', md: 'flex-start' }} maxWidth="1000px" mx="auto">
@@ -122,7 +124,8 @@ export const ProductDetailPage = () => {
             </Flex>
           </Box>
           <Text color="gray.500">{product.price.sellingPrice}원</Text>
-          <Button mt={4} colorScheme="black" bg="black" color="white" onClick={handleProceedToPayment} position="absolute" right={50} bottom={0} p={20} width="260px">
+          <Text fontWeight="bold" mt={4} position="absolute" right={50} bottom={60} p={20} width="260px">총 결제 금액 {totalPrice}원</Text>
+          <Button mt={4} bg="black" color="white" onClick={handleProceedToPayment} position="absolute" right={50} bottom={0} p={20} width="260px">
             나에게 선물하기
           </Button>
         </Box>
