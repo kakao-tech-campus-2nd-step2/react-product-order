@@ -1,13 +1,12 @@
 import { Box, Textarea } from '@chakra-ui/react';
-import { memo } from 'react';
-
-import { orderLetterPlaceHolder } from '@/pages/Order';
 
 export interface IOrderLetter {
   setMessage: (message: string) => void;
+  placeholder: string;
 }
 
-export const OrderLetter = memo(({ setMessage }: IOrderLetter) => {
+// TODO: Memoization
+export const OrderLetter = ({ setMessage, placeholder }: IOrderLetter) => {
   const handleMessageChange: React.ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     setMessage(event.target.value);
   };
@@ -16,7 +15,7 @@ export const OrderLetter = memo(({ setMessage }: IOrderLetter) => {
     <Box width="100%" padding="26px 30px 30px">
       <Textarea
         onChange={handleMessageChange}
-        placeholder={orderLetterPlaceHolder}
+        placeholder={placeholder}
         resize="none"
         height="100px"
         variant="filled"
@@ -24,4 +23,4 @@ export const OrderLetter = memo(({ setMessage }: IOrderLetter) => {
       />
     </Box>
   );
-});
+};
