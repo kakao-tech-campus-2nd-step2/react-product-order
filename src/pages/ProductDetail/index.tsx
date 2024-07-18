@@ -10,7 +10,7 @@ const ProductDetialPage = () => {
 
   if (!productId) {
     navigate('/');
-    return <></>;
+    return null;
   }
 
   return (
