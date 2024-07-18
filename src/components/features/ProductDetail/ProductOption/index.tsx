@@ -9,16 +9,40 @@ import { useAuth } from '@/provider/Auth';
 import { useNavigate } from 'react-router-dom';
 import { getDynamicPath } from '@/routes/path';
 
+import { useState, useEffect } from 'react';
+
 type Props = {
   productId: string;
   productName: string;
   productPrice: number;
+  maxProduct: number | undefined;
 };
 
-export const ProductOption = ({ productId, productName, productPrice }: Props) => {
-
+export const ProductOption = ({ productId, productName, productPrice, maxProduct }: Props) => {
   const auth = useAuth();
   const navigate = useNavigate();
+
+  const [count, setCount] = useState<number>(1); // 물품 개수
+  const [resultPrice, setResultPrice] = useState<number>(productPrice);
+
+  const minusBtnClickedHandler = () => {
+    setCount(count - 1);
+  }
+
+  const plusBtnClickedHandler = () => {
+    setCount(count + 1);
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      setCount(value);
+    }
+  }
+
+  useEffect(() => {
+    setResultPrice(productPrice * count);
+  }, [count, productPrice])
 
   const btnClickedHandler = () => {
     if (auth === undefined) {
@@ -36,17 +60,25 @@ export const ProductOption = ({ productId, productName, productPrice }: Props) =
             {productName}
           </Title>
           <Qty>
-            <Button isDisabled={true} style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>−</Button>
-            <NumberInput defaultValue={1} min={1}>
-              <NumberInputField />
+            <Button
+              onClick={minusBtnClickedHandler}
+              isDisabled={count <= 1 ? true : false}
+              style={{
+                fontSize: '30px', padding: '0', fontWeight: '400'
+              }}>−</Button>
+            <NumberInput min={1} max={maxProduct} value={count}>
+              <NumberInputField onChange={handleInputChange} />
             </NumberInput>
-            <Button style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>+</Button>
+            <Button
+              onClick={plusBtnClickedHandler}
+              isDisabled={maxProduct ? (count >= maxProduct ? true : false) : false}
+              style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>+</Button>
           </Qty>
         </Option>
         <Price>
           <AllPrice>
             총 결제 금액
-            <Result>{productPrice}원</Result>
+            <Result>{resultPrice}원</Result>
           </AllPrice>
           <ForMeBtn onClick={btnClickedHandler}>나에게 선물하기</ForMeBtn>
         </Price>

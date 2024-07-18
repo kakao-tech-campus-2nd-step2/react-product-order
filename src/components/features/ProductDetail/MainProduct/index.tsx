@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { useGetProductsDetail } from '@/api/hooks/useGetProductDetail';
+import { useGetProductsOption } from '@/api/hooks/useGetProductOption';
 import { Spinner } from '@/components/common/Spinner';
 
 import { ProductOption } from '../ProductOption';
@@ -15,7 +16,12 @@ export const MainProduct = ({ productId }: Props) => {
       productId,
     });
 
+  const { dataOption } =
+    useGetProductsOption({
+      productId,
+    });
 
+  console.log(dataOption);
 
   if (isLoading)
     return (
@@ -47,7 +53,11 @@ export const MainProduct = ({ productId }: Props) => {
           </Header>
         </InsideWrapper>
       </Wrapper>
-      <ProductOption productId={productId} productName={data.detail.name} productPrice={data.detail.price.sellingPrice} />
+      <ProductOption
+        productId={productId}
+        productName={data.detail.name}
+        productPrice={data.detail.price.sellingPrice}
+        maxProduct={dataOption?.options.giftOrderLimit} />
     </>
   );
 };

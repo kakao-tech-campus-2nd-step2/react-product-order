@@ -65,6 +65,7 @@ export type ProductOptions = {
 export type ProductOptionData = {
   options: {
     giftOrderLimit: number;
+    hasOption: boolean;
     names: string[];
     options: ProductOptions[];
     productId: string;

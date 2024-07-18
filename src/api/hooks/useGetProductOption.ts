@@ -8,6 +8,8 @@ type RequestParams = {
 
 import { ProductOptionData } from '@/types';
 
+
+
 const getProductsOptionPath = ({ productId }: RequestParams) => {
     const params = new URLSearchParams();
     return `/v1/products/${productId}/options?${params.toString()}`;
@@ -21,7 +23,7 @@ export const getProductsOption = async (params: RequestParams) => {
 };
 
 export const useGetProductsOption = ({ productId }: RequestParams) => {
-    const [data, setData] = useState<any | undefined>();
+    const [dataOption, setDataOption] = useState<ProductOptionData | undefined>();
     const [isLoading, setLoading] = useState(true);
     const [isError, setError] = useState(false);
 
@@ -32,12 +34,12 @@ export const useGetProductsOption = ({ productId }: RequestParams) => {
                 setError(false);
                 const response = await getProductsOption({ productId });
 
-                setData(response);
+                setDataOption(response);
                 setLoading(false);
             } catch {
                 setError(true);
                 setLoading(false);
-                setData(undefined);
+                setDataOption(undefined);
             }
         };
 
@@ -45,7 +47,7 @@ export const useGetProductsOption = ({ productId }: RequestParams) => {
     }, [productId]);
 
     return {
-        data,
+        dataOption,
         isLoading,
         isError,
     };
