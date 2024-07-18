@@ -41,7 +41,7 @@ const OrderPage = () => {
         <Text fontSize="xl" fontWeight="bold">결제 정보</Text>
         <Checkbox mt={3}>현금영수증 신청</Checkbox>
         <Select mt={3} placeholder="개인소득공제">
-          <option value="business">사업자증빙</option>
+          <option value="business">사업자증빙용</option>
         </Select>
         <Input mt={3} placeholder="(-없이) 숫자만 입력해주세요." />
 

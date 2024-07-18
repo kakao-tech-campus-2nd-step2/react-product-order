@@ -10,7 +10,6 @@ type RequestParams = {
 
 export const getProductDetail = async ({ productId }: RequestParams): Promise<GoodsData> => {
     const response = await fetchInstance.get<{ detail: GoodsData }>(`/v1/products/${productId}/detail`);
-    console.log('API 응답 데이터:', response.data.detail); 
     return response.data.detail; 
   };
   

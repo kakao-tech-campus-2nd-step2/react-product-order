@@ -1,17 +1,18 @@
-import axios from 'axios';
-import { useQuery } from 'react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-type ProductOption = {
-  id: number;
-  name: string;
-  additionalPrice: number;
+import type { ProductOption } from '@/types';
+
+import { fetchInstance } from '../instance';
+
+const fetchProductOptions = async (productId: number): Promise<ProductOption> => {
+  const response = await fetchInstance.get(`/v1/products/${productId}/options`);
+  return response.data.options; 
 };
 
-const fetchProductOptions = async (productId: number): Promise<ProductOption[]> => {
-  const response = await axios.get(`/v1/products/${productId}/options`);
-  return response.data;
-};
-
-export const useGetProductOptions = (productId: number) => {
-  return useQuery<ProductOption[], Error>(['productOptions', productId], () => fetchProductOptions(productId));
+export const useGetProductOptions = (productId: number): UseQueryResult<ProductOption> => {
+  return useQuery<ProductOption, Error>({
+    queryKey: ['productOptions', productId],
+    queryFn: () => fetchProductOptions(productId)
+  });
 };

@@ -33,3 +33,10 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductOption = {
+  id: number;
+  name: string;
+  additionalPrice: number;
+  giftOrderLimit: number;
+};

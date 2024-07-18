@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+import { useGetProductOptions } from '@/api/hooks/useGetProductOptions';
 import { useAuth } from '@/provider/Auth';
 
 import { Header } from '../../components/features/Layout/Header';
@@ -18,14 +19,29 @@ const ProductDetailPage: React.FC = () => {
   const authInfo = useAuth(); 
 
   const { data, isLoading, isError } = useGetProductDetail(productId);
+  const { data: optionsData, isLoading: isOptionsLoading, isError: isOptionsError } = useGetProductOptions(productId);
   const [quantity, setQuantity] = useState(1);
   const quantityInputRef = useRef<HTMLInputElement>(null);
 
-  if (isLoading) return <Spinner />;
-  if (isError) return <Text>에러가 발생했습니다.</Text>;
-  if (!data || !data.price) return <Text>상품을 찾을 수 없습니다.</Text>;
+  console.log('Product Detail Data:', data);
+  console.log('Product Options Data:', optionsData);
+  console.log('isLoading:', isLoading, 'isError:', isError);
+  console.log('isOptionsLoading:', isOptionsLoading, 'isOptionsError:', isOptionsError);
 
-  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  if (isLoading || isOptionsLoading) return <Spinner />;
+  if (isError || isOptionsError) return <Text>에러가 발생했습니다.</Text>;
+  if (!data || !data.price || !optionsData) return <Text>상품을 찾을 수 없습니다.</Text>;
+
+  const giftOrderLimit = optionsData.giftOrderLimit || 1;
+  
+  const handleIncrease = () => {
+    if (quantity < giftOrderLimit) {
+      setQuantity((prev) => prev + 1);
+    } else {
+      alert(`최대 주문 가능 수량은 ${giftOrderLimit}개 입니다.`);
+    }
+  };
+
   const handleDecrease = () => setQuantity((prev) => Math.max(1, prev - 1));
 
   const handleGiftClick = () => {
@@ -82,5 +98,6 @@ const ProductDetailPage: React.FC = () => {
     </Box>
   );
 };
+
 
 export default ProductDetailPage;
