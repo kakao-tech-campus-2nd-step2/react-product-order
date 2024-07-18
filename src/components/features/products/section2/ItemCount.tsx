@@ -1,16 +1,26 @@
 import { Button, Flex, Input, Text, useNumberInput } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
-export default function ItemCount() {
+type ItemCountProps = {
+  name: string | undefined;
+  setTotalCount: (value: number) => void;
+};
+
+export default function ItemCount({ name, setTotalCount }: ItemCountProps) {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
     defaultValue: 1,
     min: 1,
-    max: 10,
+    max: 100,
   });
 
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
+
+  useEffect(() => {
+    setTotalCount(input.value);
+  }, [input.value, setTotalCount]);
 
   return (
     <Flex
@@ -21,10 +31,10 @@ export default function ItemCount() {
       p="12px 14px 16px"
       gap="8px"
     >
-      <Text fontWeight="700">[특가] 치악산 복숭아 당도최고 </Text>
+      <Text fontWeight="700">{name}</Text>
       <Flex gap={'8px'} w="100%">
         <Button {...dec}>-</Button>
-        <Input flexGrow={1} {...input} />
+        <Input {...input} />
         <Button {...inc}>+</Button>
       </Flex>
     </Flex>

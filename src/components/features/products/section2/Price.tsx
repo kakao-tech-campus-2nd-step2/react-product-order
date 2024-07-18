@@ -1,6 +1,12 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
 
-export default function Price() {
+export default function Price({
+  totalPrices,
+  onClickPayment,
+}: {
+  totalPrices: number;
+  onClickPayment: () => void;
+}) {
   const textStyles = {
     bg: 'rgb(245, 245, 245)',
     fontWeight: 700,
@@ -31,10 +37,10 @@ export default function Price() {
           총 결제 금액
         </Text>
         <Text fontSize="20px" sx={textStyles}>
-          10000원
+          {totalPrices}원
         </Text>
       </Flex>
-      <Button _hover={{ bg: 'rgb(34,34,34)' }} sx={ButtonStyle}>
+      <Button _hover={{ bg: 'rgb(34,34,34)' }} sx={ButtonStyle} onClick={onClickPayment}>
         나에게 선물하기
       </Button>
     </Flex>
