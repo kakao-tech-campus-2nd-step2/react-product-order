@@ -1,6 +1,7 @@
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 
+import { BASE_URI } from '@/constants/URI.ts';
 import { QueryClient } from '@tanstack/react-query';
 
 const initInstance = (config: AxiosRequestConfig): AxiosInstance => {
@@ -18,7 +19,7 @@ const initInstance = (config: AxiosRequestConfig): AxiosInstance => {
 };
 
 export const fetchInstance = initInstance({
-  baseURL: 'https://kakao-tech-campus-mock-server.vercel.app/api',
+  baseURL: BASE_URI,
 });
 
 export const queryClient = new QueryClient({
