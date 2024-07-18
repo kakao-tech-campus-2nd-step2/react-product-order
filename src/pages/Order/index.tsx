@@ -1,4 +1,5 @@
 import { Box, Flex, Spinner } from '@chakra-ui/react';
+import { useRef } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 import { useGetProductDetails } from '@/api/hooks/useGetProductDetails';
@@ -11,8 +12,21 @@ export const OrderPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const location = useLocation();
   const quantity = location.state?.quantity ?? 1;
+  const messageRef = useRef<HTMLTextAreaElement>(null);
 
   const { data, isError, isLoading } = useGetProductDetails(productId!);
+
+  const handlePaymentClick = () => {
+    if (!messageRef.current?.value) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
+    if(messageRef.current.value.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      return;
+    }
+    alert('주문이 완료되었습니다.');
+  };
 
   if (isLoading) {
     return (
@@ -47,7 +61,7 @@ export const OrderPage = () => {
           <Flex w="100%" position="relative">
             <Box as="main" w="100%" maxW="900px">
               <Box borderLeft="1px solid rgb(229, 229, 229)" h="calc(-54px + 100vh)">
-                <MessageSection />
+                <MessageSection ref={messageRef} />
                 <Box w="100%" backgroundColor="rgb(237, 237, 237)" h="8px" />
                 <GiftInfoSection data={data} quantity={quantity} />
               </Box>
@@ -60,7 +74,10 @@ export const OrderPage = () => {
               maxW="360px"
               h="calc(-54px + 100vh)"
             >
-              <PaymentInfoSection price={data.price.sellingPrice * quantity} />
+              <PaymentInfoSection
+                price={data.price.sellingPrice * quantity}
+                onPaymentClick={handlePaymentClick}
+              />
             </Box>
           </Flex>
         </Flex>
