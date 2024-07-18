@@ -46,13 +46,27 @@ export const ProductDetailPage = () => {
   if (!data) {
     return null;
   }
-
+  
   return (
     <Center w="100%">
       <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
         <Flex w="100%" position="relative">
-          <ProductDetailSection {...data} />
-          <ProductOrderSection {...data} />
+          <ProductDetailSection
+            id={parseInt(productId!)}
+            name={data.name}
+            imageURL={data.imageURL}
+            price={data.price}
+            wish={data.wish}
+            brandInfo={data.brandInfo}
+          />
+          <ProductOrderSection
+            id={parseInt(productId!)}
+            name={data.name}
+            imageURL={data.imageURL}
+            price={data.price}
+            wish={data.wish}
+            brandInfo={data.brandInfo}
+          />
         </Flex>
       </Flex>
     </Center>
