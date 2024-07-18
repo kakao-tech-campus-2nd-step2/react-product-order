@@ -1,6 +1,8 @@
+// import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 
 import { useGetProductDetails } from '@/api/hooks/useGetProductsDetail';
+import { useGetProductOptions } from '@/api/hooks/useGetProductsOptions';
 import { Container } from '@/components/common/layouts/Container';
 import ProductBuySection from '@/components/features/Product/ProductBuySection';
 import ProductInfoSection from '@/components/features/Product/ProductInfoSection';
@@ -9,16 +11,33 @@ import styled from '@emotion/styled';
 
 const ProductPage = () => {
   const { productId = '' } = useParams<{ productId: string }>();
-  const { data, isLoading, isError } = useGetProductDetails({ productId });
+  const {
+    data: productDetails,
+    isLoading: isLoadingDetails,
+    isError: isErrorDetails,
+  } = useGetProductDetails({ productId });
+  const {
+    data: productOptions,
+    isLoading: isLoadingOptions,
+    isError: isErrorOptions,
+  } = useGetProductOptions({ productId });
+  // const queryClient = useQueryClient();
+
   const {
     name: title = '',
     brandInfo: { name: subtitle = '' } = {},
     price: { sellingPrice: amount = 0 } = {},
     imageURL: imageSrc = '',
-  } = data?.detail || {};
+  } = productDetails?.detail || {};
 
-  if (isLoading || isError) return null;
-  if (!data) return null;
+  const giftOrderLimit = productOptions?.options.giftOrderLimit || 0;
+
+  if (isLoadingDetails || isErrorDetails) return null;
+  if (!productDetails) return null;
+
+  if (isLoadingOptions || isErrorOptions) return null;
+  if (!productOptions) return null;
+
   return (
     <ProductPageLayout>
       <Container maxWidth='1280px'>
@@ -39,6 +58,7 @@ const ProductPage = () => {
             imageSrc={imageSrc}
             amount={amount}
             subtitle={subtitle}
+            limit={giftOrderLimit}
           />
         </Box>
       </Container>
