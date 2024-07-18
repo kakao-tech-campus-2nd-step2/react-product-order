@@ -37,7 +37,7 @@ const fetchProductOption = async (productId: string) => {
 
 export const useGetProductOption = (productId: string) => {
   const query = useQuery<ProductOptionsResponse, Error>(
-    ['productDetail', productId],
+    ['productOption', productId],
     () => fetchProductOption(productId),
   );
 

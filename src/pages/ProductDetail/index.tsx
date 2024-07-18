@@ -17,12 +17,14 @@ const ProductDetailPage = () => {
 
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [giftOrderLimit, setGiftOrderLimit] = useState(1);
 
   useEffect(() => {
-    if (data) {
+    if (data && optionData) {
       setTotalPrice(data.detail.price.sellingPrice * quantity);
+      setGiftOrderLimit(optionData?.options?.giftOrderLimit || 1);
     }
-  }, [data, quantity]);
+  }, [data, optionData, quantity]);
 
   useEffect(() => {
     if (!loading && (errorMessage || !data)) {
@@ -34,6 +36,7 @@ const ProductDetailPage = () => {
     step: 1,
     defaultValue: 1,
     min: 1,
+    max: giftOrderLimit,
     onChange: (_, valueAsNumber) => setQuantity(valueAsNumber),
   });
 
