@@ -19,7 +19,7 @@ export type ProductOptionsResponse = {
 const fetchProductOption = async (productId: string) => {
 	try {
 		const response = await fetchInstance.get<ProductOptionsResponse>(
-			`/v1/products/${productId}/detail`,
+			`/v1/products/${productId}/options`,
 		);
 		return response.data;
 	} catch (err) {
@@ -39,42 +39,3 @@ export const useGetProductOption = (productId: string) => {
 
 	return [query.data, { loading: query.isLoading, errorMessage: query.error?.message }] as const;
 };
-
-
-// const getProductOptionsPath = (productId: string) => `/v1/products/${productId}/options`;
-
-// export const getProductOptions = async (productId: string) => {
-//   const response = await fetchInstance.get<ProductOptionsResponse>(getProductOptionsPath(productId));
-//   return response.data;
-// };
-
-// export const useGetProductOptions = (productId: string) => {
-//   const [data, setData] = useState<ProductOptionsResponse | undefined>();
-//   const [isLoading, setLoading] = useState(true);
-//   const [isError, setError] = useState(false);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         setLoading(true);
-//         setError(false);
-//         const response = await getProductOptions(productId);
-//         setData(response);
-//         setLoading(false);
-//       } catch (error) {
-//         setError(true);
-//         setData(undefined);
-//       }
-//     };
-
-//     fetchData();
-//   }, [productId]);
-
-//   return {
-//     data,
-//     isLoading,
-//     isError,
-//   };
-// };
-
-// export default useGetProductOptions;

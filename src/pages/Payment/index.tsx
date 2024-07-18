@@ -38,8 +38,8 @@ const PaymentPage = () => {
 	} = useForm();
 	
 	useEffect(() => {
-			console.log(data?.productName);
-	}, [data?.productName])
+			console.log(data?.options);
+	}, [data?.options]);
 	
 	if (loading) {
 		return (
