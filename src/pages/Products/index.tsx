@@ -1,18 +1,21 @@
 import { Flex } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { useGetProductDetail } from "@/api/hooks/useGetProductDetail";
 import { Spinner } from "@/components/common/Spinner";
 import { AsideContent } from "@/components/features/Products/ProductAside";
 import { MainContent } from "@/components/features/Products/ProductMain";
+import { useAuth } from "@/provider/Auth";
 import { RouterPath } from "@/routes/path";
 
 export const ProductsPage = () => {
   const { productId = "" } = useParams<{ productId: string }>();
   const { data, isError, isLoading } = useGetProductDetail(productId);
   const [quantity, setQuantity] = useState(1);
+  const authInfo = useAuth();
+  const navigate = useNavigate();
 
   if (!productId) {
     return <Navigate to={RouterPath.notFound} />;
@@ -27,6 +30,14 @@ export const ProductsPage = () => {
   if (isError) return <Navigate to={RouterPath.notFound} />;
   if (!data) return <></>;
 
+  const handleClick = () => {
+    if (authInfo) navigate("/order", { state: { quantity, data } });
+    else {
+      const goLogin = confirm("로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?");
+      if (goLogin) navigate("login");
+    }
+  };
+
   return (
     <Flex width="100%" justifyContent="center" alignItems="center">
       <Flex
@@ -37,7 +48,7 @@ export const ProductsPage = () => {
       >
         <Flex width="100%" justifyContent="flex-start" alignItems="flex-start" position="relative">
           {MainContent(data.detail.imageURL, data.detail.name, data.detail.price.sellingPrice)}
-          {AsideContent(data, quantity, setQuantity)}
+          {AsideContent(data, quantity, setQuantity, handleClick)}
         </Flex>
       </Flex>
     </Flex>

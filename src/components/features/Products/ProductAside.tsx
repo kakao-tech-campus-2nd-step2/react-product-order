@@ -1,12 +1,14 @@
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 
 import type { ProductDetailResponseData } from "@/api/hooks/useGetProductDetail";
+
+type HandleClickFunction = () => void;
 
 export const AsideContent = (
   data: ProductDetailResponseData,
   quantity: number,
   setQuantity: React.Dispatch<React.SetStateAction<number>>,
+  handleClick: HandleClickFunction,
 ) => {
   const decreaseQuantity = () => {
     setQuantity(quantity - 1);
@@ -177,25 +179,24 @@ export const AsideContent = (
               {data.detail.price.sellingPrice * quantity}원
             </Text>
           </Box>
-          <Link to="/order" state={{ quantity, data }}>
-            <Button
-              width="100%"
-              borderRadius="4px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              cursor="pointer"
-              transition="background-color 200ms ease"
-              height="60px"
-              fontSize="16px"
-              fontWeight="400"
-              color="white"
-              backgroundColor="rgb(17, 17, 17)"
-              boxSizing="border-box"
-            >
-              나에게 선물하기
-            </Button>
-          </Link>
+          <Button
+            width="100%"
+            borderRadius="4px"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            cursor="pointer"
+            transition="background-color 200ms ease"
+            height="60px"
+            fontSize="16px"
+            fontWeight="400"
+            color="white"
+            backgroundColor="rgb(17, 17, 17)"
+            boxSizing="border-box"
+            onClick={handleClick}
+          >
+            나에게 선물하기
+          </Button>
         </Box>
       </Box>
     </Box>
