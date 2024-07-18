@@ -1,9 +1,11 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import { Layout } from '@/components/features/Layout';
+import Checkout from '@/pages/Checkout';  // 수정된 import
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
+import ProductDetail from '@/pages/ProductDetail';  // 수정된 import
 import { ThemePage } from '@/pages/Theme';
 
 import { PrivateRoute } from './components/PrivateRoute';
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
             element: <MyAccountPage />,
           },
         ],
+      },
+      {
+        path: RouterPath.productDetail,
+        element: <ProductDetail />,
+      },
+      {
+        path: RouterPath.checkout,
+        element: <Checkout />,
       },
       {
         path: RouterPath.notFound,
