@@ -19,7 +19,7 @@ const initInstance = (config: AxiosRequestConfig): AxiosInstance => {
 };
 
 export const fetchInstance = initInstance({
-  baseURL: BASE_URI,
+  baseURL: `${BASE_URI}/api`,
 });
 
 export const queryClient = new QueryClient({
