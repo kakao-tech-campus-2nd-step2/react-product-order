@@ -1,4 +1,4 @@
-import { Box, Flex, forwardRef,Text, Textarea } from '@chakra-ui/react';
+import { Box, Flex, forwardRef, Text, Textarea } from '@chakra-ui/react';
 
 export const MessageSection = forwardRef((_, ref) => (
   <Box as="section" w="100%" padding="44px 0px 32px">
@@ -24,7 +24,8 @@ export const MessageSection = forwardRef((_, ref) => (
           fontSize="1rem"
           borderRadius="0.375rem"
           outlineOffset="2px"
-          background="#EDF2F7" />
+          background="#EDF2F7"
+        />
       </Box>
     </Box>
   </Box>

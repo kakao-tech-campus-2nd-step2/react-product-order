@@ -46,7 +46,7 @@ export const ProductDetailPage = () => {
   if (!data) {
     return null;
   }
-  
+
   return (
     <Center w="100%">
       <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
