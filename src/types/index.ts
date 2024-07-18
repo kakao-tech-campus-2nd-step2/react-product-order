@@ -59,3 +59,16 @@ export type ProductDetailData = GoodsData & {
 export type ProductDetailResponseData = {
   detail: ProductDetailData;
 };
+
+export type ProductOrderRequestBody = {
+  productId: number;
+  productOptionId: number;
+  productQuantity: number;
+  messageCardTemplateId: number;
+  messageCardTextMessage: string;
+  senderId: number;
+  receiverId: number;
+  hasCashReceipt: boolean;
+  cashReceiptType?: "PERSONAL" | "BUSINESS";
+  cashReceiptNumber?: string;
+};

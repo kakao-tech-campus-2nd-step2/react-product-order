@@ -1,66 +1,75 @@
 import { Box, Button, Center, Flex, HStack,Image, Input, Text, VStack } from "@chakra-ui/react";
-import { useEffect, useRef,useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
-import type { ProductDetailData } from "@/types";
-
-import { getProductDetail } from "../../api/hooks/useGetProductDetail";
+import { useGetProductDetail } from "../../api/hooks/useGetProductDetail";
 
 export const ProductDetailPage = () => {
-  const [productDetail, setProductDetail] = useState<ProductDetailData | null>(null);
-  const productIdRef = useRef<number | null>(null);
-  const [notFound, setNotFound] = useState(false);
+  const { productDetail, loading, error, notFound } = useGetProductDetail();
+  const [productQuantity, setProductQuantity] = useState<number>(1);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const url = window.location.pathname;
-    const match = url.match(/\/products\/(\d+)/);
-    if (match) {
-      productIdRef.current = parseInt(match[1], 10);
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProductQuantity(Number(event.target.value));
+  };
+
+  const handleOrder = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (productDetail) {
+      navigate("/order", {
+        state: {
+          productDetail,
+          productQuantity,
+        },
+      });
     }
-
-    const fetchProductDetail = async () => {
-      if (productIdRef.current !== null) {
-        try {
-          const data = await getProductDetail(productIdRef.current);
-          setProductDetail(data);
-        } catch (error) {
-          setNotFound(true);
-        }
-      }
-    };
-    fetchProductDetail();
-  }, []);
+  };
 
   if (notFound) {
     return <Navigate to="/" />;
   }
 
-  if (!productDetail) {
+  if (loading) {
     return <Center>Loading...</Center>;
   }
 
+  if(error || !productDetail) {
+    return <Center>Error loading product details</Center>;
+  }
+
+  const totalPrice = productDetail.price.sellingPrice * productQuantity;
+
   return (
     <Box p={8}>
-      <Flex direction={{ base: "column", md: "row" }}>
-        <Box flex="1" mb={{ base: 4, md: 0 }}>
-          <Image src={productDetail.imageURL} alt={productDetail.name} boxSize="400px" />
-        </Box>
-        <Box flex="1" ml={{ md: 8 }}>
-          <VStack align="flex-start" spacing={4}>
-            <Text fontSize="lg" fontWeight="bold">{productDetail.name}</Text>
-            <Text fontSize="xl" color="gray.500">{productDetail.price.sellingPrice}</Text>
-            <Text>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Text>
-            <HStack>
-              <Button>-</Button>
-              <Input width="50px" textAlign="center" value={1} readOnly />
-              <Button>+</Button>
-            </HStack>
-            <Text fontSize="lg" fontWeight="bold">총 결제 금액</Text>
-            <Text fontSize="2xl" fontWeight="bold">{productDetail.price.sellingPrice}</Text>
-            <Button colorScheme="blackAlpha">나에게 선물하기</Button>
-          </VStack>
-        </Box>
-      </Flex>
+      <form onSubmit={handleOrder}>
+        <Flex direction={{ base: "column", md: "row" }}>
+          <Box flex="1" mb={{ base: 4, md: 0 }}>
+            <Image src={productDetail.imageURL} alt={productDetail.name} boxSize="400px" />
+          </Box>
+          <Box flex="1" ml={{ md: 8 }}>
+            <VStack align="flex-start" spacing={4}>
+              <Text fontSize="lg" fontWeight="bold">{productDetail.name}</Text>
+              <Text fontSize="xl" color="gray.500">{productDetail.price.sellingPrice}원</Text>
+              <Text>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Text>
+              <HStack>
+                <Button type="button" onClick={() => setProductQuantity(prev => Math.max(1, prev - 1))}>-</Button>
+                <Input
+                  width="50px"
+                  textAlign="center"
+                  value={productQuantity}
+                  onChange={handleQuantityChange}
+                  type="number"
+                  min="1"
+                />
+                <Button type="button" onClick={() => setProductQuantity(prev => prev + 1)}>+</Button>
+              </HStack>
+              <Text fontSize="lg" fontWeight="bold">총 결제 금액</Text>
+              <Text fontSize="2xl" fontWeight="bold">{totalPrice}원</Text>
+              <Button type="submit" colorScheme="blackAlpha">나에게 선물하기</Button>
+            </VStack>
+          </Box>
+        </Flex>
+      </form>
     </Box>
   );
 };
