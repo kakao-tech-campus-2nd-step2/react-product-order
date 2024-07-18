@@ -1,4 +1,5 @@
-// import { useQuery } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { useCurrentProduct } from '@/api/hooks/useGetProduct';
@@ -18,10 +19,44 @@ export const OrderPage = () => {
   }
 
   return (
-    <>
+    <OrderProvider>
       <OrderMessageSection />
       <OrderProductSection productKey={productKey} count={productCount} />
       <OrderInfoSection productKey={productKey} count={productCount} />
-    </>
+    </OrderProvider>
   );
+};
+
+type OrderMessageContextType = {
+  message: string;
+  setMessage: (message: string) => void;
+  isRecipt: boolean;
+  setIsRecipt: (isRecipt: boolean) => void;
+  receiptNumber: string;
+  setReciptNumber: (receiptNumber: string) => void;
+};
+// type OrderReciptContextType = {
+// };
+
+const OrderMessageContext = createContext<OrderMessageContextType | undefined>(undefined);
+// const OrderReciptContext = createContext<OrderReciptContextType | undefined>(undefined);;
+
+export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [message, setMessage] = useState<string>('');
+  const [isRecipt, setIsRecipt] = useState<boolean>(false);
+  const [receiptNumber, setReciptNumber] = useState<string>('');
+
+  return (
+    <OrderMessageContext.Provider
+      value={{ message, setMessage, isRecipt, setIsRecipt, receiptNumber, setReciptNumber }}
+    >
+      {children}
+    </OrderMessageContext.Provider>
+  );
+};
+
+export const useOrderMessageContext = () => {
+  const context = useContext(OrderMessageContext);
+  if (!context) throw new Error('useOrderMessageContext must be used within a OrderProvider');
+  return context;
 };
