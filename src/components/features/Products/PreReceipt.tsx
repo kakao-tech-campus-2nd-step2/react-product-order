@@ -9,7 +9,7 @@ import { ReceiptItem } from '@/components/features/Products/ReceiptItem';
 import { ReceiptPrice } from '@/components/features/Products/ReceiptPrice';
 import type { IProductPage } from '@/pages/Products';
 import { useAuth } from '@/provider/Auth';
-import { getDynamicPath } from '@/routes/path';
+import { getDynamicPath, RouterPath } from '@/routes/path';
 
 export interface IPreReceipt extends IProductPage {}
 
@@ -38,7 +38,7 @@ export const PreReceipt = ({ productKey }: IPreReceipt) => {
       }
       return;
     }
-    // navigate()
+    navigate(RouterPath.order, { state: { cntMap } });
   };
 
   const totalPriceMemo = useMemo(() => {
