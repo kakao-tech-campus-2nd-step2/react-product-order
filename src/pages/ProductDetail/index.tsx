@@ -21,7 +21,7 @@ export const ProductDetailPage = () => {
         <>
             <Wrapper>
                 <MainProduct productId={productId} />
-                <ProductOption />
+                <ProductOption productId={productId} />
             </Wrapper>
         </>
     );

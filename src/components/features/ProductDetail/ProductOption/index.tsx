@@ -1,37 +1,48 @@
 import {
-    Button,
-    NumberInput,
-    NumberInputField,
+  Button,
+  NumberInput,
+  NumberInputField,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
-export const ProductOption = () => {
-    return (
-        <Wrapper>
-            <InsideWrapper>
-                <Option>
-                    <Title>
-                        [단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)
-                    </Title>
-                    <Qty>
-                        <Button isDisabled={true} style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>−</Button>
-                        {/* <Input width="50px" textAlign="center" /> */}
-                        <NumberInput defaultValue={1} min={1}>
-                            <NumberInputField />
-                        </NumberInput>
-                        <Button style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>+</Button>
-                    </Qty>
-                </Option>
-                <Price>
-                    <AllPrice>
-                        총 결제 금액
-                        <Result>145000원</Result>
-                    </AllPrice>
-                    <ForMeBtn>나에게 선물하기</ForMeBtn>
-                </Price>
-            </InsideWrapper>
-        </Wrapper>
-    );
+import { useNavigate } from 'react-router-dom';
+import { getDynamicPath } from '@/routes/path';
+
+type Props = {
+  productId: string;
+};
+
+export const ProductOption = ({ productId }: Props) => {
+  const navigate = useNavigate();
+  const btnClickedHandler = () => {
+    navigate(getDynamicPath.productOption(productId));
+  }
+
+  return (
+    <Wrapper>
+      <InsideWrapper>
+        <Option>
+          <Title>
+            [단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)
+          </Title>
+          <Qty>
+            <Button isDisabled={true} style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>−</Button>
+            <NumberInput defaultValue={1} min={1}>
+              <NumberInputField />
+            </NumberInput>
+            <Button style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>+</Button>
+          </Qty>
+        </Option>
+        <Price>
+          <AllPrice>
+            총 결제 금액
+            <Result>145000원</Result>
+          </AllPrice>
+          <ForMeBtn onClick={btnClickedHandler}>나에게 선물하기</ForMeBtn>
+        </Price>
+      </InsideWrapper>
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.aside`

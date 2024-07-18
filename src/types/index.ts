@@ -53,3 +53,22 @@ export type ProductsData = {
     imageURL: string;
   };
 };
+
+export type ProductOptions = {
+  id: number;
+  key: string;
+  stockQuantity: number;
+  usable: boolean;
+  value: string;
+}
+
+export type ProductOptionData = {
+  options: {
+    giftOrderLimit: number;
+    names: string[];
+    options: ProductOptions[];
+    productId: string;
+    productName: string;
+    productPrice: number;
+  }
+}

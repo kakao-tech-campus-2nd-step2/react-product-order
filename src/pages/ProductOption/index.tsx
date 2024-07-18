@@ -1,21 +1,23 @@
-// import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import { MainOption } from '@/components/features/ProductOption/MainOption';
 import { PaymentOption } from '@/components/features/ProductOption/PaymentOption';
 
+import { useCurrentProductOption } from '@/hooks/useCurrentProductOption';
+
 // import { useCurrentTheme } from '@/hooks/useCurrentTheme';
-// import { RouterPath } from '@/routes/path';
+import { RouterPath } from '@/routes/path';
 
 export const ProductOptionPage = () => {
-    // const { themeKey = '' } = useParams<{ themeKey: string }>();
-    // const { isRender, currentTheme } = useCurrentTheme({ themeKey });
+    const { productId = '' } = useParams<{ productId: string }>();
+    const { isRender, currentProduct } = useCurrentProductOption({ productId });
 
-    // if (!isRender) return null;
+    if (!isRender) return null;
 
-    // if (!currentTheme) {
-    //     return <Navigate to={RouterPath.notFound} />;
-    // }
+    if (!currentProduct) {
+        return <Navigate to={RouterPath.notFound} />;
+    }
 
     return (
         <>
