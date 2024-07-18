@@ -4,10 +4,9 @@ import type { GoodsDetailRequestParams } from '@/api/hooks/useGetProductsDetail'
 import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
 import { Image } from '@/components/common/Image';
 import { Spinner } from '@/components/common/Spinner';
-import { PaymentInfo } from '@/components/features/GoodsDetail/PaymentInfo';
 import { breakpoints } from '@/styles/variants';
 
-import NumberInputWithButtons from './NumberInputWithButtons';
+import PaymentInfo from './PaymentInfo';
 
 type Props = GoodsDetailRequestParams;
 
@@ -36,8 +35,7 @@ export const GoodsHeaderSection = ({ productId }: Props) => {
         <GiftDescription>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</GiftDescription>
       </SimpleInfoWrapper>
       <PaymentInfoWrapper>
-        <NumberInputWithButtons label={data.name} />
-        <PaymentInfo />
+        <PaymentInfo label={data.name} />
       </PaymentInfoWrapper>
     </StyledDiv>
   );

@@ -1,13 +1,59 @@
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { IconButton, Input, useNumberInput, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
-export const PaymentInfo = () => {
+interface PaymentInfoProps {
+  label: string;
+}
+
+const PaymentInfo = ({ label }: PaymentInfoProps) => {
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
+    step: 1,
+    defaultValue: 1,
+    min: 1,
+  });
+
+  const inc = getIncrementButtonProps();
+  const dec = getDecrementButtonProps();
+  const input = getInputProps();
+
   return (
-    <Wrapper>
-      <TotalPrice>총 결제 금액</TotalPrice>
-      <GiftForMeButton>나에게 선물하기</GiftForMeButton>
-    </Wrapper>
+    <>
+      <VStack maxW="320px" padding="10px" borderRadius="3" borderColor="gray.200" borderWidth="1px">
+        <StyledLabel>{label}</StyledLabel>
+        <NumberInputWrapper>
+          <IconButton aria-label="Decrease value" {...dec} icon={<MinusIcon />} />
+          <Input {...input} />
+          <IconButton aria-label="Increase value" {...inc} icon={<AddIcon />} />
+        </NumberInputWrapper>
+      </VStack>
+      <Wrapper>
+        <TotalPrice>총 결제 금액</TotalPrice>
+        <GiftForMeButton>나에게 선물하기</GiftForMeButton>
+      </Wrapper>
+    </>
   );
 };
+
+export default PaymentInfo;
+
+const StyledLabel = styled.p`
+  font-weight: 700;
+  line-height: 22px;
+  color: rgb(17, 17, 17);
+  overflow-wrap: break-word;
+  word-break: break-all;
+`;
+
+const NumberInputWrapper = styled.div`
+  gap: 5px;
+  display: flex;
+  flex-direction: row;
+  border-width: 0px;
+  border-style: solid;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+`;
 
 const Wrapper = styled.div`
   display: flex;
