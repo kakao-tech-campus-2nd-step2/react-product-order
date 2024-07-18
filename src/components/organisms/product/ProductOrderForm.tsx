@@ -96,6 +96,7 @@ function ProductOrderForm({
           onChange={handleDataChange}
           value={orderData.cashReceiptNumber}
           name="cashReceiptNumber"
+          disabled={!orderData.hasCashReceipt}
         />
         {
           errorStatus.hasReceiptError ? (

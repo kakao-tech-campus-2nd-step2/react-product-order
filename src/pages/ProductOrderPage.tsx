@@ -11,6 +11,7 @@ import useOrderFormValidation from '@hooks/useOrderFormValidation';
 import { ProductOrderPageState } from '@/types';
 import { OrderRequestBody } from '@/types/request';
 import { CashReceiptOptions } from '@/constants';
+import { isEmptyString, isNumericString } from '@/utils';
 
 function ProductOrderPage() {
   const location = useLocation();
@@ -38,12 +39,19 @@ function ProductOrderPage() {
     cashReceiptNumber: '',
   });
   const {
-    errorStatus,
+    errorStatus, validateForm,
   } = useOrderFormValidation({ orderData });
 
   const handleSubmit = useCallback(() => {
+    if (isEmptyString(orderData.messageCardTextMessage)
+      || (orderData.hasCashReceipt && !isNumericString(orderData.cashReceiptNumber as string))) {
+      validateForm();
+
+      return;
+    }
+
     alert('주문이 완료되었습니다.');
-  }, []);
+  }, [orderData, validateForm]);
 
   return (
     <Page>

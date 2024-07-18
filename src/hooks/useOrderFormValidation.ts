@@ -1,5 +1,5 @@
 import {
-  useCallback, useEffect, useRef, useState,
+  useEffect, useRef, useState,
 } from 'react';
 import { FormErrorMessages } from '@constants/ErrorMessage';
 import { OrderRequestBody } from '@/types/request';
@@ -42,15 +42,6 @@ const useOrderFormValidation = ({ orderData }: UseOrderFormValidationProps) => {
 
     setErrorStatus(errors);
   };
-
-  const setMessageModified = useCallback(() => {
-    setErrorStatus({ ...errorStatus, isMessageModified: true });
-  }, [errorStatus, setErrorStatus]);
-
-  const setReceiptNumberModified = useCallback(() => {
-    setErrorStatus({ ...errorStatus, isReceiptNumberModified: true });
-  }, [errorStatus, setErrorStatus]);
-
   useEffect(() => {
     if (validationBoundaryCount.current) {
       validationBoundaryCount.current -= 1;
@@ -62,7 +53,7 @@ const useOrderFormValidation = ({ orderData }: UseOrderFormValidationProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderData]);
 
-  return { errorStatus, setMessageModified, setReceiptNumberModified };
+  return { errorStatus, validateForm };
 };
 
 export default useOrderFormValidation;
