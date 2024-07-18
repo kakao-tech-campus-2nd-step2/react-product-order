@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RouterPath } from '../../routes/path';
 import { authSessionStorage } from '@/utils/storage';
+import { useGetProductOption } from '@/api/hooks/useGetProductOption';
 
 interface PriceData {
   basicPrice: number;
@@ -29,9 +30,10 @@ interface ProductDetailData {
 
 export const DetailPage = () => {
   const [productDetail, setProductDetail] = useState<ProductDetailData | null>(null);
+  const { productId } = useParams();
+  const { data: productOption } = useGetProductOption(productId ?? '');
   const [isLoading, setIsLoading] = useState(true);
   const [productCount, setProductCount] = useState(1);
-  const { productId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -84,6 +86,7 @@ export const DetailPage = () => {
   const basicPrice = price?.basicPrice ?? 0;
   const totalPrice = basicPrice * productCount;
   const priceString = `${basicPrice.toLocaleString()}원`;
+  const giftOrderLimit = productOption?.giftOrderLimit || 0;
 
   return (
     <Flex justify="space-between" align="center" direction="row" p={8}>
@@ -135,7 +138,13 @@ export const DetailPage = () => {
             <IconButton
               aria-label="+"
               icon={<AddIcon />}
-              onClick={() => setProductCount(productCount + 1)}
+              onClick={() => {
+                if (productCount < giftOrderLimit) {
+                  setProductCount(productCount + 1);
+                } else {
+                  alert(`최대 주문 가능 수량은 ${giftOrderLimit}개 입니다.`);
+                }
+              }}
             />
           </ButtonGroup>
         </Flex>
