@@ -16,11 +16,21 @@ const initStorage = <T extends keyof StorageKey>(key: T, storage: Storage) => {
     storage.setItem(storageKey, stringifiedValue);
   };
 
-  return { get, set };
+  const remove = () => {
+    storage.removeItem(storageKey);
+  };
+  return { get, set, remove };
 };
 
 export const authSessionStorage = initStorage('authToken', sessionStorage);
+export const orderLocalStorage = initStorage('order', localStorage);
 
 interface StorageKey {
   authToken?: string;
+  order?: Order;
 }
+
+type Order = {
+  productId: string;
+  count: number;
+};
