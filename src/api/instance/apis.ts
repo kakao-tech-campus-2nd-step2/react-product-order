@@ -1,4 +1,4 @@
-import { fetchInstance } from '@/api/instance';
+import { fetchInstance } from '@/api/instance/index';
 import type { Products } from '@/api/products/types';
 
 export const getProductDetailById = async (productId: string) => {
