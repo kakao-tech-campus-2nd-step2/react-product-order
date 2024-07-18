@@ -21,6 +21,9 @@ export const Order = () => {
     if (!message.trim().length) {
       alert('메세지를 입력해주세요.');
     }
+    if (message.length > 100) {
+      alert('100자 이하로 입력하세요.');
+    }
   };
 
   return (
