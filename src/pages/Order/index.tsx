@@ -1,4 +1,5 @@
 import { Box, Button, Checkbox, HStack, Image, Input, Select, Text, Textarea, VStack } from '@chakra-ui/react';
+import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Header } from '@/components/features/Layout/Header';
@@ -6,14 +7,22 @@ import { Header } from '@/components/features/Layout/Header';
 const OrderPage = () => {
   const location = useLocation();
   const { product, quantity } = location.state || {};
-
-  console.log('location.state:', location.state); // 디버그 메시지 추가
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
 
   if (!product || !quantity) {
     return <Text>잘못된 접근입니다.</Text>;
   }
 
   const totalPrice = product.price.sellingPrice * quantity;
+
+  const handlePaymentClick = () => {
+    if (messageRef.current && !messageRef.current.value) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
+    else 
+      alert('주문이 완료되었습니다.');
+  };
 
   return (
     <Box p={5}>
@@ -23,7 +32,7 @@ const OrderPage = () => {
       <Text fontSize="2xl" fontWeight="bold">선물하기</Text>
       <Box mt={5} borderWidth="1px" borderRadius="lg" p={5}>
         <Text fontSize="xl" fontWeight="bold">나에게 주는 선물</Text>
-        <Textarea mt={3} placeholder="선물과 함께 보낼 메시지를 적어보세요" />
+        <Textarea mt={3} placeholder="선물과 함께 보낼 메시지를 적어보세요" ref={messageRef} />
 
         <Box mt={5}>
           <Text fontSize="xl" fontWeight="bold">선물내역</Text>
@@ -41,7 +50,7 @@ const OrderPage = () => {
         <Text fontSize="xl" fontWeight="bold">결제 정보</Text>
         <Checkbox mt={3}>현금영수증 신청</Checkbox>
         <Select mt={3} placeholder="개인소득공제">
-          <option value="business">사업자증빙용</option>
+          <option value="business">사업자증빙</option>
         </Select>
         <Input mt={3} placeholder="(-없이) 숫자만 입력해주세요." />
 
@@ -50,7 +59,14 @@ const OrderPage = () => {
           <Text fontSize="xl" fontWeight="bold">{totalPrice}원</Text>
         </HStack>
 
-        <Button mt={5} bg="yellow.400" color="black" width="full" _hover={{ bg: 'yellow.500' }}>
+        <Button
+          mt={5}
+          bg="yellow.400"
+          color="black"
+          width="full"
+          _hover={{ bg: 'yellow.500' }}
+          onClick={handlePaymentClick}
+        >
           {totalPrice}원 결제하기
         </Button>
       </Box>
