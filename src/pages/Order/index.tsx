@@ -62,7 +62,7 @@ export const OrderPage = () => {
                   {location.state.brandInfo.name}
                 </Text>
                 <Text>
-                  {location.state.name} x {location.state.count}
+                  {location.state.name} x {location.state.count}개
                 </Text>
               </Flex>
             </Card>
