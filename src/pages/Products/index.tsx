@@ -1,5 +1,5 @@
 import { Button, Divider, Flex, Image, Input, Text } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductsDetail } from '@/api';
 import Loading from '@/components/common/Loading';
@@ -7,6 +7,13 @@ import Loading from '@/components/common/Loading';
 export const ProductsPage = () => {
   const { productsId = '' } = useParams<{ productsId: string }>();
   const { data: productsDetail, isError, isLoading } = useGetProductsDetail({ productsId });
+  const navigate = useNavigate();
+
+  const handleOrderClick = () => {
+    if (productsDetail?.detail) {
+      navigate('/order', { state: { ...productsDetail.detail } });
+    }
+  };
 
   return (
     <Flex h="calc(100vh - 54px)" w="100%" justify="center" py="10">
@@ -53,7 +60,13 @@ export const ProductsPage = () => {
                   fontWeight="800"
                 >{`${productsDetail?.detail.price.basicPrice}원`}</Text>
               </Flex>
-              <Button h="50px" bg="black" color="white" _hover={{ bg: 'black', opacity: '0.8' }}>
+              <Button
+                onClick={handleOrderClick}
+                h="50px"
+                bg="black"
+                color="white"
+                _hover={{ bg: 'black', opacity: '0.8' }}
+              >
                 나에게 선물하기
               </Button>
             </Flex>
