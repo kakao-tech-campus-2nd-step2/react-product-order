@@ -1,9 +1,9 @@
 import { Box, Divider, HStack, Image, Text, VStack } from '@chakra-ui/react';
 
-import type { GoodsData } from '@/types';
+import type { ProductDetail } from '@/types';
 
 interface Props {
-  product: GoodsData;
+  product: ProductDetail;
 }
 
 export const ProductOverviewSection = ({ product }: Props) => {

@@ -12,10 +12,10 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
-import type { GoodsData } from '@/types';
+import type { ProductDetail } from '@/types';
 
 interface Props {
-  product: GoodsData;
+  product: ProductDetail;
 }
 
 export const ProductOptionsSection = ({ product }: Props) => {

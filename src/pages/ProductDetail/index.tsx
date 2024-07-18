@@ -1,15 +1,25 @@
 import styled from '@emotion/styled';
+import { useParams } from 'react-router-dom';
 
 import { ProductOptionsSection } from '@/components/features/ProductDetail/ProductOptionsSection';
 import { ProductOverviewSection } from '@/components/features/ProductDetail/ProductOverViewSection';
+import { useCurrentProduct } from '@/hooks/useCurrentProduct';
 import { breakpoints } from '@/styles/variants';
-import { GoodsMockData } from '@/types/mock';
 
 export const ProductDetailPage = () => {
+  const { productId = '' } = useParams<{ productId: string }>();
+  const { isRender, currentProduct } = useCurrentProduct({ productId });
+
+  if (!isRender) return null;
+
+  if (!currentProduct) {
+    return null;
+  }
+
   return (
     <Wrapper>
-      <ProductOverviewSection product={GoodsMockData} />
-      <ProductOptionsSection product={GoodsMockData} />
+      <ProductOverviewSection product={currentProduct} />
+      <ProductOptionsSection product={currentProduct} />
     </Wrapper>
   );
 };
