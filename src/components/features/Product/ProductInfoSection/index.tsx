@@ -1,25 +1,20 @@
 import * as S from './styles';
 import { Img, Text } from '@chakra-ui/react';
 
-const ProductInfoSection = ({
-  Title,
-  Price,
-}: {
-  Title: string;
-  Price: number;
-}) => {
+type Props = {
+  imageSrc: string;
+  title: string;
+  amount: number;
+};
+
+const ProductInfoSection = ({ imageSrc, title, amount }: Props) => {
   return (
     <S.MainBox>
       <S.ArticleBox>
         <S.DetailBox>
-          <Img
-            width='100%'
-            maxWidth='450px'
-            src='https://st.kakaocdn.net/product/gift/product/20240516094905_425d02258d7d4fffaccc7219285a951d.jpg'
-            alt={Title}
-          />
+          <Img width='100%' maxWidth='450px' src={imageSrc} alt={title} />
           <S.TitleBox>
-            <S.Title>{Title}</S.Title>
+            <S.Title>{title}</S.Title>
             <Text
               width='100%'
               fontSize='30px'
@@ -29,7 +24,7 @@ const ProductInfoSection = ({
               lineHeight='120px'
               color='rgb(34, 34, 34)'
             >
-              {Price}원
+              {amount}원
             </Text>
             <S.DividerBar />
             <Text

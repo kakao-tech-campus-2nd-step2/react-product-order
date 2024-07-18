@@ -1,13 +1,11 @@
 import * as S from './styles';
 import { Text, Button, Input } from '@chakra-ui/react';
 
-const ProductBuySection = ({
-  Title,
-  Price,
-}: {
-  Title: string;
-  Price: number;
-}) => {
+type Props = {
+  title: string;
+  amount: number;
+};
+const ProductBuySection = ({ title, amount }: Props) => {
   return (
     <S.AsideBox>
       <S.AsideWrapper>
@@ -19,7 +17,7 @@ const ProductBuySection = ({
             overflowWrap='break-word'
             wordBreak='break-all'
           >
-            {Title}
+            {title}
           </Text>
           <S.ItemNumberBox>
             <Button
@@ -61,7 +59,7 @@ const ProductBuySection = ({
         </S.ProductNumberBox>
         <S.ButtonBox>
           <S.TotalPriceBox>
-            총 결제 금액 <S.PriceText>{Price}원</S.PriceText>
+            총 결제 금액 <S.PriceText>{amount}원</S.PriceText>
           </S.TotalPriceBox>
           <S.ButtonItem>나에게 선물하기</S.ButtonItem>
         </S.ButtonBox>
