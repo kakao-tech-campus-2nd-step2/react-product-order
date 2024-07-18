@@ -35,6 +35,29 @@ const OrderReseipSection = ({
     const cashReceiptType = cashReceiptSelectRef.current?.value as 'PERSONAL' | 'BUSINESS';
     const cashReceiptNumber = cashReceiptNumberRef.current?.value || '';
 
+    if (!messageCardTextMessage) {
+      alert('메시지를 입력해주세요.');
+      messageCardTextMessageRef.current?.focus();
+      return;
+    }
+
+    if (messageCardTextMessage.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      messageCardTextMessageRef.current?.focus();
+      return;
+    }
+
+    if (hasCashReceipt && !cashReceiptNumber) {
+      alert('현금영수증 번호를 입력해주세요.');
+      cashReceiptNumberRef.current?.focus();
+      return;
+    }
+
+    if (!cashReceiptNumber.match(/^\d+$/)) {
+      alert('현금영수증 번호는 숫자만 입력해주세요.');
+      return;
+    }
+
     const orderRequestBody = {
       productId,
       productOptionId: 1,
