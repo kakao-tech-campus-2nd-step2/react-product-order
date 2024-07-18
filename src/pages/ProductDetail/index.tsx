@@ -1,5 +1,6 @@
 import { Box, Button, Center, Flex, HStack,Image, Input, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useRef,useState } from "react";
+import { Navigate } from "react-router-dom";
 
 import type { ProductDetailData } from "@/types";
 
@@ -8,6 +9,7 @@ import { getProductDetail } from "../../api/hooks/useGetProductDetail";
 export const ProductDetailPage = () => {
   const [productDetail, setProductDetail] = useState<ProductDetailData | null>(null);
   const productIdRef = useRef<number | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     const url = window.location.pathname;
@@ -18,12 +20,20 @@ export const ProductDetailPage = () => {
 
     const fetchProductDetail = async () => {
       if (productIdRef.current !== null) {
-        const data = await getProductDetail(productIdRef.current);
-        setProductDetail(data);
+        try {
+          const data = await getProductDetail(productIdRef.current);
+          setProductDetail(data);
+        } catch (error) {
+          setNotFound(true);
+        }
       }
     };
     fetchProductDetail();
   }, []);
+
+  if (notFound) {
+    return <Navigate to="/" />;
+  }
 
   if (!productDetail) {
     return <Center>Loading...</Center>;
