@@ -4,29 +4,21 @@ import {
   Divider, Text, Textarea,
 } from '@chakra-ui/react';
 import { ChangeEvent, useCallback } from 'react';
-import { FormErrorMessages } from '@constants/ErrorMessage';
+import { OrderRequestBody } from '@/types/request';
+import { OrderFormErrorStatus } from '@/types';
 
 interface ProductMessageFormProps {
-  cardMessage: string;
-  setCardMessage: (message: string) => void;
-  messageFormError: string;
-  setMessageFormError: (message: string) => void;
+  orderData: OrderRequestBody;
+  setOrderData: (orderData: OrderRequestBody) => void;
+  errorStatus: OrderFormErrorStatus;
 }
 
 function ProductMessageForm({
-  cardMessage, setCardMessage, messageFormError, setMessageFormError,
+  orderData, setOrderData, errorStatus,
 }: ProductMessageFormProps) {
   const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    if (e.target.value === '') {
-      setMessageFormError(FormErrorMessages.MESSAGE_CARD_EMPTY);
-    }
-
-    if (e.target.value !== '' && messageFormError !== '') {
-      setMessageFormError('');
-    }
-
-    setCardMessage(e.target.value);
-  }, [setCardMessage, setMessageFormError, messageFormError]);
+    setOrderData({ ...orderData, messageCardTextMessage: e.target.value });
+  }, [orderData, setOrderData]);
 
   return (
     <>
@@ -43,10 +35,14 @@ function ProductMessageForm({
             backgroundColor={defaultBorderColor}
             resize="none"
             placeholder="선물과 함께 보낼 메시지를 적어보세요"
-            value={cardMessage}
+            value={orderData.messageCardTextMessage}
             onChange={handleChange}
           />
-          <Text color={textColors.error}>{messageFormError}</Text>
+          {
+            errorStatus.hasCardMessageError ? (
+              <Text color={textColors.error}>{errorStatus.cardMessageErrorCaption}</Text>
+            ) : null
+          }
         </Container>
       </Container>
       <Divider borderBottomWidth="5px" borderColor={defaultBorderColor} />
