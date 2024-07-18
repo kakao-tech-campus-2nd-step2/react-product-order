@@ -36,18 +36,53 @@ export const Order = () => {
         }
     };
 
+    const validateForm = () => {
+        let valid = true;
+        const errors = [];
+
+        if (!formState.message) {
+            errors.push('메시지를 입력해주세요.');
+            valid = false;
+        } else if (formState.message.length > 100) {
+            errors.push('메시지는 100자 이내로 입력해주세요.');
+            valid = false;
+        }
+
+        if (formState.receiptRequested) {
+            if (!formState.receiptNumber) {
+                errors.push('현금영수증 번호를 입력해주세요.');
+                valid = false;
+            } else if (!/^\d+$/.test(formState.receiptNumber)) {
+                errors.push('현금영수증 번호는 숫자만 입력해주세요.');
+                valid = false;
+            }
+        }
+
+        if (errors.length > 0) {
+            alert(errors.join('\n'));
+            valid = false   // 유효성 검사 실패시 폼 제출 방지
+        }
+
+        return valid;
+    };
+
     const handleSubmit = () => {
-        const orderData = {
-            message: messageRef.current?.value || '',
-            receiptRequested: receiptRequestedRef.current?.checked || false,
-            receiptType: receiptTypeRef.current?.value || '',
-            receiptNumber: receiptNumberRef.current?.value || '',
-            productDetail,
-            quantity,
-            price
-        };
-        console.log('Order Data:', orderData);
-        // 여기에 주문 데이터를 처리하는 로직을 추가하세요
+        
+        if (validateForm()) {
+            const orderData = {
+                message: messageRef.current?.value || '',
+                receiptRequested: receiptRequestedRef.current?.checked || false,
+                receiptType: receiptTypeRef.current?.value || '',
+                receiptNumber: receiptNumberRef.current?.value || '',
+                productDetail,
+                quantity,
+                price
+            };
+            console.log('Order Data:', orderData);
+
+            window.alert('주문이 완료되었습니다.')
+        }
+        
     };
 
     return (
