@@ -27,6 +27,7 @@ export const DefaultGoodsItems = ({
         title,
         imageSrc,
         amount,
+        subtitle,
       },
     });
   };
