@@ -4,30 +4,49 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
+import { Container } from '@/components/common/layouts/Container';
 
 export const Order = () => {
   const location = useLocation();
   // console.log(location.state);
-  const [formData, setFormData] = useState({ message: '' });
+  const [formData, setFormData] = useState({ message: '', cashReceiptNumber: '' });
+  const [isCashReceiptChecked, setIsCashReceiptChecked] = useState(false);
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCashReceiptChecked(e.target.checked);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, cashReceiptNumber: e.target.value });
+  };
+
   const handleSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const { message } = formData;
+    const { message, cashReceiptNumber } = formData;
+
     if (!message.trim().length) {
       alert('메세지를 입력해주세요.');
+      return;
     }
     if (message.length > 100) {
       alert('100자 이하로 입력하세요.');
+      return;
     }
+    if (isCashReceiptChecked && !cashReceiptNumber.trim().length) {
+      alert('현금 영수증 번호를 입력해주세요.');
+      return;
+    }
+
+    alert('선물 보내기 성공');
   };
 
   return (
-    <Form>
+    <Container maxWidth="1280px" flexDirection="row" justifyContent="center">
       <Left>
         <TopSection>
           <TopTitle>나에게 주는 선물</TopTitle>
@@ -70,7 +89,9 @@ export const Order = () => {
                 결제 정보
               </Text>
               <Flex align="center" mb={10}>
-                <Checkbox colorScheme="yellow">현금영수증 신청</Checkbox>
+                <Checkbox colorScheme="yellow" onChange={handleCheckboxChange}>
+                  현금영수증 신청
+                </Checkbox>
               </Flex>
               <Selectgroup mb={2}>
                 <option value="personal" defaultChecked>
@@ -78,7 +99,12 @@ export const Order = () => {
                 </option>
                 <option value="business">사업자 지출증빙</option>
               </Selectgroup>
-              <InputCustom placeholder="(-없이) 숫자만 입력해주세요." mb={4} />
+              <InputCustom
+                placeholder="(-없이) 숫자만 입력해주세요."
+                value={formData.cashReceiptNumber}
+                onChange={handleInputChange}
+                mb={4}
+              />
               <Flex
                 justify="space-between"
                 w="100%"
@@ -96,16 +122,9 @@ export const Order = () => {
           </Box>
         </Flex>
       </Right>
-    </Form>
+    </Container>
   );
 };
-
-const Form = styled.form`
-  max-width: 1280px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
 
 const Left = styled.div`
   width: 100%;
