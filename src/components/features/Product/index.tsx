@@ -1,8 +1,10 @@
-import { Box, Button, Heading, HStack, Image, Input, Spinner, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, HStack, Image, Input, Spinner, Text, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+
+import { Header } from '../Layout/Header';
 
 type ProductDetailParams = {
   id: string;
@@ -23,8 +25,9 @@ const ProductDetail: React.FC = () => {
   const handleDecrease = () => setQuantity((prev) => Math.max(1, prev - 1));
 
   return (
-    <Box p={5}>
-      <HStack spacing={10} alignItems="start">
+    <Box>
+      <Header />
+      <Flex direction="row" align="start" p={5} maxWidth="1200px" mx="auto">
         <Box flex="1">
           <Image src={data.imageURL} alt={data.name} boxSize="400px" />
         </Box>
@@ -36,8 +39,8 @@ const ProductDetail: React.FC = () => {
             <Text>{data.description}</Text>
           </Box>
         </VStack>
-      </HStack>
-      <Box mt={10} p={5} borderWidth="1px" borderRadius="lg" width="full">
+      </Flex>
+      <Box mt={10} p={5} borderWidth="1px" borderRadius="lg" maxWidth="1200px" mx="auto">
         <HStack justifyContent="space-between" mb={5}>
           <Text fontSize="xl" fontWeight="bold">{data.name}</Text>
           <HStack>
