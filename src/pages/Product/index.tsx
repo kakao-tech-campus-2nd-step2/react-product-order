@@ -73,10 +73,10 @@ export const ProductDetailPage = () => {
   }
 
   return (
-    <Box p={4}>
-      <Flex>
+    <Box p={14}>
+      <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'center', md: 'flex-start' }} maxWidth="1000px" mx="auto">
         <Image src={product.imageURL} alt={product.name} maxW="400px" />
-        <Box ml={4}>
+        <Box ml={{ base: 0, md: 4 }} mt={{ base: 4, md: 0 }} textAlign={{ base: 'center', md: 'left' }}>
           <Text fontSize="xl" fontWeight="bold">
             {product.name}
           </Text>
