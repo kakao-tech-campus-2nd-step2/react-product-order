@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import { Image } from '@/components/common/Image';
 import styled from '@emotion/styled';
 
@@ -13,10 +15,24 @@ export const DefaultGoodsItems = ({
   subtitle,
   title,
   amount,
+  id,
   ...props
 }: DefaultGoodsItemsProps) => {
+  const navigate = useNavigate();
+
+  const handlerDetail = () => {
+    navigate(`/product/${id}`, {
+      state: {
+        id,
+        title,
+        imageSrc,
+        amount,
+      },
+    });
+  };
+
   return (
-    <Wrapper {...props}>
+    <Wrapper {...props} onClick={handlerDetail}>
       <Image
         src={imageSrc}
         alt={`${title} 소개`}
