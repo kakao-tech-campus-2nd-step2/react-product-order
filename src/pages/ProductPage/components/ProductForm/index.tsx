@@ -30,7 +30,7 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
       css={containerStyle}
     >
       <SelectQuantity
-        productName={data.productName}
+        productOptions={data}
         quantity={quantity}
         setQuantity={updateQuantity}
       />
