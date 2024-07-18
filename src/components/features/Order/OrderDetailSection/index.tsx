@@ -9,17 +9,30 @@ type Props = {
   title: string;
   subtitle: string;
   quantity: number;
+  isError: (isError: boolean) => void;
 };
 
-const OrderDetailSection = ({ imageSrc, title, subtitle, quantity }: Props) => {
+const OrderDetailSection = ({
+  imageSrc,
+  title,
+  subtitle,
+  quantity,
+  isError,
+}: Props) => {
   const [message, setMessage] = useState<string>('');
+  const [hasError, setHasError] = useState<boolean>(false);
 
   const handleChangeMessage = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { value } = event.target;
-    if (value.length <= 100) {
-      setMessage(value);
+    setMessage(value);
+    if (value.length > 100) {
+      setHasError(true);
+      isError(true);
+    } else {
+      setHasError(false);
+      isError(false);
     }
   };
 
@@ -50,9 +63,10 @@ const OrderDetailSection = ({ imageSrc, title, subtitle, quantity }: Props) => {
                 borderWidth='2px'
                 borderColor='var(--chakra-colors-transparent)'
                 borderStyle='solid'
+                value={message}
                 onChange={handleChangeMessage}
               ></Textarea>
-              {message.length > 100 && ( // 100자 초과 시 안내 표시
+              {hasError && (
                 <Text fontSize='12px' color='red'>
                   카드 메시지가 100글자를 초과하였습니다. 100자 이내로
                   입력해주세요.

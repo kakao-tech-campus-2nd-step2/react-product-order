@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Container } from '@/components/common/layouts/Container';
@@ -16,6 +16,8 @@ type LocationState = {
 };
 
 const OrderPage = () => {
+  const [isError, setIsError] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -46,8 +48,9 @@ const OrderPage = () => {
               title={title}
               subtitle={subtitle}
               quantity={quantity}
+              isError={setIsError}
             />
-            <OrderBuySection price={amount * quantity} />
+            <OrderBuySection price={amount * quantity} isError={isError} />
           </Box>
         </Container>
       </Box>

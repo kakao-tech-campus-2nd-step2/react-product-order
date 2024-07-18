@@ -4,8 +4,16 @@ import { Box, Checkbox, Divider, Input, Select, Text } from '@chakra-ui/react';
 
 type Props = {
   price: number;
+  isError: boolean;
 };
-const OrderBuySection = ({ price }: Props) => {
+const OrderBuySection = ({ price, isError }: Props) => {
+  const handleSubmit = () => {
+    if (isError) {
+      alert('카드 메시지를 100자 이내로 입력해주세요.');
+      return;
+    }
+    alert('결제가 완료되었습니다.');
+  };
   return (
     <AsideBox>
       <Box
@@ -71,7 +79,9 @@ const OrderBuySection = ({ price }: Props) => {
         </S.PriceBox>
         <Divider />
         <Box width='100%' height='32px' backgroundColor='inherit'></Box>
-        <S.SubmitButton>{price}원 결제하기</S.SubmitButton>
+        <S.SubmitButton onClick={handleSubmit}>
+          {price}원 결제하기
+        </S.SubmitButton>
       </Box>
     </AsideBox>
   );
