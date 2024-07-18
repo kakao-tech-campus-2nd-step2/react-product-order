@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, HStack, Image, Input, Select, Text, Textarea, VStack } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Header } from '@/components/features/Layout/Header';
@@ -8,6 +8,8 @@ const OrderPage = () => {
   const location = useLocation();
   const { product, quantity } = location.state || {};
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
+  const [isCashReceipt, setIsCashReceipt] = useState(false);
+  const [cashReceiptNumber, setCashReceiptNumber] = useState('');
 
   if (!product || !quantity) {
     return <Text>잘못된 접근입니다.</Text>;
@@ -29,6 +31,12 @@ const OrderPage = () => {
       alert('메시지 입력란을 찾을 수 없습니다.');
       return;
     }
+
+    if (isCashReceipt && !cashReceiptNumber) {
+      alert('현금영수증 번호를 입력해주세요.');
+      return;
+    }
+
     alert('주문이 완료되었습니다.');
   };
 
@@ -56,16 +64,19 @@ const OrderPage = () => {
 
       <Box mt={5} borderWidth="1px" borderRadius="lg" p={5}>
         <Text fontSize="xl" fontWeight="bold">결제 정보</Text>
-        <Checkbox mt={3}>현금영수증 신청</Checkbox>
+        <Checkbox mt={3} isChecked={isCashReceipt} onChange={(e) => setIsCashReceipt(e.target.checked)}>
+          현금영수증 신청
+        </Checkbox>
         <Select mt={3} placeholder="개인소득공제">
-          <option value="business">사업자증빙</option>
+          <option value="business">사업자증빙용</option>
         </Select>
-        <Input mt={3} placeholder="(-없이) 숫자만 입력해주세요." />
-
-        <HStack justifyContent="space-between" mt={5}>
-          <Text fontSize="xl" fontWeight="bold">최종 결제금액</Text>
-          <Text fontSize="xl" fontWeight="bold">{totalPrice}원</Text>
-        </HStack>
+        <Input 
+          mt={3} 
+          placeholder="(-없이) 숫자만 입력해주세요." 
+          value={cashReceiptNumber} 
+          onChange={(e) => setCashReceiptNumber(e.target.value)} 
+        />
+        
 
         <Button
           mt={5}
