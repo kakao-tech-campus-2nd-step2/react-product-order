@@ -61,6 +61,11 @@ export const useOrderForm = () => {
         alert('(-없이) 숫자만 입력해주세요.');
         return;
       }
+
+      if (!formData.cashReceiptNumber.match(/^01\d{9}$/)) {
+        alert('번호를 정확히 입력해주세요.');
+        return;
+      }
     }
 
     // console.log(formData);
