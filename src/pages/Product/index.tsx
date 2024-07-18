@@ -47,9 +47,6 @@ export const ProductDetailPage = () => {
     return null;
   }
 
-  console.log('detail productId: ', productId);
-  console.log('detail data id: ', data.id);
-
   return (
     <Center w="100%">
       <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
