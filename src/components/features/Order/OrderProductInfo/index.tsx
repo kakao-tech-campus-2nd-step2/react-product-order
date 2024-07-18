@@ -1,11 +1,24 @@
 import { Box, Flex, FormControl, FormLabel, HStack, Image, Input, Text } from '@chakra-ui/react';
 
+import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+
 interface OrderProductInfoProps {
-  imageURL: string;
-  name: string;
+  productId: string;
   messageCardTextMessageRef: React.RefObject<HTMLInputElement>;
 }
-const OrderProductInfo = ({ imageURL, name, messageCardTextMessageRef }: OrderProductInfoProps) => {
+const OrderProductInfo = ({ productId, messageCardTextMessageRef }: OrderProductInfoProps) => {
+  const { data, isPending, error } = useGetProductDetail(productId);
+
+  if (isPending) {
+    return <div>loading...</div>;
+  }
+
+  if (error) {
+    return <div>error...</div>;
+  }
+
+  const { imageURL, name } = data.detail;
+
   return (
     <Box width={'100%'}>
       <Flex direction="column" gap="1rem">

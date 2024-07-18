@@ -1,6 +1,7 @@
 import { Box, Checkbox, Flex, Input, Select, Text } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 
+import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
 import { usePostOrder } from '@/api/hooks/usePostOrder';
 import { Button } from '@/components/common/Button';
 import { orderLocalStorage } from '@/utils/storage';
@@ -8,21 +9,33 @@ import { orderLocalStorage } from '@/utils/storage';
 interface OrderReseipSectionProps {
   productId: string;
   count: number;
-  basicPrice: number;
   messageCardTextMessageRef: React.RefObject<HTMLInputElement>;
 }
 const OrderReseipSection = ({
   productId,
-  basicPrice,
   count,
   messageCardTextMessageRef,
 }: OrderReseipSectionProps) => {
+  const { data, isPending, error } = useGetProductDetail(productId);
+
   const { mutate, isSuccess } = usePostOrder();
 
   const [hasCashReceipt, setHasCashReceipt] = useState(false);
 
   const cashReceiptSelectRef = useRef<HTMLSelectElement>(null);
   const cashReceiptNumberRef = useRef<HTMLInputElement>(null);
+
+  if (isPending) {
+    return <div>loading...</div>;
+  }
+
+  if (error) {
+    return <div>error...</div>;
+  }
+
+  const {
+    price: { basicPrice },
+  } = data.detail;
 
   const handleCashReceipt = () => {
     setHasCashReceipt(!hasCashReceipt);
