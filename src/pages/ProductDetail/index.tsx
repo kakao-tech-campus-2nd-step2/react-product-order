@@ -10,7 +10,7 @@ import { getDynamicPath } from "@/routes/path";
 const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const validProductId = productId || "";
-  const { data, isLoading, isError } = useGetProductDetail(validProductId);
+  const [data, { loading, errorMessage}] = useGetProductDetail(validProductId);
 
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -32,14 +32,14 @@ const ProductDetailPage = () => {
   const dec = getDecrementButtonProps();
   const input = getInputProps();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <TextView>
         <Spinner />
       </TextView>
     );
   }
-  if (isError || !data) {
+  if (errorMessage || !data) {
     return (
       <TextView>
         에러가 발생했습니다.
