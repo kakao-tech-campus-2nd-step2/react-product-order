@@ -70,6 +70,10 @@ export const OrderPage: React.FC = () => {
       alert('메시지를 입력해주세요.');
       return;
     }
+    if (message.length > 100) {
+      alert('메시지를 100자 이내로 입력해주세요.');
+      return;
+    }
     alert('결제가 완료되었습니다.');
   };
 
