@@ -16,12 +16,20 @@ const OrderPage = () => {
   const totalPrice = product.price.sellingPrice * quantity;
 
   const handlePaymentClick = () => {
-    if (messageRef.current && !messageRef.current.value) {
-      alert('메시지를 입력해주세요.');
+    if (messageRef.current) {
+      if (!messageRef.current.value) {
+        alert('메시지를 입력해주세요.');
+        return;
+      }
+      if (messageRef.current.value.length > 100) {
+        alert('카드 메시지는 100자 이내로 입력해주세요.');
+        return;
+      }
+    } else {
+      alert('메시지 입력란을 찾을 수 없습니다.');
       return;
     }
-    else 
-      alert('주문이 완료되었습니다.');
+    alert('주문이 완료되었습니다.');
   };
 
   return (
