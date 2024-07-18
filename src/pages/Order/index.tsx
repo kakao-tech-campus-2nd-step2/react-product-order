@@ -1,25 +1,41 @@
 import { Box, Checkbox, Flex, Image, Input, Select, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Container } from 'src/components/common/layouts/Container';
 
 import { Button } from '@/components/common/Button';
 
 export const Order = () => {
   const location = useLocation();
   // console.log(location.state);
+  const [formData, setFormData] = useState({ message: '' });
 
-  const handleSubmitClick = () => {
-    alert('선물 보내기 성공');
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const handleSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const { message } = formData;
+    if (!message.trim().length) {
+      alert('메세지를 입력해주세요.');
+    }
   };
 
   return (
-    <Container maxWidth="1280px" flexDirection="row" justifyContent="center">
+    <Form>
       <Left>
         <TopSection>
           <TopTitle>나에게 주는 선물</TopTitle>
           <MessageInputWrapper>
-            <MessageInput placeholder="선물과 함께 보낼 메시지를 적어주세요" />
+            <MessageInput
+              type="text"
+              id="message"
+              value={formData.message}
+              onChange={handleMessageChange}
+              placeholder="선물과 함께 보낼 메시지를 적어주세요"
+            />
           </MessageInputWrapper>
         </TopSection>
         <MiddleLine />
@@ -77,9 +93,16 @@ export const Order = () => {
           </Box>
         </Flex>
       </Right>
-    </Container>
+    </Form>
   );
 };
+
+const Form = styled.form`
+  max-width: 1280px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
 
 const Left = styled.div`
   width: 100%;
@@ -112,7 +135,7 @@ const MessageInputWrapper = styled.div`
   padding: 12px 30px 16px;
 `;
 
-const MessageInput = styled.textarea`
+const MessageInput = styled.input`
   width: 100%;
   height: 100px;
   border-color: #e2e8f0;
