@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { Link } from 'react-router-dom';
 
 import { GoodsItem } from '@/components/common/GoodsItem';
 import { HandleBox, Loading } from '@/components/common/Handle';
@@ -35,14 +36,16 @@ export const ItemListWithInfiniteScroll = ({ themeKey }: { themeKey: string }) =
     <ListWrapper>
       <Container justifyContent="center" alignItems="center" maxWidth="1024px">
         <Grid columns={{ init: 2, sm: 2, md: 4 }} gap={20}>
-          {products.map((item, index) => (
-            <GoodsItem
-              key={index + 1}
-              imageSrc={item.imageURL}
-              subtitle={item.brandInfo.name}
-              title={item.name}
-              amount={item.price.basicPrice}
-            />
+          {products.map((item) => (
+            <Link to={`/products/${item.id}`}>
+              <GoodsItem
+                key={item.id}
+                imageSrc={item.imageURL}
+                subtitle={item.brandInfo.name}
+                title={item.name}
+                amount={item.price.basicPrice}
+              />
+            </Link>
           ))}
           <div ref={ref}></div>
         </Grid>
