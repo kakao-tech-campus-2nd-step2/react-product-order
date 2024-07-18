@@ -1,17 +1,25 @@
 import { Button, Divider, Flex, Image, Input, Text } from '@chakra-ui/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductsDetail } from '@/api';
 import Loading from '@/components/common/Loading';
+import { RouterPath } from '@/routes/path';
+import { authSessionStorage } from '@/utils/storage';
 
 export const ProductsPage = () => {
   const { productsId = '' } = useParams<{ productsId: string }>();
   const { data: productsDetail, isError, isLoading } = useGetProductsDetail({ productsId });
+  const currentAuthToken = authSessionStorage.get();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleOrderClick = () => {
-    if (productsDetail?.detail) {
-      navigate('/order', { state: { ...productsDetail.detail, count: 3 } });
+    if (!currentAuthToken) {
+      if (window.confirm('로그인이 필요합니다. 로그인페이지로 이동하시겠습니까?')) {
+        navigate(RouterPath.login + `?redirect=${location.pathname}`);
+      }
+    } else if (productsDetail?.detail) {
+      navigate(RouterPath.order, { state: { ...productsDetail.detail, count: 3 } });
     }
   };
 
