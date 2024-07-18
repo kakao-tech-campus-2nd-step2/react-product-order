@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import { useGetProductsDetail } from '@/api/hooks/useGetProductDetail';
 import { Spinner } from '@/components/common/Spinner';
 
+import { ProductOption } from '../ProductOption';
+
 type Props = {
   productId: string;
 };
@@ -26,24 +28,27 @@ export const MainProduct = ({ productId }: Props) => {
   if (!data) return <></>;
 
   return (
-    <Wrapper>
-      <InsideWrapper>
-        <Header>
-          <Image src="https://st.kakaocdn.net/product/gift/product/20240703140657_19263fd5455146b0a308a4e0d6bacc6a.png" alt="hh" />
-          <Description>
-            <Title>
-              [단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)
-            </Title>
-            <Price>
-              145000원
-            </Price>
-            <Banner>
-              카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!
-            </Banner>
-          </Description>
-        </Header>
-      </InsideWrapper>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <InsideWrapper>
+          <Header>
+            <Image src={data.detail.imageURL} alt={data.detail.name} />
+            <Description>
+              <Title>
+                {data.detail.name}
+              </Title>
+              <Price>
+                {data.detail.price.sellingPrice}원
+              </Price>
+              <Banner>
+                카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!
+              </Banner>
+            </Description>
+          </Header>
+        </InsideWrapper>
+      </Wrapper>
+      <ProductOption productId={productId} productName={data.detail.name} productPrice={data.detail.price.sellingPrice} />
+    </>
   );
 };
 

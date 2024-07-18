@@ -2,7 +2,6 @@ import { Navigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import { MainProduct } from '@/components/features/ProductDetail/MainProduct';
-import { ProductOption } from '@/components/features/ProductDetail/ProductOption';
 
 import { useCurrentProduct } from '@/hooks/useCurrentProduct';
 import { RouterPath } from '@/routes/path';
@@ -21,7 +20,6 @@ export const ProductDetailPage = () => {
         <>
             <Wrapper>
                 <MainProduct productId={productId} />
-                <ProductOption productId={productId} />
             </Wrapper>
         </>
     );

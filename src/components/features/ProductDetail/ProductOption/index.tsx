@@ -11,14 +11,16 @@ import { getDynamicPath } from '@/routes/path';
 
 type Props = {
   productId: string;
+  productName: string;
+  productPrice: number;
 };
 
-export const ProductOption = ({ productId }: Props) => {
+export const ProductOption = ({ productId, productName, productPrice }: Props) => {
+
   const auth = useAuth();
   const navigate = useNavigate();
 
   const btnClickedHandler = () => {
-    console.log(auth);
     if (auth === undefined) {
       navigate(getDynamicPath.login());
     } else {
@@ -31,7 +33,7 @@ export const ProductOption = ({ productId }: Props) => {
       <InsideWrapper>
         <Option>
           <Title>
-            [단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)
+            {productName}
           </Title>
           <Qty>
             <Button isDisabled={true} style={{ fontSize: '30px', padding: '0', fontWeight: '400' }}>−</Button>
@@ -44,7 +46,7 @@ export const ProductOption = ({ productId }: Props) => {
         <Price>
           <AllPrice>
             총 결제 금액
-            <Result>145000원</Result>
+            <Result>{productPrice}원</Result>
           </AllPrice>
           <ForMeBtn onClick={btnClickedHandler}>나에게 선물하기</ForMeBtn>
         </Price>
