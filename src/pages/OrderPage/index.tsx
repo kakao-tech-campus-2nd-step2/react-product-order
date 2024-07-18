@@ -8,12 +8,16 @@ import { PaymentSection } from './components/PaymentSection';
 import { useOrderForm } from './hooks/useOrderForm';
 
 export const OrderPage = () => {
-  const { formData, handleCheckboxChange, handleInputChange, handleSubmit } =
-    useOrderForm();
+  const {
+    formData,
+    handleCheckboxChange,
+    handleInputChange,
+    handleClickButton,
+  } = useOrderForm();
 
   return (
     <BaseLayout>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => e.preventDefault()}>
         <Content height="92vh" maxWidth="1280px">
           <Divider direction="vertical" />
           <GiftSection
@@ -25,6 +29,7 @@ export const OrderPage = () => {
             formData={formData}
             handleCheckboxChange={handleCheckboxChange}
             handleInputChange={handleInputChange}
+            handleClickButton={handleClickButton}
           />
           <Divider direction="vertical" />
         </Content>

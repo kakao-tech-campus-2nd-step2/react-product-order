@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 
 import { OrderFormType } from '@/types/orderType';
 
@@ -29,10 +29,35 @@ export const useOrderForm = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const validateGiftMessage = (message: string) => {
+    if (message?.trim() === '') {
+      alert('메세지를 입력해주세요.');
+      handleInputChange('gitfMessage', '');
+      return false;
+    }
+
+    if (message?.length > 100) {
+      alert('선물 메세지는 100자 이내로 입력해 주세요.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
     alert('주문이 완료되었습니다.');
   };
 
-  return { formData, handleCheckboxChange, handleInputChange, handleSubmit };
+  const handleClickButton = () => {
+    const isValidate = validateGiftMessage(formData.gitfMessage);
+
+    if (isValidate) handleSubmit();
+  };
+
+  return {
+    formData,
+    handleCheckboxChange,
+    handleInputChange,
+    handleClickButton,
+  };
 };

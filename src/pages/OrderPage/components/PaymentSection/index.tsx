@@ -15,12 +15,14 @@ type PaymentSectionProps = {
   formData: OrderFormType;
   handleCheckboxChange: (checkboxField: keyof OrderFormType) => void;
   handleInputChange: (inputField: keyof OrderFormType, value: string) => void;
+  handleClickButton: () => void;
 };
 
 export const PaymentSection = ({
   formData,
   handleCheckboxChange,
   handleInputChange,
+  handleClickButton,
 }: PaymentSectionProps) => {
   const location = useLocation();
   const { productId, quantity } = location.state;
@@ -46,7 +48,7 @@ export const PaymentSection = ({
         </Text>
       </Container>
       <Divider />
-      <Button size="large" css={buttonStyle}>
+      <Button size="large" onClick={handleClickButton} css={buttonStyle}>
         {finalPrice} 결제하기
       </Button>
     </Container>
