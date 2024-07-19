@@ -20,6 +20,8 @@ const Order: React.FC = () => {
   const [receipt, setReceipt] = useState(false);
   const [taxType, setTaxType] = useState('personal');
   const [taxNumber, setTaxNumber] = useState('');
+  const [cardMessage, setCardMessage] = useState('');
+  const [cardMessageError, setCardMessageError] = useState('');
 
   const handleReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setReceipt(e.target.checked);
@@ -27,8 +29,25 @@ const Order: React.FC = () => {
     setTaxType(e.target.value);
   const handleTaxNumberChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setTaxNumber(e.target.value);
+  const handleCardMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const message = e.target.value;
+    if (message.length > 100) {
+      setCardMessageError('메시지를 100자 이내로 입력해주세요.');
+    } else {
+      setCardMessageError('');
+    }
+    setCardMessage(message);
+  };
 
   const handlePayment = () => {
+    if (!cardMessage) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
+    if (cardMessage.length > 100) {
+      setCardMessageError('메시지를 100자 이내로 입력해주세요.');
+      return;
+    }
     alert('결제하기 버튼을 눌렀습니다.');
   };
 
@@ -42,7 +61,17 @@ const Order: React.FC = () => {
         나에게 주는 선물
       </Text>
       <Box mb={4}>
-        <Input placeholder="선물과 함께 보낼 메시지를 적어보세요" />
+        <Input
+          placeholder="선물과 함께 보낼 메시지를 적어보세요"
+          value={cardMessage}
+          onChange={handleCardMessageChange}
+          isInvalid={!!cardMessageError}
+        />
+        {cardMessageError && (
+          <Text color="red.500" mt={2}>
+            {cardMessageError}
+          </Text>
+        )}
       </Box>
       <Box borderWidth="1px" borderRadius="lg" p={4} mb={4}>
         <Text fontSize="lg" mb={2}>
