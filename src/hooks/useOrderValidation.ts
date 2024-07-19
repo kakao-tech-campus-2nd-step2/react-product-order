@@ -75,15 +75,16 @@ const isCacheReceiptInvalid = (
   numberCurrent: HTMLInputElement,
   setWarning: (warning: string) => void,
 ) => {
-  if (checkboxCurrent.checked) {
-    if (!numberCurrent.value) {
-      setWarning('현금영수증 번호를 입력해 주세요.');
-      return true;
-    }
-    if (!/^\d+$/.test(numberCurrent.value)) {
-      setWarning('현금영수증 번호는 숫자만 입력해 주세요.');
-      return true;
-    }
-    return false;
+  if (!checkboxCurrent.checked) return false;
+
+  if (!numberCurrent.value) {
+    setWarning('현금영수증 번호를 입력해 주세요.');
+    return true;
   }
+  if (!/^\d+$/.test(numberCurrent.value)) {
+    setWarning('현금영수증 번호는 숫자만 입력해 주세요.');
+    return true;
+  }
+
+  return false;
 };
