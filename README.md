@@ -24,5 +24,5 @@
 
 ## step 3
 
-- [ ] 기존에 만든 form / input을 react-hook-form으로 변경한다.
-- [ ] validate 또한 react-hook-form 기능을 적극적으로 활용한다. (이 과정에서 zod를 사용해도 좋다.)
+- [x] 기존에 만든 form / input을 react-hook-form으로 변경한다.
+- [x] validate 또한 react-hook-form 기능을 적극적으로 활용한다. (이 과정에서 zod를 사용해도 좋다.)
