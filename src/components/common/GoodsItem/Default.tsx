@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
+import { getDynamicPath } from '@/routes/path';
 
 import { Image } from '@/components/common/Image';
 
@@ -18,15 +20,18 @@ export const DefaultGoodsItems = ({
 }: DefaultGoodsItemsProps) => {
   return (
     <Wrapper {...props}>
-      <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
-      <InfoWrapper>
-        <Subtitle>{subtitle}</Subtitle>
-        <Title>{title}</Title>
-        <Amount>
-          {amount}
-          <span>원</span>
-        </Amount>
-      </InfoWrapper>
+      <Link to={getDynamicPath('/product/:productId')({ productId: 1 })}>
+        <TitleLink>{title}</TitleLink>
+        <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
+        <InfoWrapper>
+          <Subtitle>{subtitle}</Subtitle>
+          <Title>{title}</Title>
+          <Amount>
+            {amount}
+            <span>원</span>
+          </Amount>
+        </InfoWrapper>
+      </Link>
     </Wrapper>
   );
 };
