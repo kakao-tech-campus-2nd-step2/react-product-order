@@ -29,3 +29,9 @@
 - [x] 현금 영수증 checkbox 클릭 시 현금영수증 번호가 입력되었는지 확인해요.
 
 - [x] 현금 영수증 입력은 숫자만 입력하도록 안내해요.
+
+#### 🚀 3단계 - React Hook Form를 사용하여 기존의 form을 리팩터링 해요.
+
+- [ ] 기존에 만든 form / input을 react-hook-form으로 변경해요.
+
+- [ ] validate 또한 react-hook-form 기능을 적극적으로 활용해요. (이 과정에서 zod를 사용해도 좋아요.)
