@@ -1,17 +1,18 @@
 import { Box, Button, Image, Input, Text } from '@chakra-ui/react';
 import React from 'react';
-import { Link, useNavigate,useParams } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
-import { getDynamicPath } from '@/routes/path';
+import { getDynamicPath } from '@/routes/path'; // 수정된 import 구문
 
 import useGetProductDetails from '../../api/hooks/useGetProductDetails';
 import useGetProductOptions from '../../api/hooks/useGetProductOptions';
-import { useGift } from '../../provider/Auth';
+import { useAuth,useGift } from '../../provider/Auth';
 
 const ProductDetailPage = () => {
   const { productId } = useParams<{ productId?: string }>();
   const navigate = useNavigate();
   const { quantity, setQuantity, setSelectedProduct } = useGift();
+  const authInfo = useAuth();
 
   console.log('Product ID from params:', productId);
 
@@ -38,6 +39,11 @@ const ProductDetailPage = () => {
   };
 
   const handleGift = () => {
+    if (!authInfo) {
+      navigate(getDynamicPath.login()); // Redirect to login page if not authenticated
+      return;
+    }
+
     if (productDetails) {
       setSelectedProduct(productDetails);
     }
@@ -59,9 +65,7 @@ const ProductDetailPage = () => {
             <Input type="number" value={quantity} onChange={handleQuantityChange} min="1" />
           </Box>
           <Text>총 가격: {totalPrice}원</Text>
-          <Link to={getDynamicPath.checkout(productId)}>
-            <Button onClick={handleGift}>나에게 선물하기</Button>
-          </Link>
+          <Button onClick={handleGift}>나에게 선물하기</Button>
           <Box mt="4">
             <Text fontWeight="bold" as="h2">상품 설명</Text>
             {productDetails.productDescription?.images.map((image, index) => (
