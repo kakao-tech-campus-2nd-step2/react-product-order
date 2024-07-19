@@ -11,3 +11,7 @@
 
 - [x] 상품 상세페이지에서 상품 개수 체크
 - [x] 결제 페이지의 Form validation
+
+## 3단계 - React Hook Form를 사용하여 기존의 form을 리팩터링 해요.
+
+- [ ] 기존 form/input을 react-hook-form으로 변경
