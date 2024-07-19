@@ -52,7 +52,6 @@ export const ProductDetailPage = () => {
       <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
         <Flex w="100%" position="relative">
           <ProductDetailSection
-            id={parseInt(productId!)}
             name={data.name}
             imageURL={data.imageURL}
             price={data.price}
