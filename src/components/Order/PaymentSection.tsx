@@ -1,5 +1,6 @@
 import { Divider } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
+import { useRef, useState } from 'react';
 
 import { Button } from '../common/Button';
 import { HandleBox, Loading } from '../common/Handle';
@@ -7,8 +8,16 @@ import { CashReceipt } from './CashReceipt';
 
 import { useProductDetail } from '@/services/useProductDetail';
 
-export const PaymentSection = ({ orderHistory }: { orderHistory: { id: number; count: number } }) => {
+export const PaymentSection = ({
+  orderHistory,
+  inputRef,
+}: {
+  orderHistory: { id: number; count: number };
+  inputRef: React.RefObject<HTMLInputElement>;
+}) => {
   const { isError, isPending, data, error } = useProductDetail(orderHistory.id.toString());
+  const [checked, setChecked] = useState(false);
+  const numberRef = useRef<HTMLInputElement>(null);
 
   if (isPending) {
     return <Loading />;
@@ -16,16 +25,37 @@ export const PaymentSection = ({ orderHistory }: { orderHistory: { id: number; c
   if (isError) {
     return <HandleBox>{error.message}</HandleBox>;
   }
-  const totalPrice = data.detail.price.basicPrice * orderHistory.count;
+
   const handleClick = () => {
-    window.alert('주문이 완료되었습니다.');
+    const number = numberRef.current?.value;
+    const input = inputRef.current?.value || '';
+
+    if (input.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      return;
+    }
+    if (!input) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
+    if (checked && !number) {
+      alert('현금영수증 번호를 입력해주세요');
+      return;
+    }
+    if (isNaN(Number(number))) {
+      alert('현금영수증 번호는 숫자로만 입력해주세요.');
+      return;
+    }
+    alert('주문이 완료되었습니다.');
   };
+
+  const totalPrice = data.detail.price.basicPrice * orderHistory.count;
 
   return (
     <PaymentSectionWrapper>
       <Title>결제 정보</Title>
       <Divider color="#e6e6e6" />
-      <CashReceipt />
+      <CashReceipt ref={numberRef} checked={checked} setChecked={setChecked}/>
       <PaymentInfo>
         <Divider color="#e6e6e6" />
         <FinallyPrice>
