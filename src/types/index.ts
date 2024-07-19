@@ -35,7 +35,7 @@ export type GoodsData = {
   }
 }
 
-export type ProductsInfoData = {
+export type ProductsDetailData = {
   detail: {
     id: number
     imageURL: string
@@ -45,5 +45,17 @@ export type ProductsInfoData = {
   }
   brandInfo: {
     id: number
+  }
+}
+
+export type ProductsOptionData = {
+  options: {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    hasOption: boolean;
+    giftOrderLimit: number;
+    names: [];
+    options: [];
   }
 }

@@ -74,13 +74,13 @@ export const Order = () => {
             <Box w="100%">
               <Text fontSize="xl" fontWeight="bold">선물 내역</Text>
               <GiftDetailBox>
-                <Image src={location.state.data.imageURL} alt={location.state.data.name} width="150px" height="150px" />
+                <Image src={location.state.data.detail.imageURL} alt={location.state.data.detail.name} width="150px" height="150px" />
                 <Box>
                   <Text fontSize="lg" fontWeight="semibold" color="gray.700">
-                    {location.state.data.brandInfo.name}
+                    {location.state.data.detail.brandInfo.name}
                   </Text>
                   <Text fontSize="md" fontWeight="medium" color="gray.500">
-                    {location.state.data.name} x {location.state.itemCount}개
+                    {location.state.data.detail.name} x {location.state.itemCount}개
                   </Text>
                 </Box>
               </GiftDetailBox>
