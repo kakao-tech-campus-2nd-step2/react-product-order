@@ -25,10 +25,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-<<<<<<< HEAD
     "@hookform/resolvers": "^3.9.0",
-=======
->>>>>>> d48e4d8 (부산대 FE_차기은 4주차 과제 STEP1 (#18))
     "@tanstack/react-query": "^5.24.1",
     "axios": "^1.6.7",
     "framer-motion": "^11.3.3",
@@ -36,12 +33,8 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.52.1",
     "react-intersection-observer": "^9.8.1",
-<<<<<<< HEAD
     "react-router-dom": "^6.24.1",
     "zod": "^3.23.8"
-=======
-    "react-router-dom": "^6.24.1"
->>>>>>> d48e4d8 (부산대 FE_차기은 4주차 과제 STEP1 (#18))
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
