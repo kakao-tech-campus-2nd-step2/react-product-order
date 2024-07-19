@@ -1,9 +1,11 @@
 import { Box, Button, Flex, NumberInput, NumberInputField, Text } from '@chakra-ui/react';
-import { useState } from 'react';
 
-export default function GoodsCount() {
-  const [amount, setAmount] = useState(1);
-
+type CountData = {
+  name?: string;
+  amount: number;
+  setAmount: React.Dispatch<React.SetStateAction<number>>;
+};
+export default function GoodsCount({ name, amount, setAmount }: CountData) {
   const handleIncrease = () => {
     setAmount(Math.min(amount + 1, 100));
   };
@@ -26,14 +28,10 @@ export default function GoodsCount() {
         borderColor="rgb(237, 237, 237)"
       >
         <Box fontSize="16px" fontWeight={700}>
-          외식 통합권 10만원권
+          {name}
         </Box>
         <Flex pt="8px" justifyContent="space-between" alignItems="center">
-          <Button
-            borderRadius="6px"
-            padding="0"
-            onClick={handleDecrease}
-          >
+          <Button borderRadius="6px" padding="0" onClick={handleDecrease}>
             <Text display="flex" fontSize="16px" fontWeight={600} color="rgb(26, 32, 44)">
               -
             </Text>
@@ -52,13 +50,10 @@ export default function GoodsCount() {
           >
             <NumberInputField padding="0px 12px"></NumberInputField>
           </NumberInput>
-          <Button
-            borderRadius="6px"
-            padding="0"
-            onClick={handleIncrease}
-          >
-            <Text display="flex" fontSize="16px" fontWeight={600} color="rgb(26, 32, 44)">+</Text>
-            
+          <Button borderRadius="6px" padding="0" onClick={handleIncrease}>
+            <Text display="flex" fontSize="16px" fontWeight={600} color="rgb(26, 32, 44)">
+              +
+            </Text>
           </Button>
         </Flex>
       </Box>
