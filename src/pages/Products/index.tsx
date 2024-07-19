@@ -4,7 +4,7 @@ import { useGetProduct } from '@/api/hooks/useGetProduct';
 import { ProductDetail } from '@/components/features/ProductDetail';
 import { RouterPath } from '@/routes/path';
 
-export const Products = () => {
+export const ProductsPage = () => {
   const { productId = '' } = useParams<{ productId: string }>();
   const { data } = useGetProduct(productId);
 
