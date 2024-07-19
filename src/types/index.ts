@@ -34,42 +34,44 @@ export type GoodsData = {
 };
 
 export type ProductDetailData = {
-  id: number;
-  name: string;
-  imageURL: string;
-  wish: {
-    wishCount: number;
-    isWished: boolean;
-  };
-  price: {
-    basicPrice: number;
-    discountRate: number;
-    sellingPrice: number;
-  };
-  brandInfo: {
-    id: number;
-    name: string;
-    imageURL: string;
-  };
-  isAccessableProductPage: boolean;
-  review: {
-    averageRating: number;
-    totalReviewCount: number;
-  };
-  productDescription: {
-    images: string[];
-  };
-  productDetailInfo: {
-    announcements: Array<{
-      displayOrder: number;
+  detail: {
+    brandInfo: {
+      id: number;
       name: string;
-      value: string;
-    }>;
-    terms: Array<{
-      displayOrder: number;
-      title: string;
-      description: string;
-    }>;
+      imageURL: string;
+    };
+    id: number;
+    imageURL: string;
+    isAccessableProductPage: boolean;
+    name: string;
+    price: {
+      basicPrice: number;
+      discountRate: number;
+      sellingPrice: number;
+    };
+    productDescription: {
+      displayImage: string;
+    };
+    productDetailInfo: {
+      announcements: {
+        displayOrder: number;
+        name: string;
+        value: string;
+      }[];
+      terms: {
+        displayOrder: number;
+        title: string;
+        description: string;
+      }[];
+    };
+    review: {
+      averageRating: number;
+      totalReviewCount: number;
+    };
+    wish: {
+      isWished: boolean;
+      wishCount: number;
+    };
   };
 };
 
