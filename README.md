@@ -10,3 +10,8 @@
 5. 상품 개수가 giftOrderLimit을 초과한 경우 선택불가
 6. 카드 메시지 입력 안내, 100자 이내로 입력
 7. 현금영수증 번호 입력 확인, 숫자만
+
+## 3단계
+
+8. form / input을 react-hook-form으로 리팩토링
+9. validate에 react-hook-form 적용
