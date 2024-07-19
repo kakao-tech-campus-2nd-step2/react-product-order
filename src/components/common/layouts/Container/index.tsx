@@ -1,24 +1,36 @@
-import styled from '@emotion/styled';
 import { forwardRef } from 'react';
 
 import { vars } from '@/styles';
+import styled from '@emotion/styled';
 
 type Props = {
   maxWidth?: string;
   flexDirection?: 'row' | 'column';
-  justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around';
+  justifyContent?:
+    | 'center'
+    | 'flex-start'
+    | 'flex-end'
+    | 'space-between'
+    | 'space-around';
   alignItems?: 'center' | 'flex-start' | 'flex-end' | 'baseline' | 'stretch';
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const Container: React.FC<Props> = forwardRef(
   (
-    { children, maxWidth, flexDirection, justifyContent, alignItems, ...props }: Props,
-    ref: React.Ref<HTMLDivElement>,
+    {
+      children,
+      maxWidth,
+      flexDirection,
+      justifyContent,
+      alignItems,
+      ...props
+    }: Props,
+    ref: React.Ref<HTMLDivElement>
   ) => {
     return (
       <Wrapper ref={ref} {...props}>
         <Inner
-          className="inner"
+          className='inner'
           maxWidth={maxWidth}
           flexDirection={flexDirection}
           justifyContent={justifyContent}
@@ -28,7 +40,7 @@ export const Container: React.FC<Props> = forwardRef(
         </Inner>
       </Wrapper>
     );
-  },
+  }
 );
 
 const Wrapper = styled.div`

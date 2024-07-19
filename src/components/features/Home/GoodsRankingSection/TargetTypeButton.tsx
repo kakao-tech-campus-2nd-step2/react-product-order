@@ -1,7 +1,6 @@
-import styled from '@emotion/styled';
-
 import { breakpoints } from '@/styles/variants';
 import type { RankingFilterOption } from '@/types';
+import styled from '@emotion/styled';
 
 type Props = {
   value: RankingFilterOption['targetType'];

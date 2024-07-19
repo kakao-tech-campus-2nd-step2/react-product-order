@@ -1,8 +1,6 @@
-import styled from '@emotion/styled';
-
-import { breakpoints } from '@/styles/variants';
-
 import { DefaultGoodsItems, type DefaultGoodsItemsProps } from './Default';
+import { breakpoints } from '@/styles/variants';
+import styled from '@emotion/styled';
 
 type Props = {
   rankingIndex: number;
@@ -38,7 +36,8 @@ const RankingLabel = styled.span<Pick<Props, 'rankingIndex'>>`
   top: 4px;
   left: 4px;
   color: #fff;
-  background-color: ${({ rankingIndex }) => (rankingIndex <= 3 ? '#fd7364' : '#bbb')};
+  background-color: ${({ rankingIndex }) =>
+    rankingIndex <= 3 ? '#fd7364' : '#bbb'};
 
   @media screen and (min-width: ${breakpoints.sm}) {
     width: 30px;

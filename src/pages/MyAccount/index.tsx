@@ -1,10 +1,9 @@
-import styled from '@emotion/styled';
-
 import { Button } from '@/components/common/Button';
 import { Spacing } from '@/components/common/layouts/Spacing';
 import { useAuth } from '@/provider/Auth';
 import { RouterPath } from '@/routes/path';
 import { authSessionStorage } from '@/utils/storage';
+import styled from '@emotion/styled';
 
 export const MyAccountPage = () => {
   const authInfo = useAuth();
@@ -20,8 +19,8 @@ export const MyAccountPage = () => {
     <Wrapper>
       {authInfo?.name}님 안녕하세요! <Spacing height={64} />
       <Button
-        size="small"
-        theme="darkGray"
+        size='small'
+        theme='darkGray'
         onClick={handleLogout}
         style={{
           maxWidth: '200px',

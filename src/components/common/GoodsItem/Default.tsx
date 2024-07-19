@@ -1,6 +1,7 @@
-import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 import { Image } from '@/components/common/Image';
+import styled from '@emotion/styled';
 
 export type DefaultGoodsItemsProps = {
   imageSrc: string;
@@ -14,11 +15,32 @@ export const DefaultGoodsItems = ({
   subtitle,
   title,
   amount,
+  id,
   ...props
 }: DefaultGoodsItemsProps) => {
+  const navigate = useNavigate();
+
+  const handlerDetail = () => {
+    navigate(`/product/${id}`, {
+      state: {
+        id,
+        title,
+        imageSrc,
+        amount,
+        subtitle,
+      },
+    });
+  };
+
   return (
-    <Wrapper {...props}>
-      <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
+    <Wrapper {...props} onClick={handlerDetail}>
+      <Image
+        src={imageSrc}
+        alt={`${title} 소개`}
+        width='100%'
+        ratio='square'
+        radius={4}
+      />
       <InfoWrapper>
         <Subtitle>{subtitle}</Subtitle>
         <Title>{title}</Title>

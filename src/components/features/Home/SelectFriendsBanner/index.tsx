@@ -1,15 +1,14 @@
-import styled from '@emotion/styled';
-
 import { Image } from '@/components/common/Image';
 import { Container as CommonContainer } from '@/components/common/layouts/Container';
 import { breakpoints } from '@/styles/variants';
+import styled from '@emotion/styled';
 
 export const SelectFriendsBanner = () => (
   <Wrapper>
-    <Container flexDirection="row" alignItems="center">
+    <Container flexDirection='row' alignItems='center'>
       <SelectImage
-        src="https://gift-s.kakaocdn.net/dn/gift/images/m640/bg_profile_default.png"
-        alt="친구 선택 유도 아이콘"
+        src='https://gift-s.kakaocdn.net/dn/gift/images/m640/bg_profile_default.png'
+        alt='친구 선택 유도 아이콘'
         onClick={() => {
           alert('선물 받을 친구 선택하기');
         }}
