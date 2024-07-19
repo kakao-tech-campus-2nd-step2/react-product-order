@@ -99,7 +99,6 @@ export const OrderPage: React.FC = () => {
   }
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
     if (receiptRequested && !data.receiptNumber) {
       alert('현금 영수증 번호를 입력해주세요.');
       return;
