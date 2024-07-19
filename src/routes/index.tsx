@@ -38,6 +38,10 @@ const router = createBrowserRouter([
         element: <ProductPage />,
       },
       {
+        path: RouterPath.order,
+        element: <ProductPage />,
+      },
+      {
         path: RouterPath.notFound,
         element: <Navigate to={RouterPath.home} />,
       },

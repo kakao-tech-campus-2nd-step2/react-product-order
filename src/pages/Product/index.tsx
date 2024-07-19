@@ -13,7 +13,6 @@ const ProductPage: React.FC = () => {
   const { productKey } = useParams<Params>();
   console.log('Product key from useParams:', productKey);
   if (!productKey) {
-    console.log('아이디 없다')
     return <Navigate to={RouterPath.notFound} />;
   }
 
