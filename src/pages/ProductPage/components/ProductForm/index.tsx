@@ -6,9 +6,9 @@ import { OneTextContainer } from '@/components/OneTextContainer';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Layout/Container';
 
-import { SelectQuantity } from './SelectQuantity';
+import { QuantityInput } from './QuantityInput';
 import { TotalPriceCallout } from './TotalPriceCallout';
-import { buttonStyle, containerStyle } from './style';
+import { containerStyle } from './style';
 
 type ProductFormProps = {
   productId: number;
@@ -29,14 +29,19 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
       justifyContent="space-between"
       css={containerStyle}
     >
-      <SelectQuantity
+      <QuantityInput
         productOptions={data}
         quantity={quantity}
         setQuantity={updateQuantity}
       />
       <Container flexDirection="column" gap="1rem">
         <TotalPriceCallout totalPrice={totalPrice} />
-        <Button theme="black" onClick={navigateToOrder} css={buttonStyle}>
+        <Button
+          theme="black"
+          size="large"
+          onClick={navigateToOrder}
+          css={{ height: '3.5rem' }}
+        >
           나에게 선물하기
         </Button>
       </Container>

@@ -28,4 +28,4 @@
   - [x] Select
   - [x] Input
 
-- [ ] Alert Dialog
+- [x] Alert Dialog

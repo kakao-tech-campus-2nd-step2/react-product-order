@@ -1,25 +1,22 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
-import { IconButton, Input, useNumberInput } from '@chakra-ui/react';
+import { IconButton, Input, Text, useNumberInput } from '@chakra-ui/react';
 
 import { ProductOptions } from '@/types/productType';
 
 import { Card } from '@/components/Card';
 import { Container } from '@/components/ui/Layout/Container';
-import { Text } from '@/components/ui/Text';
 
-import { cardStyle } from './styles';
-
-type SelectQuantityProps = {
+type QuantityInputProps = {
   productOptions: ProductOptions;
   quantity: number;
   setQuantity: (newQuantity: number) => void;
 };
 
-export const SelectQuantity = ({
+export const QuantityInput = ({
   productOptions,
   quantity,
   setQuantity,
-}: SelectQuantityProps) => {
+}: QuantityInputProps) => {
   const maxQuantity = productOptions.giftOrderLimit;
 
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
@@ -38,8 +35,8 @@ export const SelectQuantity = ({
   const input = getInputProps();
 
   return (
-    <Card flexDirection="column" gap="0.5rem" css={cardStyle}>
-      <Text isBold>{productOptions.productName}</Text>
+    <Card flexDirection="column" gap="0.5rem" css={{ padding: '1rem' }}>
+      <Text as="b">{productOptions.productName}</Text>
       <Container flexDirection="row" gap="0.5rem">
         <IconButton
           aria-label="Decrease Quantity"
@@ -48,7 +45,7 @@ export const SelectQuantity = ({
         />
         <Input {...input} />
         <IconButton
-          aria-label="Decrease Quantity"
+          aria-label="Increase Quantity"
           icon={<AddIcon />}
           {...inc}
         />
