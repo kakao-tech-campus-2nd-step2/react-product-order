@@ -18,6 +18,12 @@ export const Order = () => {
     const number = numberRef.current?.value;
     const message = messageRef.current?.value;
 
+    // 카드 메시지가 100자를 초과할 경우 경고 표시
+    if (message && message.length > 100) {
+      alert('카드 메시지는 100자 이내로 입력해 주세요!');
+      return;
+    }
+
     // 현금 영수증 신청을 한 경우 (체크 박스 활성화 상태)
     if (check) {
       if (number && message) {
