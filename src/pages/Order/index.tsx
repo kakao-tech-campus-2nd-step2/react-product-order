@@ -33,9 +33,16 @@ export const OrderPage = () => {
       return;
     }
 
-    if (cashReceipt && cashReceiptNumber.trim() === "") {
-      alert("현금영수증 번호를 입력해주세요.");
-      return;
+    if (cashReceipt) {
+      if (cashReceiptNumber.trim() === "") {
+        alert("현금영수증 번호를 입력해주세요.");
+        return;
+      }
+
+      if (isNaN(Number(cashReceiptNumber))) {
+        alert("현금영수증 번호는 숫자만 입력해주세요.");
+        return;
+      }
     }
 
     alert("주문이 완료되었습니다.");
