@@ -33,8 +33,15 @@ const Order: React.FC = () => {
 
   const handleTaxTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setTaxType(e.target.value);
-  const handleTaxNumberChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setTaxNumber(e.target.value);
+  const handleTaxNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setTaxNumber(value);
+      setTaxNumberError('');
+    } else {
+      setTaxNumberError('숫자만 입력해주세요.');
+    }
+  };
   const handleCardMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const message = e.target.value;
     if (message.length > 100) {
