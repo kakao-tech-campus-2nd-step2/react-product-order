@@ -36,12 +36,14 @@ const ProductDetail: React.FC = () => {
   if (!data) return <TextView>상품이 없습니다.</TextView>;
 
   const product = data.detail;
+  const imageUrl = product.imageURL;
+  const sellingPrice = product.price?.sellingPrice;
 
   return (
     <ProductDetailContent
-      imageUrl={product.imageURL}
+      imageUrl={imageUrl}
       name={product.name}
-      price={product.price?.sellingPrice}
+      price={sellingPrice}
       onButtonClick={handleGiftButtonClick}
     />
   );

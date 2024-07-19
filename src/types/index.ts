@@ -83,4 +83,5 @@ export type ProductOption = {
 
 export type ProductOptionsData = {
   options: ProductOption[];
+  giftOrderLimit: number;
 };
