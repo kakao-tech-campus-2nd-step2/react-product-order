@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Checkbox,
   Flex,
   FormControl,
@@ -21,6 +22,10 @@ export const PaymentPage = () => {
     totalPrice: number;
   };
   const [receiptType, setReceiptType] = useState('personal');
+
+  const handlePayment = () => {
+    window.alert("주문이 완료되었습니다.")
+  };
 
   return (
     <Box p={8}>
@@ -72,6 +77,9 @@ export const PaymentPage = () => {
               <Input placeholder=" (-없이) 숫자로만 입력해주세요." size="xl" w="260px" h="40px"/>
             </FormControl>
             <Text fontSize="lg" fontWeight="bold" ml={100} mb={20} textAlign="center">최종 결제 금액 {totalPrice}원</Text>
+            <Button bg="#feeb00" color="black" onClick={handlePayment} ml={100} p={20} width="260px">
+              {totalPrice}원 결제하기
+            </Button>
           </Box>
       </Flex>
     </Box>
