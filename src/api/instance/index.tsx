@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 
@@ -17,16 +16,5 @@ const initInstance = (config: AxiosRequestConfig): AxiosInstance => {
 };
 
 export const fetchInstance = initInstance({
-  baseURL: 'https://kakao-tech-campus-mock-server.vercel.app/api',
-});
-
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      refetchOnMount: true,
-      refetchOnReconnect: true,
-      refetchOnWindowFocus: true,
-    },
-  },
+  baseURL: 'https://react-gift-mock-api-joojjang.vercel.app/api',
 });

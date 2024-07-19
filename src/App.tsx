@@ -1,17 +1,43 @@
-import { QueryClientProvider } from '@tanstack/react-query';
-
-import { queryClient } from './api/instance';
-import { AuthProvider } from './provider/Auth';
-import { Routes } from './routes';
+import { Layout } from '@/components/features/Layout';
+import { Home } from '@/pages/Home';
+import { Theme } from '@/pages/Theme';
+import { AuthProvider } from '@/auth/AuthProvider';
+import { Login } from '@/pages/Login';
+import { MyAccount } from '@/pages/MyAccount';
+import { RouterPath } from '@/routes';
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RequireAuth } from '@/auth/RequireAuth';
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
-    </QueryClientProvider>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 };
+
+const router = createBrowserRouter([
+  {
+    path: RouterPath.root,
+    element: <Layout />,
+    children: [
+      { path: RouterPath.home, element: <Home /> },
+      { path: RouterPath.theme, element: <Theme /> },
+      {
+        path: RouterPath.myAccount,
+        element: (
+          <RequireAuth>
+            <MyAccount />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: RouterPath.notFound,
+        element: <Navigate to={RouterPath.home} />,
+      },
+    ],
+  },
+  { path: RouterPath.login, element: <Login /> },
+]);
 
 export default App;
