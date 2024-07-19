@@ -2,7 +2,7 @@ import { Box, Button, Image, Input, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { fetchProductDetails } from '@/api/instance';
 import { Spinner } from '@/components/common/Spinner';
@@ -13,6 +13,7 @@ import { ProductDetailData } from '@/types';
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const anthInfo = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
   const giftOrderLimit = 100;
@@ -36,7 +37,7 @@ const ProductDetail = () => {
   const handleGiftClick = () => {
     if (!anthInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        navigate(RouterPath.login);
+        navigate(`${RouterPath.login}?redirect=${encodeURIComponent(location.pathname)}`);
       }
     } else if (product) {
       navigate(RouterPath.payment, {
