@@ -16,6 +16,15 @@ export const OrderPage = () => {
 
   const totalPrice = productDetail.price.sellingPrice * productQuantity;
 
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length > 100) {
+      alert("선물 메시지는 100자 이내로 입력해주세요.");
+      return;
+    }
+      setMessage(value);
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -23,6 +32,7 @@ export const OrderPage = () => {
       alert("선물 메시지를 입력해주세요.");
       return;
     }
+
     alert("주문이 완료되었습니다.");
   };
 
@@ -35,7 +45,7 @@ export const OrderPage = () => {
             <Text fontSize="lg" fontWeight="bold">선물 메시지</Text>
             <Textarea
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={handleMessageChange}
               placeholder="선물과 함께 보낼 메시지를 적어보세요"
               size="lg"
             />

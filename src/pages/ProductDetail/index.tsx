@@ -1,5 +1,5 @@
-import { Box, Button, Center, Flex, HStack, Image, Input, Select, Text, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Button, Center, Flex, HStack, Image, Input, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
 import { useGetProductOptions } from "@/api/hooks/useGetProductOption";
@@ -8,30 +8,68 @@ import { useAuth } from '@/provider/Auth';
 import { useGetProductDetail } from "../../api/hooks/useGetProductDetail";
 
 export const ProductDetailPage = () => {
-  const { productDetail, loading, error, notFound } = useGetProductDetail();
-  const { productOptions, loading: optionsLoading } = useGetProductOptions();
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const { productDetail, loading, notFound } = useGetProductDetail();
+  const { productOption, loading: optionsLoading } = useGetProductOptions();
   const [productQuantity, setProductQuantity] = useState<number>(1);
   const navigate = useNavigate();
   const authInfo = useAuth();
 
+  useEffect(() => {
+    console.log('Product Option:', productOption);
+  }, [productOption]);
+
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProductQuantity(Number(event.target.value));
+    const value = event.target.value;
+    const numberValue = Number(value);
+
+    if (value === "" || (numberValue > 0 && numberValue <= (productOption?.giftOrderLimit || Infinity))) {
+      setProductQuantity(numberValue);
+    } else if (productOption && numberValue > productOption.giftOrderLimit) {
+      setProductQuantity(productOption.giftOrderLimit);
+      alert(`최대 주문 가능 수량은 ${productOption.giftOrderLimit}개 입니다.`);
+    }
+  };
+
+  const handleIncreaseQuantity = () => {
+    if (productOption && productQuantity < productOption.giftOrderLimit) {
+      setProductQuantity(prev => prev + 1);
+    } else if (productOption) {
+      alert(`최대 주문 가능 수량은 ${productOption.giftOrderLimit}개 입니다.`);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    setProductQuantity((prev) => Math.max(prev - 1, 1));
   };
 
   const handleOrder = (event: React.FormEvent) => {
     event.preventDefault();
+    const numberQuantity = productQuantity;
+
+    console.log('Product Option in Order:', productOption);
+
     if (!authInfo) {
       navigate(`/login?redirect=${window.location.pathname}`);
       return;
     }
 
+    if (!productOption) {
+      alert("상품 옵션 정보를 로드하는 중입니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
+    if (numberQuantity > productOption.giftOrderLimit) {
+      alert(`최대 주문 가능 수량은 ${productOption.giftOrderLimit}개 입니다.`);
+      setProductQuantity(productOption.giftOrderLimit);
+      return;
+    }
+
+    // 상품 상세 정보를 주문 상태로 전달
     if (productDetail) {
       navigate("/order", {
         state: {
-          productDetail,
-          productQuantity,
-          selectedOption: selectedOption !== null ? productOptions.find(option => option.id === selectedOption) : null,
+          productDetail,  // 상품 상세 정보
+          productQuantity: numberQuantity,
         },
       });
     }
@@ -45,15 +83,11 @@ export const ProductDetailPage = () => {
     return <Center>Loading...</Center>;
   }
 
-  if (error || !productDetail) {
+  if (!productDetail) {
     return <Center>Error loading product details</Center>;
   }
 
-  const selectedOptionPrice = selectedOption !== null
-    ? productOptions.find(option => option.id === selectedOption)?.price
-    : productDetail.price.sellingPrice;
-
-  const totalPrice = (selectedOptionPrice ?? productDetail.price.sellingPrice) * productQuantity;
+  const totalPrice = productDetail.price.sellingPrice * productQuantity;
 
   return (
     <Box p={8}>
@@ -67,13 +101,14 @@ export const ProductDetailPage = () => {
               <Text fontSize="lg" fontWeight="bold">{productDetail.name}</Text>
               <Text fontSize="xl" color="gray.500">{productDetail.price.sellingPrice}원</Text>
               <Text>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Text>
-              <Select placeholder="옵션을 선택하세요" onChange={(e) => setSelectedOption(Number(e.target.value))}>
-                {productOptions.map(option => (
-                  <option key={option.id} value={option.id}>{option.key} - {option.price}원</option>
-                ))}
-              </Select>
               <HStack>
-                <Button type="button" onClick={() => setProductQuantity(prev => Math.max(1, prev - 1))}>-</Button>
+                <Button
+                  type="button"
+                  onClick={handleDecreaseQuantity}
+                  disabled={productQuantity <= 1}
+                >
+                  -
+                </Button>
                 <Input
                   width="50px"
                   textAlign="center"
@@ -82,7 +117,13 @@ export const ProductDetailPage = () => {
                   type="number"
                   min="1"
                 />
-                <Button type="button" onClick={() => setProductQuantity(prev => prev + 1)}>+</Button>
+                <Button
+                  type="button"
+                  onClick={handleIncreaseQuantity}
+                  disabled={!productOption || productQuantity >= productOption.giftOrderLimit}
+                >
+                  +
+                </Button>
               </HStack>
               <Text fontSize="lg" fontWeight="bold">총 결제 금액</Text>
               <Text fontSize="2xl" fontWeight="bold">{totalPrice}원</Text>

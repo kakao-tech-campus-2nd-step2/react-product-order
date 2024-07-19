@@ -2,7 +2,7 @@ import { useFetchData } from "@/hooks/useFetchData";
 import type { ProductOptionData } from "@/types";
 
 const getProductOptionPath = ({ productId }: { productId: number }) =>
-  `/api/v1/products/${productId}/options`;
+  `/v1/products/${productId}/options`;
 
 export const useGetProductOptions = () => {
   const { data, loading, error } = useFetchData<ProductOptionData>(
@@ -10,7 +10,7 @@ export const useGetProductOptions = () => {
   );
 
   return {
-    productOptions: data?.options || [],
+    productOption: data || null,
     loading,
     error
   };

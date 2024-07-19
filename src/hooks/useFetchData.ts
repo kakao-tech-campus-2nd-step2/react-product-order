@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef,useState } from "react";
 
 import { useProductId } from "../api/hooks/useProductId";
 import { fetchInstance } from "../api/instance";
@@ -9,27 +9,29 @@ export const fetchData = async <T>(path: string): Promise<T> => {
 };
 
 export const useFetchData = <T>(getPath: (productId: number) => string) => {
-  const [fetchedData, setFetchedData] = useState<T | null>(null);
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [notFound, setNotFound] = useState(false);
   const productId = useProductId();
+  const hasFetched = useRef(false);
 
   useEffect(() => {
     const fetchDataAsync = async () => {
       try {
-        const data = await fetchData<T>(getPath(productId));
-        setFetchedData(data);
+        const fetchedData = await fetchData<T>(getPath(productId));
+        setData(fetchedData);
       } catch (err) {
-        setNotFound(true);
         setError("Failed to fetch data.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDataAsync();
+    if (!hasFetched.current) {
+      fetchDataAsync();
+      hasFetched.current = true;
+    }
   }, [productId, getPath]);
 
-  return { data: fetchedData, loading, error, notFound };
+  return { data, loading, error };
 };
