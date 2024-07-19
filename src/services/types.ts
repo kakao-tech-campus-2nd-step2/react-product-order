@@ -57,3 +57,12 @@ export interface ProductDetailResponse {
     };
   };
 }
+export interface ProductOptionResponse {
+  options: {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    hasOption: boolean;
+    giftOrderLimit: number;
+  };
+}
