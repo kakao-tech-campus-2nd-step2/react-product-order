@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { ROUTE_PATH } from '@routes/path';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@context/auth/useAuth';
 import { Button } from '@components/common';
 import QuantitySelector from './QuantitySelector';
@@ -12,19 +12,25 @@ interface ProductOrderProps {
 }
 
 export default function ProductOrder({ name, giftOrderLimit }: ProductOrderProps) {
+  const [count, setCount] = useState<number>(0);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { productId } = useParams<{ productId: string }>();
 
   const handleOrderClick = () => {
-    const targetPath = isAuthenticated ? ROUTE_PATH.ORDER : ROUTE_PATH.LOGIN;
-    navigate(targetPath);
+    if (productId) {
+      const orderHistory = { id: Number(productId), count };
+      sessionStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+      const targetPath = isAuthenticated ? ROUTE_PATH.ORDER : ROUTE_PATH.LOGIN;
+      navigate(targetPath);
+    }
   };
 
   return (
     <ProductOrderContainer>
       <QuantitySelectorConatiner>
         <Title>{name}</Title>
-        <QuantitySelector giftOrderLimit={giftOrderLimit} />
+        <QuantitySelector giftOrderLimit={giftOrderLimit} onSetCount={setCount} count={count} />
       </QuantitySelectorConatiner>
       <div>
         <TotalAmount>

@@ -1,17 +1,30 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Image } from '@chakra-ui/react';
-import ProductImage from '@assets/images/goodsItem.jpg';
+import { useQuery } from '@tanstack/react-query';
+import { ProductDetailResponse } from '@internalTypes/responseTypes';
+import { AxiosError } from 'axios';
+import { getProductsDetail } from '@apis/products';
 
 const IMAGE_SIZE = 86;
 
 export default function Gift() {
+  const data = sessionStorage.getItem('orderHistory');
+  const { id: productId, count } = data ? JSON.parse(data) : null;
+
+  const { data: productDetailData } = useQuery<ProductDetailResponse, AxiosError>({
+    queryKey: ['productDetail', productId],
+    queryFn: () => getProductsDetail({ productId }),
+  });
+
   return (
     <GiftContainer>
-      <Image src={ProductImage} maxW={IMAGE_SIZE} mr={4} />
+      <Image src={productDetailData?.detail.imageURL} maxW={IMAGE_SIZE} mr={4} />
       <div>
-        <GiftName>텐바이텐</GiftName>
-        <GiftInfo>귀엽게 완성되는 브런치 한상 스누피 레트로 토스터기 X 1개</GiftInfo>
+        <GiftName>{productDetailData?.detail.brandInfo.name}</GiftName>
+        <GiftInfo>
+          {productDetailData?.detail.name} X {count}개
+        </GiftInfo>
       </div>
     </GiftContainer>
   );
