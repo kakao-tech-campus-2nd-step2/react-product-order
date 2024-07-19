@@ -1,13 +1,13 @@
-import { Box, Button, Image, Input, Select, Text } from '@chakra-ui/react';
+import { Box, Button, Image, Input, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { fetchProductDetails, fetchProductOptions } from '@/api/instance';
+import { fetchProductDetails } from '@/api/instance';
 import { Spinner } from '@/components/common/Spinner';
 import { useAuth } from '@/provider/Auth';
 import { RouterPath } from '@/routes/path';
-import { Option, ProductDetailData } from '@/types';
+import { ProductDetailData } from '@/types';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -25,47 +25,49 @@ const ProductDetail = () => {
     enabled: !!productId,
   });
 
-  const {
-    data: optionsData,
-    error: optionsError,
-    isLoading: isOptionsLoading,
-  } = useQuery<Option[], Error>({
-    queryKey: ['options', productId ?? ''],
-    queryFn: () => fetchProductOptions(productId ?? ''),
-    enabled: !!productId,
-  });
+  // const {
+  //   data: optionsData,
+  //   error: optionsError,
+  //   isLoading: isOptionsLoading,
+  // } = useQuery<Option[], Error>({
+  //   queryKey: ['options', productId ?? ''],
+  //   queryFn: () => fetchProductOptions(productId ?? ''),
+  //   enabled: !!productId,
+  // });
 
   useEffect(() => {
-    if (productError || optionsError) {
-      navigate('/'); //상품 정보 또는 옵션 정보 로드 중 오류발생하면 메인페이지로 이동
+    if (productError) {
+      navigate('/');
     }
-  }, [productError, optionsError, navigate]);
+  }, [productError, navigate]);
 
   const handleGiftClick = () => {
     if (!anthInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        navigate(RouterPath.login); //로그인 아니면 로그인페이지로 이동
+        console.log('로그인 페이지로 이동');
+        navigate(RouterPath.login);
       }
     } else if (product) {
+      console.log('결제페이지로 이동', product, product.detail.price.sellingPrice * quantity);
       navigate(RouterPath.payment, {
-        //로그인 되어있으면 결제로 이동
         state: {
           product,
           quantity,
           totalPrice: product.detail.price.sellingPrice * quantity,
         },
       });
+    } else {
+      console.log('선택된 옵션이 없습니다.');
     }
   };
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
+  const handleQuantityChange = (value: number) => {
     if (value > 0) {
       setQuantity(value);
     }
   };
 
-  if (isProductLoading || isOptionsLoading) {
+  if (isProductLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <Spinner />
@@ -73,7 +75,6 @@ const ProductDetail = () => {
     );
   }
 
-  const options = Array.isArray(optionsData) ? optionsData : [];
   const totalPrice = product?.detail.price.sellingPrice
     ? product.detail.price.sellingPrice * quantity
     : 0;
@@ -91,21 +92,19 @@ const ProductDetail = () => {
             </Text>
             <Text fontSize="xl" color="gray.600" marginBottom={4}>
               {product.detail.price.sellingPrice?.toLocaleString() ?? 0} 원
+              <Text>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</Text>
             </Text>
-            <Select placeholder="옵션 선택" marginBottom={4}>
-              {options.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </Select>
+            <Button onClick={() => handleQuantityChange(quantity - 1)}>-</Button>
             <Input
               type="number"
               value={quantity}
               min={1}
               marginBottom={4}
-              onChange={handleQuantityChange}
+              onChange={(e) => handleQuantityChange(parseInt(e.target.value, 10))}
+              textAlign="center"
+              width="50px"
             />
+            <Button onClick={() => handleQuantityChange(quantity + 1)}>+</Button>
             <Text fontSize="xl" fontWeight="bold" marginBottom={4}>
               총 결제 금액: {totalPrice.toLocaleString()} 원
             </Text>

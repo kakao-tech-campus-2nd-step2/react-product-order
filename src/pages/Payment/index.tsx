@@ -1,4 +1,5 @@
 import { Box, Button, Checkbox, Input, Select, Text, Textarea } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Container } from '@/components/common/layouts/Container';
@@ -6,9 +7,18 @@ import { Container } from '@/components/common/layouts/Container';
 const PaymentPage = () => {
   const location = useLocation();
   const { product, quantity, totalPrice } = location.state;
+  const [message, setMessage] = useState('');
+  const [cashReceipt, setCashReceipt] = useState(false);
+  const [cashReceiptNumber, setCashReceiptNumber] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (message.length === 0) {
+      alert('카드 메시지를 입력해주세요!');
+      return;
+    }
+
     alert('주문이 완료되었습니다.');
   };
 
@@ -35,7 +45,12 @@ const PaymentPage = () => {
             <Text fontSize="2xl" fontWeight="bold" marginBottom="20px">
               나에게 주는 선물
             </Text>
-            <Textarea placeholder="선물과 함께 보낼 메시지를 적어보세요" marginBottom="20px" />
+            <Textarea
+              placeholder="선물과 함께 보낼 메시지를 적어보세요"
+              marginBottom="20px"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
 
             <Box>
               <Text fontSize="xl" fontWeight="bold" marginBottom="10px">
@@ -59,12 +74,26 @@ const PaymentPage = () => {
               결제 정보
             </Text>
             <form onSubmit={handleSubmit}>
-              <Checkbox marginBottom="20px">현금영수증 신청</Checkbox>
+              <Checkbox
+                marginBottom="20px"
+                isChecked={cashReceipt}
+                onChange={(e) => setCashReceipt(e.target.checked)}
+              >
+                현금영수증 신청
+              </Checkbox>
+              {cashReceipt && (
+                <Input
+                  placeholder="(-없이) 숫자만 입력해주세요."
+                  marginBottom="20px"
+                  value={cashReceiptNumber}
+                  onChange={(e) => setCashReceiptNumber(e.target.value)}
+                />
+              )}
+
               <Select placeholder="개인소득공제" marginBottom="20px">
                 <option value="personal">개인소득공제</option>
                 <option value="business">사업자 지출증빙</option>
               </Select>
-              <Input placeholder="(-없이) 숫자만 입력해주세요." marginBottom="20px" />
 
               <Box
                 display="flex"
