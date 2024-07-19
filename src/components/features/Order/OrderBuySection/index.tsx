@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import * as S from './styles';
 import { AsideBox } from '@/components/features/Product/ProductBuySection/styles.ts';
 import { Box, Checkbox, Divider, Input, Select, Text } from '@chakra-ui/react';
@@ -7,13 +9,33 @@ type Props = {
   isError: boolean;
 };
 const OrderBuySection = ({ price, isError }: Props) => {
+  const [cashReceiptNumber, setCashReceiptNumber] = useState('');
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const filteredValue = value.replace(/[^0-9]/g, '');
+    setCashReceiptNumber(filteredValue);
+  };
+
+  const handleCheck = (checked: boolean) => {
+    setIsChecked(checked);
+  };
+
   const handleSubmit = () => {
     if (isError) {
       alert('카드 메시지를 100자 이내로 입력해주세요.');
       return;
     }
+
+    if (isChecked && !cashReceiptNumber) {
+      alert('현금영수증 번호를 입력해주세요!');
+      return;
+    }
+
     alert('결제가 완료되었습니다.');
   };
+
   return (
     <AsideBox>
       <Box
@@ -35,7 +57,7 @@ const OrderBuySection = ({ price, isError }: Props) => {
         </S.AsideTitleBox>
         <Divider borderWidth='0px 0px 1px' color='rgb(237, 237, 237)' />
         <Box width='100%' padding='16px'>
-          <Checkbox>
+          <Checkbox onChange={(e) => handleCheck(e.target.checked)}>
             <Text
               fontSize='15px'
               lineHeight='24px'
@@ -55,6 +77,8 @@ const OrderBuySection = ({ price, isError }: Props) => {
             width='100%'
             name='cashReceiptNumber'
             placeholder='(-없이) 숫자만 입력해주세요.'
+            value={cashReceiptNumber}
+            onChange={handleInputChange}
           />
         </Box>
         <Divider />

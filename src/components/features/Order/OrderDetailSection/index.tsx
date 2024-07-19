@@ -21,7 +21,7 @@ const OrderDetailSection = ({
 }: Props) => {
   const [message, setMessage] = useState<string>('');
   const [hasError, setHasError] = useState<boolean>(false);
-
+  const [isEmpty, setIsEmpty] = useState<boolean>(false);
   const handleChangeMessage = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -29,6 +29,9 @@ const OrderDetailSection = ({
     setMessage(value);
     if (value.length > 100) {
       setHasError(true);
+      isError(true);
+    } else if (value.length < 1) {
+      setIsEmpty(true);
       isError(true);
     } else {
       setHasError(false);
@@ -67,9 +70,14 @@ const OrderDetailSection = ({
                 onChange={handleChangeMessage}
               ></Textarea>
               {hasError && (
-                <Text fontSize='12px' color='red'>
+                <Text fontSize='12px' color='red' mt='5px'>
                   카드 메시지가 100글자를 초과하였습니다. 100자 이내로
                   입력해주세요.
+                </Text>
+              )}
+              {isEmpty && (
+                <Text fontSize='12px' color='red' mt='5px'>
+                  카드 메시지를 입력해주세요.
                 </Text>
               )}
             </Box>
