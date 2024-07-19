@@ -302,6 +302,6 @@ queryKey는 react-query의 기능들 중 하나인 데이터 캐싱을 위한 ke
 
 ### Step 3
 
-- [ ] react hook form을 이용한 리팩토링
-  - [ ] validation 로직 추가
+- [x] react hook form을 이용한 리팩토링
+  - [x] validation 로직 추가
 
