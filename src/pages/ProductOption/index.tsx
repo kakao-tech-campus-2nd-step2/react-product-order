@@ -1,30 +1,34 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import { MainOption } from '@/components/features/ProductOption/MainOption';
-import { PaymentOption } from '@/components/features/ProductOption/PaymentOption';
 
 import { useCurrentProductOption } from '@/hooks/useCurrentProductOption';
 
-// import { useCurrentTheme } from '@/hooks/useCurrentTheme';
 import { RouterPath } from '@/routes/path';
 
 export const ProductOptionPage = () => {
     const { productId = '' } = useParams<{ productId: string }>();
     const { isRender, currentProduct } = useCurrentProductOption({ productId });
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+
     if (!isRender) return null;
 
     if (!currentProduct) {
         return <Navigate to={RouterPath.notFound} />;
     }
+    const count = searchParams.get('count');
+    const price = searchParams.get('price');
+
+    console.log(count, price);
 
     return (
         <>
             <Wrapper>
                 <InsideWrapper>
-                    <MainOption />
-                    <PaymentOption />
+                    <MainOption productId={productId} productCount={count} allPrice={price} />
                 </InsideWrapper>
             </Wrapper>
         </>

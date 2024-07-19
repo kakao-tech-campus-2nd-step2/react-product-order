@@ -48,9 +48,12 @@ export const ProductOption = ({ productId, productName, productPrice, maxProduct
     if (auth === undefined) {
       navigate(getDynamicPath.login());
     } else {
-      navigate(getDynamicPath.productOption(productId));
+      const path = getDynamicPath.productOption(productId);
+      navigate(`${path}?count=${count}&price=${resultPrice}`);
+      // navigate(getDynamicPath.productOption(productId));
     }
   }
+
 
   return (
     <Wrapper>

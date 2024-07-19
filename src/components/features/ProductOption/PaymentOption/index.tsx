@@ -3,36 +3,57 @@ import styled from '@emotion/styled';
 
 import { Button } from '@/components/common/Button';
 
+type Props = {
+  allPrice: string | null;
+  cashReceipt: boolean;
+  cashReceiptNumber: string;
+  handleCashReceiptChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleCashReceiptNumberChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
-export const PaymentOption = () => {
-    return (
-        <Wrapper>
-            <InsideWrapper>
-                <PaymentTitle>
-                    <Title>결제 정보</Title>
-                </PaymentTitle>
-                <Divider />
-                <Receipt>
-                    <Checkbox style={{ fontWeight: "700" }}>현금영수증 신청</Checkbox>
-                    <Space />
-                    <Select defaultValue='personal'>
-                        <option value='personal'>개인소득공제</option>
-                        <option value='buisiness'>사업자증빙용</option>
-                    </Select>
-                    <Space2 />
-                    <Input placeholder='(-없이) 숫자만 입력해주세요' />
-                </Receipt>
-                <Divider />
-                <ResultPayment>
-                    <ResultTitle>최종 결제금액</ResultTitle>
-                    <ResultPrice>145000원</ResultPrice>
-                </ResultPayment>
-                <Divider />
-                <Space3 />
-                <Button children={'145000원 결제하기'} />
-            </InsideWrapper>
-        </Wrapper>
-    );
+export const PaymentOption = ({
+  allPrice,
+  cashReceipt,
+  cashReceiptNumber,
+  handleCashReceiptChange,
+  handleCashReceiptNumberChange,
+}: Props) => {
+  return (
+    <Wrapper>
+      <InsideWrapper>
+        <PaymentTitle>
+          <Title>결제 정보</Title>
+        </PaymentTitle>
+        <Divider />
+        <Receipt>
+          <Checkbox
+            style={{ fontWeight: "700" }}
+            isChecked={cashReceipt}
+            onChange={handleCashReceiptChange}>현금영수증 신청</Checkbox>
+          <Space />
+          <Select defaultValue='personal'>
+            <option value='personal'>개인소득공제</option>
+            <option value='buisiness'>사업자증빙용</option>
+          </Select>
+          <Space2 />
+          <Input
+            placeholder='(-없이) 숫자만 입력해주세요'
+            value={cashReceiptNumber}
+            onChange={handleCashReceiptNumberChange}
+            isDisabled={!cashReceipt}
+          />
+        </Receipt>
+        <Divider />
+        <ResultPayment>
+          <ResultTitle>최종 결제금액</ResultTitle>
+          <ResultPrice>{allPrice}원</ResultPrice>
+        </ResultPayment>
+        <Divider />
+        <Space3 />
+        <Button type='submit' children={`${allPrice}원 결제하기`} />
+      </InsideWrapper>
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.aside`

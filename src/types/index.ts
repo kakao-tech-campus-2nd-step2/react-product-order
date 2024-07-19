@@ -41,16 +41,16 @@ export type Price = {
 
 export type ProductsData = {
   detail: {
+    brandInfo: {
+      id: number;
+      name: string;
+      imageURL: string;
+    };
     id: number;
     imageURL: string;
     isAccessableProductPage: boolean;
     name: string;
     price: Price;
-  };
-  brandInfo: {
-    id: number;
-    name: string;
-    imageURL: string;
   };
 };
 
