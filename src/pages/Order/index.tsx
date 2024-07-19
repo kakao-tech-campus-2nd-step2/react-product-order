@@ -37,6 +37,16 @@ export default () => {
             alert('메세지를 입력해주세요.');
             return;
         }
+        if (formData.hasCashReceipt !== undefined) {
+            if (formData.cashReceiptNumber === '') {
+                alert('현금영수증 정보를 입력해주세요.');
+                return;
+            }
+            if (!/^\d*$/.test(formData.cashReceiptNumber as string)) {
+                alert('현금영수증 번호는 숫자로만 입력해주세요.');
+                return;
+            }
+        }
 
         // TODO Options 구현 후 수정
         // TODO 메세지 탬플릿, 센더/리시버 id

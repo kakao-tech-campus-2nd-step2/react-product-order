@@ -40,8 +40,8 @@
 
 - [x]  giftOrderLimit를 초과할 수 없게 하기 (option API)
 - 결제 페이지 Form validation
-  - [ ]  카드 메시지 입력 필수(100글자 이내로)
-  - [ ]  현금 영수증 checkbox가 true이면 번호 입력 강제(숫자만 입력 가능)
+  - [x]  카드 메시지 입력 필수(100글자 이내로)
+  - [x]  현금 영수증 checkbox가 true이면 번호 입력 강제(숫자만 입력 가능)
 
 ## 🎸
 
