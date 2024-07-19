@@ -1,16 +1,44 @@
 import { Button, Checkbox, Input, Select } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 
 interface Props {
   price: number;
 }
 
 export const OrderInfo = ({ price }: Props) => {
+  // const [cardMessage, setCardMessage] = useState<string>('');
+  const [cashReceiptNumber, setCashReceiptNumber] = useState<string>('');
+  const [isCashReceiptChecked, setIsCashReceiptChecked] = useState<boolean>(false);
+  console.log(isCashReceiptChecked);
+
+  const handleCashReceiptCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsCashReceiptChecked(e.target.checked);
+  };
+
+  const handleCashReceiptNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCashReceiptNumber(value);
+  };
+
+  const handleSubmit = () => {
+    if (isCashReceiptChecked && cashReceiptNumber === '') {
+      alert('현금영수증 번호를 입력해주세요.');
+      return;
+    }
+    if (isCashReceiptChecked && !/^[0-9]*$/.test(cashReceiptNumber)) {
+      alert('현금영수증 번호는 숫자로만 입력해주세요.');
+      return;
+    }
+  };
+
   return (
     <Wrapper>
       <OrderInfoTitle>결제 정보</OrderInfoTitle>
+
       <CashReceiptOption>
-        <Checkbox size="lg" colorScheme="yellow">
+        <Checkbox size="lg" colorScheme="yellow" onChange={handleCashReceiptCheckboxChange}>
           <CashReceiptTitle>현금영수증 신청</CashReceiptTitle>
         </Checkbox>
         <div style={{ padding: '5px' }} />
@@ -19,12 +47,18 @@ export const OrderInfo = ({ price }: Props) => {
           <option value="사업자증빙용">사업자증빙용</option>
         </Select>
         <div style={{ padding: '5px' }} />
-        <Input type="CashReceipt" placeholder="(-없이) 숫자만 입력해주세요." />
+        <Input
+          type="text"
+          placeholder="(-없이) 숫자만 입력해주세요."
+          onChange={handleCashReceiptNumberChange}
+        />
       </CashReceiptOption>
+
       <TotalPriceWrapper>
         <TotalPriceTitle>최종 결제금액</TotalPriceTitle>
         <TotalPrice>{price}원</TotalPrice>
       </TotalPriceWrapper>
+
       <PaymentButton>
         <Button
           width="100%"
@@ -32,6 +66,7 @@ export const OrderInfo = ({ price }: Props) => {
           bg="#FEE500"
           _hover={{ bg: '#FADA0A' }}
           fontWeight={400}
+          onClick={handleSubmit}
         >
           {price}원 결제하기
         </Button>
