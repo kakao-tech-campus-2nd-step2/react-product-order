@@ -7,6 +7,8 @@ import { Grid } from '@/components/common/layouts/Grid';
 import { Spinner } from '@/components/common/Spinner';
 import { VisibilityLoader } from '@/components/common/VisibilityLoader';
 import { breakpoints } from '@/styles/variants';
+import { Link } from 'react-router-dom';
+import { getDynamicPath } from '@/routes/path';
 
 type Props = {
   themeKey: string;
@@ -41,13 +43,15 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
           gap={16}
         >
           {flattenGoodsList.map(({ id, imageURL, name, price, brandInfo }) => (
-            <DefaultGoodsItems
-              key={id}
-              imageSrc={imageURL}
-              title={name}
-              amount={price.sellingPrice}
-              subtitle={brandInfo.name}
-            />
+            <Link key={id} to={getDynamicPath.productDetail(id)}>
+              <DefaultGoodsItems
+                key={id}
+                imageSrc={imageURL}
+                title={name}
+                amount={price.sellingPrice}
+                subtitle={brandInfo.name}
+              />
+            </Link>
           ))}
         </Grid>
         {hasNextPage && (

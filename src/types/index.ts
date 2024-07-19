@@ -32,3 +32,44 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type Price = {
+  basicPrice: number;
+  discountRate: number;
+  sellingPrice: number;
+};
+
+export type ProductsData = {
+  detail: {
+    brandInfo: {
+      id: number;
+      name: string;
+      imageURL: string;
+    };
+    id: number;
+    imageURL: string;
+    isAccessableProductPage: boolean;
+    name: string;
+    price: Price;
+  };
+};
+
+export type ProductOptions = {
+  id: number;
+  key: string;
+  stockQuantity: number;
+  usable: boolean;
+  value: string;
+}
+
+export type ProductOptionData = {
+  options: {
+    giftOrderLimit: number;
+    hasOption: boolean;
+    names: string[];
+    options: ProductOptions[];
+    productId: string;
+    productName: string;
+    productPrice: number;
+  }
+}

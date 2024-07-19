@@ -22,16 +22,22 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.9.0",
     "@tanstack/react-query": "^5.24.1",
     "axios": "^1.6.7",
+    "framer-motion": "^11.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.52.1",
     "react-intersection-observer": "^9.8.1",
-    "react-router-dom": "^6.22.1"
+    "react-router-dom": "^6.22.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
     "@emotion/eslint-plugin": "^11.11.0",
     "@storybook/addon-essentials": "^7.6.17",
