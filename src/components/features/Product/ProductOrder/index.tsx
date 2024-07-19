@@ -1,29 +1,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-import { Input, Button, useNumberInput, HStack } from '@chakra-ui/react';
+import { Button } from '@components/common';
+import QuantitySelector from './QuantitySelector';
 
 export default function ProductOrder() {
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
-    step: 1,
-    defaultValue: 1,
-    min: 1,
-  });
-
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
-
   return (
     <ProductOrderContainer>
-      <QuantitySelector>
-        <Title>[단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)</Title>
-        <HStack maxW="320px">
-          <Button {...dec}>-</Button>
-          <Input {...input} />
-          <Button {...inc}>+</Button>
-        </HStack>
-      </QuantitySelector>
+      <QuantitySelector />
       <div>
         <TotalAmount>
           <dl>
@@ -32,7 +16,7 @@ export default function ProductOrder() {
           </dl>
         </TotalAmount>
         <Link to="/order">
-          <Button type="button">나에게 선물하기</Button>
+          <Button theme="darkGray">나에게 선물하기</Button>
         </Link>
       </div>
     </ProductOrderContainer>
@@ -44,20 +28,6 @@ const ProductOrderContainer = styled.aside`
   flex-direction: column;
   justify-content: space-between;
   max-width: 360px;
-`;
-
-const QuantitySelector = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px 14px 16px;
-  border: 1px solid rgb(237, 237, 237);
-  border-radius: 2px;
-`;
-
-const Title = styled.p`
-  font-weight: 700;
-  margin-bottom: 12px;
 `;
 
 const TotalAmount = styled.div`
