@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useGetGoodsDetail } from '@/api/hooks/useGetGoodsDetail';
 import { Button } from '@/components/common/Button';
 import { Spacing } from '@/components/common/layouts/Spacing';
-import type { FormData, OrderHistory } from '@/types';
+import type { OrderHistory } from '@/types';
 
 import { HeadingText } from '../Common/HeaderText';
 import { LabelText } from '../Common/LabelText';
@@ -12,19 +12,9 @@ import { CashReceiptFields } from '../Fields/CashReceiptFields';
 
 type Props = {
   orderHistory: OrderHistory;
-  formData: FormData;
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => void;
-  handleCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const OrderFormInfo = ({
-  orderHistory,
-  formData,
-  handleInputChange,
-  handleCheckboxChange,
-}: Props) => {
+export const OrderFormInfo = ({ orderHistory }: Props) => {
   const { id, count } = orderHistory;
 
   const {
@@ -38,11 +28,7 @@ export const OrderFormInfo = ({
         <HeadingText>결제 정보</HeadingText>
       </Title>
       <Divider color="#ededed" />
-      <CashReceiptFields
-        formData={formData}
-        handleInputChange={handleInputChange}
-        handleCheckboxChange={handleCheckboxChange}
-      />
+      <CashReceiptFields />
       <Divider color="#ededed" />
       <ItemWrapper>
         <LabelText>최종 결제금액</LabelText>

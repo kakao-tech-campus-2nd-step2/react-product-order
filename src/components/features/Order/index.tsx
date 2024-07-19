@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { Spacing } from '@/components/common/layouts/Spacing';
 import { SplitLayout } from '@/components/common/layouts/SplitLayout';
@@ -17,60 +18,30 @@ type Props = {
 export const OrderForm = ({ orderHistory }: Props) => {
   const { id, count } = orderHistory;
 
-  const [formData, setFormData] = useState<FormData>({
-    cashReceiptNumber: '',
-    cashReceiptType: 'PERSONAL',
-    hasCashReceipt: false,
-    messageCardTextMessage: '',
-    productId: id,
-    productQuantity: count,
-    receiverId: 0,
-    senderId: 0,
+  const methods = useForm<FormData>({
+    defaultValues: {
+      productId: id,
+      productQuantity: count,
+      senderId: 0,
+      receiverId: 0,
+      hasCashReceipt: false,
+    },
   });
+  const { handleSubmit } = methods;
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
+  const handleForm = (values: FormData) => {
+    const { errorMessage, isValid } = validateOrderForm(values);
 
-    if (name === 'cashReceiptNumber' && !/^\d*$/.test(value)) {
-      alert('현금영수증 번호는 숫자만 입력 가능합니다.');
+    if (!isValid) {
+      alert(errorMessage);
       return;
     }
 
-    if (name === 'cashReceiptType') {
-      setFormData((prev) => ({ ...prev, [name]: value as 'PERSONAL' | 'BUSINESS' }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: checked }));
+    console.log('values', values);
+    alert('주문이 완료되었습니다.');
   };
 
-  const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (formData.messageCardTextMessage.length === 0) {
-      alert('메시지를 입력해주세요.');
-      return;
-    }
-
-    if (formData.messageCardTextMessage.length > 100) {
-      alert('메시지는 100자 이내로 입력해주세요.');
-      return;
-    }
-
-    if (formData.hasCashReceipt && formData.cashReceiptNumber.length === 0) {
-      alert('현금영수증을 신청하셨습니다. 현금영수증 번호를 입력해주세요.');
-      return;
-    }
-
-    console.log(formData);
-    alert('결제가 완료되었습니다.');
-  };
-
+  // Submit 버튼을 누르면 form이 제출되는 것을 방지하기 위한 함수
   const preventEnterKeySubmission = (e: React.KeyboardEvent<HTMLFormElement>) => {
     const target = e.target as HTMLFormElement;
     if (e.key === 'Enter' && !['TEXTAREA'].includes(target.tagName)) {
@@ -79,28 +50,54 @@ export const OrderForm = ({ orderHistory }: Props) => {
   };
 
   return (
-    <form onSubmit={handleForm} onKeyDown={preventEnterKeySubmission}>
-      <SplitLayout
-        sidebar={
-          <OrderFormInfo
-            orderHistory={orderHistory}
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleCheckboxChange={handleCheckboxChange}
-          />
-        }
-      >
-        <Wrapper>
-          <OrderFormMessageCard
-            messageCardTextMessage={formData.messageCardTextMessage}
-            handleInputChange={handleInputChange}
-          />
-          <Spacing height={8} backgroundColor="#ededed" />
-          <GoodsInfo orderHistory={orderHistory} />
-        </Wrapper>
-      </SplitLayout>
-    </form>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(handleForm)} onKeyDown={preventEnterKeySubmission}>
+        <SplitLayout sidebar={<OrderFormInfo orderHistory={orderHistory} />}>
+          <Wrapper>
+            <OrderFormMessageCard />
+            <Spacing height={8} backgroundColor="#ededed" />
+            <GoodsInfo orderHistory={orderHistory} />
+          </Wrapper>
+        </SplitLayout>
+      </form>
+    </FormProvider>
   );
+};
+
+const validateOrderForm = (values: FormData): { errorMessage?: string; isValid: boolean } => {
+  if (values.hasCashReceipt) {
+    if (!values.cashReceiptNumber) {
+      return {
+        errorMessage: '현금영수증 번호를 입력해주세요.',
+        isValid: false,
+      };
+    }
+
+    if (!/^\d+$/.test(values.cashReceiptNumber)) {
+      return {
+        errorMessage: '현금영수증 번호는 숫자로만 입력해주세요.',
+        isValid: false,
+      };
+    }
+  }
+
+  if (values.messageCardTextMessage.length < 1) {
+    return {
+      errorMessage: '메시지를 입력해주세요.',
+      isValid: false,
+    };
+  }
+
+  if (values.messageCardTextMessage.length > 100) {
+    return {
+      errorMessage: '메시지는 100자 이내로 입력해주세요.',
+      isValid: false,
+    };
+  }
+
+  return {
+    isValid: true,
+  };
 };
 
 const Wrapper = styled.div`

@@ -3,21 +3,13 @@ import styled from '@emotion/styled';
 import { HeadingText } from '../Common/HeaderText';
 import { MessageCardsFields } from '../Fields/MessageCardsFields';
 
-type Props = {
-  messageCardTextMessage: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
-
-export const OrderFormMessageCard = ({ messageCardTextMessage, handleInputChange }: Props) => {
+export const OrderFormMessageCard = () => {
   return (
     <Wrapper>
       <TitleWrapper>
         <HeadingText>나에게 주는 선물</HeadingText>
       </TitleWrapper>
-      <MessageCardsFields
-        messageCardTextMessage={messageCardTextMessage}
-        handleInputChange={handleInputChange}
-      />
+      <MessageCardsFields />
     </Wrapper>
   );
 };

@@ -1,19 +1,16 @@
 import { Textarea } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
-type Props = {
-  messageCardTextMessage: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
+import { useOrderFormContext } from '@/hooks/useOrderFormContext';
 
-export const MessageCardsFields = ({ messageCardTextMessage, handleInputChange }: Props) => {
+export const MessageCardsFields = () => {
+  const { register } = useOrderFormContext();
+
   return (
     <Wrapper>
       <TextMessageWrapper>
         <Textarea
-          name="messageCardTextMessage"
-          value={messageCardTextMessage}
-          onChange={handleInputChange}
+          {...register('messageCardTextMessage')}
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
           resize="none"
           height="100"

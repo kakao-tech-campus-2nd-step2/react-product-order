@@ -1,48 +1,40 @@
 import { Checkbox, Input, Select } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { Controller } from 'react-hook-form';
 
 import { Spacing } from '@/components/common/layouts/Spacing';
-import type { FormData } from '@/types';
+import { useOrderFormContext } from '@/hooks/useOrderFormContext';
 
 import { LabelText } from '../Common/LabelText';
 
-type Props = {
-  formData: FormData;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  handleCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
+export const CashReceiptFields = () => {
+  const { register, control } = useOrderFormContext();
 
-export const CashReceiptFields = ({ formData, handleInputChange, handleCheckboxChange }: Props) => {
   return (
     <Wrapper>
-      <Checkbox
-        colorScheme="yellow"
-        size="lg"
+      <Controller
+        control={control}
         name="hasCashReceipt"
-        isChecked={formData.hasCashReceipt}
-        onChange={handleCheckboxChange}
-      >
-        <LabelText>현금영수증 신청</LabelText>
-      </Checkbox>
+        render={({ field: { onChange, value, ref } }) => (
+          <Checkbox ref={ref} onChange={onChange} isChecked={value} colorScheme="yellow" size="lg">
+            <LabelText>현금영수증 신청</LabelText>
+          </Checkbox>
+        )}
+      />
 
       <Spacing />
-      <Select
+      <Controller
+        control={control}
         name="cashReceiptType"
-        value={formData.cashReceiptType}
-        onChange={handleInputChange}
-        isDisabled={!formData.hasCashReceipt}
-      >
-        <option value="PERSONAL">개인소득공제</option>
-        <option value="BUSINESS">사업자증빙용</option>
-      </Select>
-      <Spacing height={8} />
-      <Input
-        name="cashReceiptNumber"
-        value={formData.cashReceiptNumber}
-        onChange={handleInputChange}
-        placeholder="(-없이) 숫자만 입력해주세요."
-        isDisabled={!formData.hasCashReceipt}
+        render={({ field }) => (
+          <Select {...field}>
+            <option value="PERSONAL">개인소득공제</option>
+            <option value="BUSINESS">사업자증빙용</option>
+          </Select>
+        )}
       />
+      <Spacing height={8} />
+      <Input {...register('cashReceiptNumber')} placeholder="(-없이) 숫자만 입력해주세요." />
     </Wrapper>
   );
 };
