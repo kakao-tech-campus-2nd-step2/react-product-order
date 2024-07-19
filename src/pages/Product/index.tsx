@@ -51,16 +51,8 @@ export const ProductDetailPage = () => {
     <Center w="100%">
       <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
         <Flex w="100%" position="relative">
-          <ProductDetailSection
-            name={data.name}
-            imageURL={data.imageURL}
-            price={data.price}
-          />
-          <ProductOrderSection
-            id={parseInt(productId!)}
-            name={data.name}
-            price={data.price}
-          />
+          <ProductDetailSection name={data.name} imageURL={data.imageURL} price={data.price} />
+          <ProductOrderSection id={parseInt(productId!)} name={data.name} price={data.price} />
         </Flex>
       </Flex>
     </Center>

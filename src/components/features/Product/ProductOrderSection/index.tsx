@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useGetProductOptions } from '@/api/hooks/useGetProductOptions';
+import type { OrderPageLocationState } from '@/pages/Order';
 import { getDynamicPath } from '@/routes/path';
 
 interface ProductOrderSectionProps {
@@ -20,7 +21,7 @@ interface ProductOrderSectionProps {
   name: string;
   price: {
     sellingPrice: number;
-  }
+  };
 }
 
 export const ProductOrderSection = (ProductData: ProductOrderSectionProps) => {
@@ -39,7 +40,9 @@ export const ProductOrderSection = (ProductData: ProductOrderSectionProps) => {
     if (!authToken) {
       navigate(getDynamicPath.login());
     } else {
-      navigate(getDynamicPath.order(ProductData.id), { state: { quantity } });
+      const state: OrderPageLocationState = { quantity };
+
+      navigate(getDynamicPath.order(ProductData.id), { state });
     }
   };
 

@@ -8,10 +8,14 @@ import { MessageSection } from '@/components/features/Order/MessageSection';
 import { PaymentInfoSection } from '@/components/features/Order/PaymentInfoSection';
 import { breakpoints } from '@/styles/variants';
 
+export interface OrderPageLocationState {
+  quantity: number;
+}
+
 export const OrderPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const location = useLocation();
-  const quantity = location.state?.quantity ?? 1;
+  const { quantity } = (location.state || { quantity: 1 }) as OrderPageLocationState;
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
   const { data, isError, isLoading } = useGetProductDetails(productId!);
