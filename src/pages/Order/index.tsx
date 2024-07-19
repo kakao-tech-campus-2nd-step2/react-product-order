@@ -53,6 +53,9 @@ export const OrderPage = () => {
     if (!orderInfo.message) {
       alert('메세지를 입력해주세요');
       return false;
+    } else if (orderInfo.needReceipt && !orderInfo.receiptNumber) {
+      alert('현금영수증 번호를 입력해주세요');
+      return false;
     }
     return true;
   };
