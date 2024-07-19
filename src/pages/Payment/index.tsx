@@ -29,6 +29,10 @@ export const PaymentPage = () => {
       window.alert("메세지를 입력해주세요.");
       return;
     }
+    if (message.length > 100) {
+      window.alert("메세지는 100자 이내로 입력해주세요.");
+      return;
+    }
     window.alert("주문이 완료되었습니다.")
   };
 
