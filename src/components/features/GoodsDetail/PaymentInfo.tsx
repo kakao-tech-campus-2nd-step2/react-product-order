@@ -1,7 +1,6 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
-import { IconButton, Input, VStack } from '@chakra-ui/react';
+import { IconButton, Input, useNumberInput, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '@/provider/Auth';
@@ -10,13 +9,23 @@ import { getDynamicPath, RouterPath } from '@/routes/path';
 interface PaymentInfoProps {
   label: string;
   price: number;
+  giftOrderLimit: number;
 }
 
-const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
-  const [count, setCount] = useState<number>(1);
+const PaymentInfo = ({ label, price, giftOrderLimit }: PaymentInfoProps) => {
   const navigate = useNavigate();
   const authInfo = useAuth();
   const { productId: currentProductId } = useParams();
+
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
+    min: 1,
+    max: giftOrderLimit,
+    defaultValue: 1,
+  });
+
+  const inc = getIncrementButtonProps();
+  const dec = getDecrementButtonProps();
+  const input = getInputProps();
 
   const handleLogin = () => {
     navigate(getDynamicPath.login());
@@ -40,23 +49,8 @@ const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
         handleLogin();
       }
     } else {
-      console.log(currentProductId, count);
+      const count = input.value;
       handleOrder(currentProductId || '', count);
-    }
-  };
-
-  const increment = () => {
-    setCount((prevCount) => prevCount + 1);
-  };
-
-  const decrement = () => {
-    setCount((prevCount) => (prevCount > 1 ? prevCount - 1 : 1));
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = Number(e.target.value);
-    if (!isNaN(newValue) && newValue > 0) {
-      setCount(newValue);
     }
   };
 
@@ -65,15 +59,15 @@ const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
       <VStack maxW="320px" padding="10px" borderRadius="3" borderColor="gray.200" borderWidth="1px">
         <StyledLabel>{label}</StyledLabel>
         <NumberInputWrapper>
-          <IconButton aria-label="Decrease value" onClick={decrement} icon={<MinusIcon />} />
-          <Input type="number" value={count} onChange={handleInputChange} />
-          <IconButton aria-label="Increase value" onClick={increment} icon={<AddIcon />} />
+          <IconButton aria-label="Decrease value" {...dec} icon={<MinusIcon />} />
+          <Input type="number" {...input} />
+          <IconButton aria-label="Increase value" {...inc} icon={<AddIcon />} />
         </NumberInputWrapper>
       </VStack>
       <Wrapper>
         <TotalPrice>
           <div>총 결제 금액</div>
-          <div>{price * count}원</div>
+          <div>{price * input.value}원</div>
         </TotalPrice>
       </Wrapper>
       <GiftForMeButton onClick={handleGiftBtnClick}>나에게 선물하기</GiftForMeButton>

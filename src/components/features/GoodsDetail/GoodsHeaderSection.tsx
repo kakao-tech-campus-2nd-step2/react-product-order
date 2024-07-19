@@ -1,19 +1,30 @@
 import styled from '@emotion/styled';
 
-import type { GoodsDetailRequestParams } from '@/api/hooks/useGetProductsDetail';
 import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
+import { useGetGoodsOptions } from '@/api/hooks/useGetProductsOption';
 import { Image } from '@/components/common/Image';
 import { Spinner } from '@/components/common/Spinner';
 import { breakpoints } from '@/styles/variants';
 
 import PaymentInfo from './PaymentInfo';
 
-type Props = GoodsDetailRequestParams;
+type Props = {
+  productId: string;
+};
 
 export const GoodsHeaderSection = ({ productId }: Props) => {
-  const { isLoading, error, data } = useGetGoodsDetail({ productId });
+  const {
+    isLoading: isDetailLoading,
+    error: detailError,
+    data: goodsDetailData,
+  } = useGetGoodsDetail({ productId });
+  const {
+    isLoading: isOptionsLoading,
+    error: optionsError,
+    data: goodsOptionsData,
+  } = useGetGoodsOptions({ productId });
 
-  if (isLoading) {
+  if (isDetailLoading || isOptionsLoading) {
     return (
       <TextView>
         <Spinner />
@@ -21,20 +32,24 @@ export const GoodsHeaderSection = ({ productId }: Props) => {
     );
   }
 
-  if (error || !data) {
+  if (detailError || optionsError || !goodsDetailData || !goodsOptionsData) {
     return <TextView>에러가 발생했습니다.</TextView>;
   }
 
   return (
     <StyledDiv>
-      <GoodsThumnailImage src={data.imageURL} alt={data.name} />
+      <GoodsThumnailImage src={goodsDetailData.imageURL} alt={goodsDetailData.name} />
       <SimpleInfoWrapper>
-        <GoodsTitle>{data.name}</GoodsTitle>
-        <GoodsPrice>{`${data.price.basicPrice}원`}</GoodsPrice>
+        <GoodsTitle>{goodsDetailData.name}</GoodsTitle>
+        <GoodsPrice>{`${goodsDetailData.price.basicPrice}원`}</GoodsPrice>
         <GiftDescription>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</GiftDescription>
       </SimpleInfoWrapper>
       <PaymentInfoWrapper>
-        <PaymentInfo label={data.name} price={data.price.basicPrice} />
+        <PaymentInfo
+          label={goodsDetailData.name}
+          price={goodsDetailData.price.basicPrice}
+          giftOrderLimit={goodsOptionsData.giftOrderLimit}
+        />
       </PaymentInfoWrapper>
     </StyledDiv>
   );
