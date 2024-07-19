@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { CircularProgress, Flex } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { createContext } from 'react';
@@ -32,7 +32,7 @@ const ProductsPage = () => {
     return response.data;
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['products', productId],
     queryFn: fetchProduct,
   });
@@ -47,17 +47,32 @@ const ProductsPage = () => {
     }
   }, [isLoading, data, productId, setPaymentInfo, totalCount]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const statusElem = (() => {
+    if (isLoading)
+      return (
+        <Flex w="100%" justify="center">
+          <CircularProgress isIndeterminate color="yellow.300" />
+        </Flex>
+      );
+    if (isError)
+      return (
+        <Flex w="100%" justify="center">
+          데이터를 불러오는 중에 문제가 발생했습니다.
+        </Flex>
+      );
+  })();
 
   return (
     <Container maxWidth="1280px">
       <Flex w="100%" h="100vh">
-        <ProductContext.Provider value={{ data, totalCount, setTotalCount, productId }}>
-          <Section1 />
-          <Section2 />
-        </ProductContext.Provider>
+        {isLoading || isError ? (
+          statusElem
+        ) : (
+          <ProductContext.Provider value={{ data, totalCount, setTotalCount, productId }}>
+            <Section1 />
+            <Section2 />
+          </ProductContext.Provider>
+        )}
       </Flex>
     </Container>
   );

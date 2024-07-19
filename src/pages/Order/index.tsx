@@ -1,4 +1,4 @@
-import { Container, Flex } from '@chakra-ui/react';
+import { CircularProgress, Container, Flex } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { createContext, useContext, useState } from 'react';
@@ -51,7 +51,11 @@ export default function OrderPage() {
     payment?.paymentInfo.productId,
     payment?.paymentInfo.imageURL,
   ];
-  const { data = { options: {} } } = useQuery({
+  const {
+    data = { options: {} },
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey: ['order', payment?.paymentInfo.productId],
     queryFn: () => fetchOrder(productId),
   });
@@ -82,22 +86,41 @@ export default function OrderPage() {
     alert('결제가 완료되었습니다.');
   };
 
+  const statusElem = (() => {
+    if (isLoading)
+      return (
+        <Flex w="100%" justify="center">
+          <CircularProgress isIndeterminate color="yellow.300" />
+        </Flex>
+      );
+    if (isError)
+      return (
+        <Flex w="100%" justify="center">
+          데이터를 불러오는 중에 문제가 발생했습니다.
+        </Flex>
+      );
+  })();
+
   return (
     <Container w="100%" maxW="1250px" h="100vh">
       <Flex>
-        <OrderContext.Provider
-          value={{
-            options: data.options,
-            count,
-            paymentInfo,
-            setPaymentInfo,
-            onClickPayment,
-            imageURL,
-          }}
-        >
-          <Section1 />
-          <Section2 />
-        </OrderContext.Provider>
+        {isLoading || isError ? (
+          statusElem
+        ) : (
+          <OrderContext.Provider
+            value={{
+              options: data.options,
+              count,
+              paymentInfo,
+              setPaymentInfo,
+              onClickPayment,
+              imageURL,
+            }}
+          >
+            <Section1 />
+            <Section2 />
+          </OrderContext.Provider>
+        )}
       </Flex>
     </Container>
   );
