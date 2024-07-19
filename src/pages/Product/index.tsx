@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Spinner } from 'src/components/common/Spinner';
 
+import { authSessionStorage } from '@/utils/storage';
+
 interface Product {
   id: number;
   name: string;
@@ -55,18 +57,6 @@ export const ProductDetailPage = () => {
     }
   }, [productId]);
 
-  const handleProceedToPayment = () => {
-    const isLoggedIn = false;
-    if (!isLoggedIn) {
-      const confirmLogin = window.confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?');
-      if (confirmLogin) {
-        navigate('/login');
-      }
-    } else {
-      navigate(`/payment?productId=${productId}`);
-    }
-  };
-
   if (isLoading) {
     return (
       <Flex alignItems="center" justifyContent="center">
@@ -82,6 +72,25 @@ export const ProductDetailPage = () => {
   if (!product) {
     return <Text>상품을 찾을 수 없습니다.</Text>;
   }
+
+  const handleProceedToPayment = () => {
+    const isLoggedIn = authSessionStorage.get() !== null;
+    if (!isLoggedIn) {
+      const confirmLogin = window.confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?');
+      if (confirmLogin) {
+        navigate('/login');
+      }
+    } else {
+      const totalPrice = product.price.sellingPrice * quantity;
+      navigate('/payment', {
+        state: {
+          name: product.name,
+          imageURL: product.imageURL,
+          totalPrice,
+        },
+      });
+    }
+  };
 
   const totalPrice = product.price.sellingPrice * quantity;
 
