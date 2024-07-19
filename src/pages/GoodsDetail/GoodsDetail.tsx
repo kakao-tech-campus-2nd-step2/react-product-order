@@ -24,7 +24,12 @@ export const GoodsDetailPage = () => {
   return (
     <Container display="flex" flexDirection="row" justifyContent="center">
       <GoodsInfo price={data.price.sellingPrice} imageURL={data.imageURL} name={data.name} />
-      <SideBar price={data.price.sellingPrice} name={data.name} />
+      <SideBar
+        price={data.price.sellingPrice}
+        name={data.name}
+        brandName={data.brandInfo.name}
+        imageURL={data.imageURL}
+      />
     </Container>
   );
 };

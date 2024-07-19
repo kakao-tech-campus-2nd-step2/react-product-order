@@ -5,7 +5,7 @@ import GiftButton from '@/components/features/GoodsDetail/SideBar/GiftButton';
 import GoodsCount from '@/components/features/GoodsDetail/SideBar/GoodsCount';
 import type { goodsDetailData } from '@/types';
 
-export default function SideBar({ price, name }: goodsDetailData) {
+export default function SideBar({ price, name, brandName, imageURL }: goodsDetailData) {
   const [amount, setAmount] = useState(1);
 
   return (
@@ -38,7 +38,13 @@ export default function SideBar({ price, name }: goodsDetailData) {
             {price * amount}
           </Text>
         </Button>
-        <GiftButton />
+        <GiftButton
+          price={price}
+          name={name}
+          amount={amount}
+          brandName={brandName}
+          imageURL={imageURL}
+        />
       </Box>
     </Box>
   );
