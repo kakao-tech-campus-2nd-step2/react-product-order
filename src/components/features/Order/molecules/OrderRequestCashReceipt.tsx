@@ -1,8 +1,9 @@
-import { Box, Checkbox, Divider, VStack } from '@chakra-ui/react';
+import { Box, Divider, VStack } from '@chakra-ui/react';
 import React from 'react';
 
 import { OrderCacheReceiptInput } from '@/components/features/Order/atoms/OrderCacheReceiptInput';
 import { OrderCashReceiptSelect } from '@/components/features/Order/atoms/OrderCacheReceiptSelect';
+import { OrderCacheCheckbox } from '@/components/features/Order/atoms/OrderChacheCheckbox';
 
 export interface IOrderRequestCashReceipt {
   cacheReceiptRefs: (
@@ -15,13 +16,11 @@ export const OrderRequestCashReceipt = ({ cacheReceiptRefs }: IOrderRequestCashR
   return (
     <Box width="100%" padding="16px">
       <VStack spacing="16px" align="start">
-        <Checkbox colorScheme="yellow" size="lg">
-          현금영수증 신청
-        </Checkbox>
+        <OrderCacheCheckbox ref={cacheReceiptRefs[0]} />
         <Divider />
-        <OrderCashReceiptSelect ref={cacheReceiptRefs[0]} />
+        <OrderCashReceiptSelect ref={cacheReceiptRefs[1]} />
         <Divider />
-        <OrderCacheReceiptInput ref={cacheReceiptRefs[1]} />
+        <OrderCacheReceiptInput ref={cacheReceiptRefs[2]} />
       </VStack>
     </Box>
   );
