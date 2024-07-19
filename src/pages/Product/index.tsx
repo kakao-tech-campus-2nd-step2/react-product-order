@@ -8,24 +8,36 @@ import { ROUTE_PATH } from '@routes/path';
 import useRedirectIfNoParam from '@hooks/useRedirectIfNoParam';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { getProductsDetail } from '@/apis/products';
-import { ProductDetailResponse } from '@internalTypes/responseTypes';
+import { getProductsDetail, getProductsOptions } from '@apis/products';
+import { ProductDetailResponse, ProductOptionResponse } from '@internalTypes/responseTypes';
 import { AxiosError } from 'axios';
 
 export default function Product() {
   const { productId } = useParams<{ productId: string }>();
-  const { data } = useQuery<ProductDetailResponse, AxiosError>({
+  const { data: productDetailData } = useQuery<ProductDetailResponse, AxiosError>({
     queryKey: ['productDetail', productId],
     queryFn: () => getProductsDetail({ productId }),
   });
   useRedirectIfNoParam('productId', ROUTE_PATH.HOME);
 
+  const { data: productOptionData } = useQuery<ProductOptionResponse, AxiosError>({
+    queryKey: ['productOption', productId],
+    queryFn: () => getProductsOptions({ productId }),
+  });
+
   return (
     <Layout>
       <CenteredContainer maxWidth="lg">
         <InnerContainer>
-          <ProductInfo image={data?.detail.imageURL} name={data?.detail.name} price={data?.detail.price.basicPrice} />
-          <ProductOrder name={data?.detail.name} />
+          <ProductInfo
+            image={productDetailData?.detail.imageURL}
+            name={productDetailData?.detail.name}
+            price={productDetailData?.detail.price.basicPrice}
+          />
+          <ProductOrder
+            name={productDetailData?.detail.name}
+            giftOrderLimit={productOptionData?.options.giftOrderLimit}
+          />
         </InnerContainer>
       </CenteredContainer>
     </Layout>

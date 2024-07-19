@@ -8,11 +8,14 @@ import QuantitySelector from './QuantitySelector';
 
 interface ProductOrderProps {
   name?: string;
+  giftOrderLimit?: number;
 }
 
-export default function ProductOrder({ name }: ProductOrderProps) {
+export default function ProductOrder({ name, giftOrderLimit }: ProductOrderProps) {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  console.info(giftOrderLimit);
 
   const handleOrderClick = () => {
     const targetPath = isAuthenticated ? ROUTE_PATH.ORDER : ROUTE_PATH.LOGIN;
@@ -23,7 +26,7 @@ export default function ProductOrder({ name }: ProductOrderProps) {
     <ProductOrderContainer>
       <QuantitySelectorConatiner>
         <Title>{name}</Title>
-        <QuantitySelector />
+        <QuantitySelector giftOrderLimit={giftOrderLimit} />
       </QuantitySelectorConatiner>
       <div>
         <TotalAmount>

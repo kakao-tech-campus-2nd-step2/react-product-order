@@ -42,6 +42,18 @@ export interface ProductDetailResponse {
   };
 }
 
+export interface ProductOptionResponse {
+  options: {
+    giftOrderLimit: number;
+    hasOption: boolean;
+    names: string[];
+    options: string[];
+    productId: number;
+    productName: string;
+    productPrice: number;
+  };
+}
+
 export interface MessageCardTemplatesResponse {
   templates: MessageCardTemplateData[];
 }
