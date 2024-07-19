@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductDetails, fetchProductOptions } from '@/api/instance';
 import { Spinner } from '@/components/common/Spinner';
 import { useAuth } from '@/provider/Auth';
+import { RouterPath } from '@/routes/path';
 import { Option, ProductDetailData } from '@/types';
 
 const ProductDetail = () => {
@@ -41,12 +42,12 @@ const ProductDetail = () => {
   }, [productError, optionsError, navigate]);
 
   const handleGiftClick = () => {
-    if (!anthInfo?.token) {
+    if (!anthInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        navigate('/login'); //로그인 아니면 로그인페이지로 이동
+        navigate(RouterPath.login); //로그인 아니면 로그인페이지로 이동
       }
     } else if (product) {
-      navigate('/payment', {
+      navigate(RouterPath.payment, {
         //로그인 되어있으면 결제로 이동
         state: {
           product,
