@@ -6,6 +6,11 @@ interface Props {
 }
 
 export const GiftMessageSection = ({ message, setMessage }: Props) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newMessage = e.target.value;
+    setMessage(newMessage);
+  };
+
   return (
     <VStack p={16} width="100%" alignItems="center">
       <Text fontSize="lg" as="b">
@@ -15,7 +20,7 @@ export const GiftMessageSection = ({ message, setMessage }: Props) => {
         backgroundColor="gray.100"
         placeholder="선물과 함께 보낼 메시지를 적어보세요"
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={handleChange}
       />
     </VStack>
   );
