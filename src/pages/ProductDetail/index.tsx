@@ -1,5 +1,5 @@
 import { Box, Button, Center, Flex, HStack, Image, Input, Text, VStack } from "@chakra-ui/react";
-import { Controller,useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Navigate, useNavigate } from "react-router-dom";
 
 import { useGetProductOptions } from "@/api/hooks/useGetProductOption";
@@ -17,7 +17,7 @@ export const ProductDetailPage = () => {
   const navigate = useNavigate();
   const authInfo = useAuth();
 
-  const { control, handleSubmit, setValue, watch } = useForm({
+  const { control, handleSubmit, setValue, watch, trigger } = useForm({
     defaultValues: {
       productQuantity: "1"
     }
@@ -36,17 +36,11 @@ export const ProductDetailPage = () => {
       return;
     }
 
-    if (Number(data.productQuantity) > productOption.options.giftOrderLimit) {
-      alert(`최대 주문 가능 수량은 ${productOption.options.giftOrderLimit}개 입니다.`);
-      setValue("productQuantity", productOption.options.giftOrderLimit.toString());
-      return;
-    }
-
     if (productDetail) {
       navigate("/order", {
         state: {
           productDetail,
-          productQuantity: Number(productQuantity),
+          productQuantity: Number(data.productQuantity),
         },
       });
     }
@@ -54,16 +48,7 @@ export const ProductDetailPage = () => {
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    const numberValue = Number(value);
-
-    if (value === "" || numberValue >= 0) {
-      if (productOption && numberValue > productOption.options.giftOrderLimit) {
-        alert(`최대 주문 가능 수량은 ${productOption.options.giftOrderLimit}개 입니다.`);
-        setValue("productQuantity", productOption.options.giftOrderLimit.toString());
-      } else {
-        setValue("productQuantity", value);
-      }
-    }
+    setValue("productQuantity", value);
   };
 
   if (notFound) {
@@ -95,29 +80,48 @@ export const ProductDetailPage = () => {
               <HStack>
                 <Button
                   type="button"
-                  onClick={() => setValue("productQuantity", Math.max(Number(productQuantity) - 1, 1).toString())}
+                  onClick={() => {
+                    setValue("productQuantity", Math.max(Number(productQuantity) - 1, 1).toString());
+                    trigger("productQuantity");
+                  }}
                   disabled={Number(productQuantity) <= 1}
                 > - </Button>
                 <Controller
                   name="productQuantity"
                   control={control}
-                  rules={{ required: true, min: 1 }}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      width="200px"
-                      textAlign="center"
-                      value={productQuantity}
-                      onChange={handleQuantityChange}
-                      type="number"
-                      min="1"
-                    />
+                  rules={{
+                    required: true,
+                    min: 1,
+                    validate: (value) => {
+                      const numberValue = Number(value);
+                      if (productOption && numberValue > productOption.options.giftOrderLimit) {
+                        return `최대 주문 가능 수량은 ${productOption.options.giftOrderLimit}개 입니다.`;
+                      }
+                      return true;
+                    }
+                  }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input
+                        {...field}
+                        width="200px"
+                        textAlign="center"
+                        value={productQuantity}
+                        onChange={handleQuantityChange}
+                        type="number"
+                        min="1"
+                      />
+                      {fieldState.error && <Text color="red.500">{fieldState.error.message}</Text>}
+                    </>
                   )}
                 />
                 <Button
                   type="button"
-                  onClick={() => setValue("productQuantity", Math.min(Number(productQuantity) + 1, productOption?.options.giftOrderLimit || Infinity).toString())}
-                  disabled={Number(productQuantity) >= (productOption?.options.giftOrderLimit || Infinity)}
+                  onClick={() => {
+                    setValue("productQuantity", Math.min(Number(productQuantity) + 1, productOption?.options.giftOrderLimit || 1).toString());
+                    trigger("productQuantity");
+                  }}
+                  disabled={Number(productQuantity) >= (productOption?.options.giftOrderLimit || 1)}
                 > + </Button>
               </HStack>
               <Text fontSize="lg" fontWeight="bold">총 결제 금액</Text>
