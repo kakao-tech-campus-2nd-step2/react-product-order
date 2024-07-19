@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { fetchInstance } from "../instance";
 
 type OptionsData = {
@@ -22,17 +24,24 @@ type ProductOptionsData = {
   options: OptionsData[];
 };
 
-type ProductOptionsResponseData = {
+export type ProductOptionsResponseData = {
   options: ProductOptionsData;
 };
 
-const getProductOptions = (productId: string) => {
+const getProductOptionsPath = (productId: string) => {
   return `/v1/products/${productId}/options`;
 };
 
-export const useGetProductOptions = async (productId: string) => {
+const getProductOptions = async (productId: string) => {
   const response = await fetchInstance.get<ProductOptionsResponseData>(
-    getProductOptions(productId),
+    getProductOptionsPath(productId),
   );
   return response.data;
+};
+
+export const useGetProductOptions = (productId: string) => {
+  return useQuery<ProductOptionsResponseData, Error>({
+    queryKey: ["productOptions", productId],
+    queryFn: () => getProductOptions(productId),
+  });
 };

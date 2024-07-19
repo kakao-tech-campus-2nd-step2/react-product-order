@@ -9,6 +9,7 @@ export const AsideContent = (
   quantity: number,
   setQuantity: React.Dispatch<React.SetStateAction<number>>,
   handleClick: HandleClickFunction,
+  giftOrderLimit: number,
 ) => {
   const decreaseQuantity = () => {
     setQuantity(quantity - 1);
@@ -20,7 +21,7 @@ export const AsideContent = (
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
-    if (!isNaN(value) && value >= 1 && value <= 100) {
+    if (!isNaN(value) && value >= 1 && value <= giftOrderLimit) {
       setQuantity(value);
     }
   };
@@ -108,7 +109,7 @@ export const AsideContent = (
               pattern="[0-9]*(.[0-9]+)?"
               role="spinbutton"
               aria-valuemin={1}
-              aria-valuemax={100}
+              aria-valuemax={giftOrderLimit}
               aria-valuenow={quantity}
               aria-valuetext={quantity.toString()}
               autoComplete="off"
@@ -119,7 +120,7 @@ export const AsideContent = (
             <Button
               aria-label="수량 1개 추가"
               onClick={increaseQuantity}
-              isDisabled={quantity >= 100}
+              isDisabled={quantity >= giftOrderLimit}
               role="button"
               tabIndex={-1}
               display="inline-flex"

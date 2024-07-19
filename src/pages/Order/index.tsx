@@ -23,7 +23,11 @@ export const OrderPage = () => {
     if (!message) {
       alert("메시지를 입력해주세요!");
       return;
+    } else if (message.length > 100) {
+      alert("메시지는 100자 이내로 입력해주세요.");
+      return;
     }
+
     if (isChecked) {
       if (
         isNaN(Number(cashReceiptNumber)) ||

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { useGetProductDetail } from "@/api/hooks/useGetProductDetail";
+import { useGetProductOptions } from "@/api/hooks/useGetProductOptions";
 import { Spinner } from "@/components/common/Spinner";
 import { AsideContent } from "@/components/features/Products/ProductAside";
 import { MainContent } from "@/components/features/Products/ProductMain";
@@ -13,6 +14,7 @@ import { RouterPath } from "@/routes/path";
 export const ProductsPage = () => {
   const { productId = "" } = useParams<{ productId: string }>();
   const { data, isError, isLoading } = useGetProductDetail(productId);
+  const { data: options } = useGetProductOptions(productId);
   const [quantity, setQuantity] = useState(1);
   const authInfo = useAuth();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export const ProductsPage = () => {
     if (authInfo) navigate("/order", { state: { quantity, data } });
     else {
       const goLogin = confirm("로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?");
-      if (goLogin) navigate("login");
+      if (goLogin) navigate("/login");
     }
   };
 
@@ -48,7 +50,13 @@ export const ProductsPage = () => {
       >
         <Flex width="100%" justifyContent="flex-start" alignItems="flex-start" position="relative">
           {MainContent(data.detail.imageURL, data.detail.name, data.detail.price.sellingPrice)}
-          {AsideContent(data, quantity, setQuantity, handleClick)}
+          {AsideContent(
+            data,
+            quantity,
+            setQuantity,
+            handleClick,
+            options ? options.options.giftOrderLimit : 100,
+          )}
         </Flex>
       </Flex>
     </Flex>

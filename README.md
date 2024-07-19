@@ -9,5 +9,5 @@
 
 ## 2단계 - validation 구현
 
-- [ ] 상품 상세페이지에서 상품 개수 체크
-- [ ] 결제 페이지의 Form validation
+- [x] 상품 상세페이지에서 상품 개수 체크
+- [x] 결제 페이지의 Form validation
