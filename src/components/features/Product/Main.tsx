@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+import { Image } from '@/components/common/Image';
 import { breakpoints } from '@/styles/variants';
 
 type Props = {
@@ -13,7 +14,14 @@ export const Main = ({ name, imageURL, price }: Props) => {
     <StyledMain>
       <Article>
         <Header>
-          <Image src={imageURL} alt={name} />
+          <Image
+            src={imageURL}
+            alt={name}
+            width="100%"
+            maxWidth="450px"
+            radius={0}
+            ratio="square"
+          />
           <TitleContainer>
             <Title>{name}</Title>
             <Price>{price}원</Price>
@@ -49,11 +57,6 @@ const Header = styled.header`
   @media screen and (min-width: 768px) {
     flex-direction: row;
   }
-`;
-
-const Image = styled.img`
-  width: 100%;
-  max-width: 450px;
 `;
 
 const TitleContainer = styled.div`

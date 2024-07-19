@@ -3,11 +3,12 @@ import styled from '@emotion/styled';
 type Props = {
   radius?: 'circle' | number;
   ratio?: 'square' | 'auto' | number;
+  maxWidth?: string;
 } & React.ImgHTMLAttributes<HTMLImageElement>;
 
 export const Image = ({ ...props }: Props) => <Wrapper {...props} />;
 
-const Wrapper = styled.img<Pick<Props, 'ratio' | 'radius'>>(
+const Wrapper = styled.img<Pick<Props, 'ratio' | 'radius' | 'maxWidth'>>(
   {
     objectFit: 'cover',
     objectPosition: 'center',
@@ -41,6 +42,13 @@ const Wrapper = styled.img<Pick<Props, 'ratio' | 'radius'>>(
     if (typeof ratio === 'number') {
       return {
         aspectRatio: `${ratio}`,
+      };
+    }
+  },
+  ({ maxWidth }) => {
+    if (maxWidth !== undefined) {
+      return {
+        maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
       };
     }
   },
