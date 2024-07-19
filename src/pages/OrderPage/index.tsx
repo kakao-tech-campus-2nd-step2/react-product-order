@@ -1,5 +1,10 @@
+import { useEffect } from 'react';
+
+import { useDisclosure } from '@chakra-ui/react';
+
 import BaseLayout from '@/layouts/BaseLayout';
 
+import { Alert } from '@/components/Alert';
 import { Content } from '@/components/Content';
 import { Divider } from '@/components/ui/Divider';
 import { Form } from '@/components/ui/Form';
@@ -9,7 +14,22 @@ import { PaymentSection } from './components/PaymentSection';
 import { useOrderForm } from './hooks/useOrderForm';
 
 export const OrderPage = () => {
-  const { form, handleSubmit } = useOrderForm();
+  const { form, handleSubmit, alertMessage, setAlertMessage } = useOrderForm();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    if (alertMessage.message) {
+      onOpen();
+    } else {
+      onClose();
+    }
+  }, [alertMessage, onClose, onOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setAlertMessage({ isSuccess: true, message: '' });
+    }
+  }, [setAlertMessage, isOpen]);
 
   return (
     <BaseLayout>
@@ -24,6 +44,13 @@ export const OrderPage = () => {
           </Content>
         </form>
       </Form>
+      {isOpen && (
+        <Alert
+          message={alertMessage.message}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      )}
     </BaseLayout>
   );
 };
