@@ -22,7 +22,7 @@ export const OrderPage = () => {
       alert("선물 메시지는 100자 이내로 입력해주세요.");
       return;
     }
-      setMessage(value);
+    setMessage(value);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -30,6 +30,11 @@ export const OrderPage = () => {
 
     if (message.trim() === "") {
       alert("선물 메시지를 입력해주세요.");
+      return;
+    }
+
+    if (cashReceipt && cashReceiptNumber.trim() === "") {
+      alert("현금영수증 번호를 입력해주세요.");
       return;
     }
 
