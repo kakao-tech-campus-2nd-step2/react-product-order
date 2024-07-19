@@ -1,8 +1,9 @@
 import { Box, Text } from '@chakra-ui/react';
 
 import { Image } from '@/components/common/Image';
+import { goodsDetailData } from '@/types';
 
-export default function GoodsInfo() {
+export default function GoodsInfo({ price, imageURL, name }: goodsDetailData) {
   return (
     <div>
       <Box
@@ -14,15 +15,11 @@ export default function GoodsInfo() {
         p="32px 32px 80px"
       >
         <Box>
-          <Image
-            width="450px"
-            ratio="square"
-            src="https://st.kakaocdn.net/product/gift/product/20200513102805_4867c1e4a7ae43b5825e9ae14e2830e3.png"
-          />
+          <Image width="450px" ratio="square" src={imageURL} />
         </Box>
         <Box width={386} height={450} pl="24px">
           <Text fontSize="24px" fontWeight={400} pt="24px">
-            외식 통합권 10만원권
+            {name}
           </Text>
           <Box
             pt="16px"
@@ -31,7 +28,7 @@ export default function GoodsInfo() {
             borderBottomWidth="0.1px"
             borderBottomColor={'rgb(226, 232, 240)'}
           >
-            100000 원
+            {price}원
           </Box>
           <Box
             p="24px 12px"
