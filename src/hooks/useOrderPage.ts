@@ -13,7 +13,11 @@ export const useOrderPage = () => {
     const totalPrice = state.totalPrice;
     return { orderList, totalPrice };
   }, [state]);
-  const rawCacheReceiptRefs = [useRef<HTMLSelectElement>(null), useRef<HTMLInputElement>(null)];
+  const rawCacheReceiptRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLSelectElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
   const cacheReceiptRefs = useMemo(() => rawCacheReceiptRefs, []);
 
   const onSubmit = useCallback(
@@ -29,7 +33,13 @@ export const useOrderPage = () => {
         if (!(ref && ref?.current)) {
           return;
         }
-        console.log(ref?.current?.value);
+
+        if (ref.current.type === 'checkbox') {
+          const checkbox = ref.current as HTMLInputElement;
+          console.log(checkbox.checked);
+          return;
+        }
+        console.log(ref?.current.value);
       });
     },
     [memState],
