@@ -32,7 +32,6 @@ export const useOrderPage = () => {
       const typeCurrent = cacheReceiptRefs[1].current as HTMLSelectElement;
       const numberCurrent = cacheReceiptRefs[2].current as HTMLInputElement;
 
-      console.log(message);
       if (isCardMessageInvalid(message, setWarning)) return;
 
       if (isCacheReceiptInvalid(checkboxCurrent, numberCurrent, setWarning)) return;
