@@ -1,6 +1,7 @@
-import { Box, Button, Flex, Image, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Text, VStack } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { getDynamicPath, RouterPath } from '@/routes/path'
@@ -32,7 +33,12 @@ const fetchProductDetails = async (productId: string) => {
 export const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  const { register, handleSubmit, watch } = useForm<{ quantity: number }>({
+    defaultValues: {
+      quantity: 1
+    }
+  });
+  const quantity = watch('quantity');
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const navigate = useNavigate();
@@ -57,7 +63,6 @@ export const ProductPage: React.FC = () => {
       });
   }, [productId]);
 
-
   const handleGiftToSelf = () => {
     const authToken = authSessionStorage.get();
     if (!authToken) {
@@ -65,20 +70,16 @@ export const ProductPage: React.FC = () => {
       return;
     }
 
-
-    if (productId) {
-        if (productDetail) {
-        navigate(getDynamicPath.order(productId), {
-            state : {
-                name: productDetail.name,
-                imageURL : productDetail.imageURL,
-                price: productDetail.price.basicPrice,
-                quantity,
-                totalPrice: productDetail.price.basicPrice * quantity
-      }
-    }
-          );
+    if (productId && productDetail) {
+      navigate(getDynamicPath.order(productId), {
+        state: {
+          name: productDetail.name,
+          imageURL: productDetail.imageURL,
+          price: productDetail.price.basicPrice,
+          quantity,
+          totalPrice: productDetail.price.basicPrice * quantity
         }
+      });
     } else {
       navigate(RouterPath.home);
     }
@@ -101,12 +102,6 @@ export const ProductPage: React.FC = () => {
     return <Box textAlign="center" py="20"><Text>No product details available.</Text></Box>;
   }
 
-  const handleQuantityChange = (_valueAsString: string, valueAsNumber: number) => {
-    if (valueAsNumber >= 1 && valueAsNumber <= (productDetail?.giftOrderLimit || 1)) {
-      setQuantity(valueAsNumber);
-    }
-  };
-
   return (
     <Flex p={5} align="center" justify="center" wrap="wrap">
       <Box flex="1" p={5} maxWidth="500px">
@@ -116,18 +111,18 @@ export const ProductPage: React.FC = () => {
         <Text fontSize="3xl" fontWeight="bold">{productDetail.name}</Text>
         <Text fontSize="2xl">{productDetail.price.basicPrice}원</Text>
         <Text>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</Text>
-        <NumberInput size="sm" defaultValue={1} min={1} max={productDetail.giftOrderLimit} value={quantity} onChange={handleQuantityChange}>
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        <Flex width="full" justify="space-between" align="center">
-          <Text fontSize="2xl" fontWeight="semibold">총 결제금액</Text>
-          <Text fontSize="2xl">{(productDetail.price.basicPrice * quantity).toLocaleString()}원</Text>
-        </Flex>
-        <Button colorScheme="gray" size="lg" width="full" onClick={handleGiftToSelf}>나에게 선물하기</Button>
+        <form onSubmit={handleSubmit(handleGiftToSelf)}>
+          <input type="number" {...register('quantity', { 
+            valueAsNumber: true, 
+            min: 1, 
+            max: productDetail.giftOrderLimit || 1
+          })} />
+          <Flex width="full" justify="space-between" align="center">
+            <Text fontSize="2xl" fontWeight="semibold">총 결제금액</Text>
+            <Text fontSize="2xl">{(productDetail.price.basicPrice * quantity).toLocaleString()}원</Text>
+          </Flex>
+          <Button colorScheme="gray" size="lg" width="full" type="submit">나에게 선물하기</Button>
+        </form>
       </VStack>
     </Flex>
   );
