@@ -13,7 +13,8 @@ export const useOrderPage = () => {
     const totalPrice = state.totalPrice;
     return { orderList, totalPrice };
   }, [state]);
-  const cacheReceiptRefs = [useRef<HTMLSelectElement>(null), useRef<HTMLInputElement>(null)];
+  const rawCacheReceiptRefs = [useRef<HTMLSelectElement>(null), useRef<HTMLInputElement>(null)];
+  const cacheReceiptRefs = useMemo(() => rawCacheReceiptRefs, []);
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
