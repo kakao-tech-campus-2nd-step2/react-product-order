@@ -3,9 +3,13 @@ import styled from '@emotion/styled';
 import { Button } from '@components/common';
 import ReceiptForm from './ReceiptForm';
 
-export default function Payment() {
+interface PaymentProps {
+  message: string;
+}
+
+export default function Payment({ message }: PaymentProps) {
   const handleClick = () => {
-    console.info('hello');
+    if (!message) alert('메시지를 입력해주세요.');
   };
 
   return (

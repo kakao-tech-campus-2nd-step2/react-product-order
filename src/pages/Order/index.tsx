@@ -24,7 +24,7 @@ export default function Order() {
       <CenteredContainer maxWidth="lg">
         <InnerContainer>
           <OrderMessage message={orderData.message} onMessageChange={handleOrderDataChange} />
-          <Payment />
+          <Payment message={orderData.message} />
         </InnerContainer>
       </CenteredContainer>
     </Layout>

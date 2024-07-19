@@ -39,7 +39,8 @@
     "jsx-a11y/label-has-associated-control": [ 2, {
     "some": [ "nesting", "id" ]
     }],
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "no-alert": "off"
   },
   "settings": {
     "import/resolver": {
