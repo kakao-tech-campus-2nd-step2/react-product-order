@@ -53,11 +53,32 @@ const CheckoutPage: React.FC = () => {
   const handleSubmit = () => {
     const authToken = authSessionStorage.get();
     if (!authToken) {
-      if (window.confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하겠습니까?')) {
-        navigate('/login', { state: { from: `/checkout/${productId}` } });
-      }
+      navigate('/login', { state: { from: `/checkout/${productId}` } });
       return;
     }
+
+    if (receiptInfo.applyReceipt) {
+      if (!receiptInfo.receiptNumber) {
+        toast({
+          title: 'Error',
+          description: '현금영수증 번호를 입력해주세요.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      } else if (!/^\d+$/.test(receiptInfo.receiptNumber)) {
+        toast({
+          title: 'Error',
+          description: '현금 영수증 번호는 숫자만 입력해야 합니다.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      }
+    }
+
     // 실제 결제 처리 로직
     toast({
       title: '결제 완료',
@@ -77,9 +98,9 @@ const CheckoutPage: React.FC = () => {
   }
 
   return (
-    <Flex justifyContent="center" padding="20px" height="100vh">
-      <Flex justifyContent="space-between" width="100%" maxW="6xl">
-        <Box flex="3" borderRight="1px solid rgb(237, 237, 237)">
+    <Flex justifyContent="center" minHeight="100vh" padding="20px">
+      <Flex maxW="1200px" width="100%">
+        <Box flex="3" borderRight="1px solid rgb(237, 237, 237)" padding="20px">
           <Flex flexDirection="column" justifyContent="center" alignItems="center" borderBottom="8px solid #EDEDED">
             <Text fontSize="lg" fontWeight="bold">
               나에게 주는 선물
@@ -106,7 +127,7 @@ const CheckoutPage: React.FC = () => {
           </Flex>
         </Box>
 
-        <Box flex="2" padding="16px">
+        <Box flex="2" padding="20px">
           <Text fontSize="lg" fontWeight="bold" py="20px" borderBottom="1px solid rgb(237, 237, 237)">
             결제 정보
           </Text>
