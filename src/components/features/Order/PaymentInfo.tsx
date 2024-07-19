@@ -1,21 +1,19 @@
 import { Box, Checkbox, Input, Select, Text, VStack } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { RefObject } from 'react';
 
-type Porps = {
-  price: number;
+type Props = {
+    price: number;
+    receiptRequestedRef: RefObject<HTMLInputElement>;
+    receiptNumberRef: RefObject<HTMLInputElement>;
 };
 
-const PaymentInfo = ({ price }:Porps) => {
-    const receiptRequestedRef = useRef(null);
-    const receiptTypeRef = useRef(null);
-    const receiptNumberRef = useRef(null);
-
+const PaymentInfo = ({ price, receiptRequestedRef, receiptNumberRef }: Props) => {
     return (
         <Box>
             <Text fontSize="lg" mb={2}>결제 정보</Text>
             <VStack align="start" spacing={4}>
                 <Checkbox ref={receiptRequestedRef}>현금영수증 신청</Checkbox>
-                <Select ref={receiptTypeRef} placeholder="개인소득공제">
+                <Select defaultValue="personal">
                     <option value="personal">개인소득공제</option>
                     <option value="business">사업자등록증</option>
                 </Select>
