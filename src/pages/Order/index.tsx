@@ -45,7 +45,7 @@ const fetchOrder = async (id: string) => {
 
 export default function OrderPage() {
   const payment = useContext(PaymentContext);
-  console.log(payment?.paymentInfo.productId);
+
   const [count = 1, productId = '1', imageURL = ''] = [
     payment?.paymentInfo.count,
     payment?.paymentInfo.productId,
