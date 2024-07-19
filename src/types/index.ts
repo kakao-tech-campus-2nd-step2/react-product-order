@@ -64,6 +64,7 @@ export type ProductOption = {
   id: number;
   name: string;
   additionalPrice: number;
+  giftOrderLimit: number;
 };
 
 export type ProductOptionsResponse = {

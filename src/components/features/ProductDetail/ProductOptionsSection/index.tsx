@@ -28,10 +28,15 @@ export const ProductOptionsSection = ({ product, productOptions = [] }: Props) =
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const navigate = useNavigate();
 
+  const optionsArray = Array.isArray(productOptions) ? productOptions : [];
+  const selectedProductOption = optionsArray.find((option) => option.id === selectedOption);
+  const maxQuantity = selectedProductOption?.giftOrderLimit || 100;
+
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
     defaultValue: 1,
     min: 1,
+    max: maxQuantity,
     onChange: (_valueAsString: string, valueAsNumber: number) => setQuantity(valueAsNumber),
   });
 
@@ -43,9 +48,7 @@ export const ProductOptionsSection = ({ product, productOptions = [] }: Props) =
     const selectedProduct = {
       product: {
         ...product,
-        selectedOption: Array.isArray(productOptions)
-          ? productOptions.find((option) => option.id === selectedOption) || null
-          : null,
+        selectedOption: selectedProductOption || null,
         quantity,
       },
     };
@@ -62,9 +65,7 @@ export const ProductOptionsSection = ({ product, productOptions = [] }: Props) =
   const totalPrice =
     product.price.sellingPrice * quantity +
     (selectedOption
-      ? Array.isArray(productOptions)
-        ? productOptions.find((option) => option.id === selectedOption)?.additionalPrice || 0
-        : 0
+      ? optionsArray.find((option) => option.id === selectedOption)?.additionalPrice || 0
       : 0);
 
   return (
@@ -74,12 +75,11 @@ export const ProductOptionsSection = ({ product, productOptions = [] }: Props) =
           {product.name}
         </Text>
         <RadioGroup onChange={(value) => setSelectedOption(Number(value))}>
-          {Array.isArray(productOptions) &&
-            productOptions.map((option) => (
-              <Radio key={option.id} value={option.id.toString()}>
-                {option.name} (+{option.additionalPrice}원)
-              </Radio>
-            ))}
+          {optionsArray.map((option) => (
+            <Radio key={option.id} value={option.id.toString()}>
+              {option.name} (+{option.additionalPrice}원)
+            </Radio>
+          ))}
         </RadioGroup>
         <HStack mt={2}>
           <IconButton aria-label="Add" icon={<MinusIcon />} {...dec} />

@@ -24,7 +24,7 @@
 
 ### ProductDetail 페이지
 
-- [ ] 상품의 개수가 giftOrderLimit을 초과한 경우, 선택 불가
+- [x] 상품의 개수가 giftOrderLimit을 초과한 경우, 선택 불가
 
 ### Order 페이지
 
