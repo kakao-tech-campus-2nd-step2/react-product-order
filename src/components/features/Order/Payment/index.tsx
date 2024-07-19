@@ -1,22 +1,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Checkbox, Select, Input } from '@chakra-ui/react';
 import { Button } from '@components/common';
+import ReceiptForm from './ReceiptForm';
 
 export default function Payment() {
   return (
     <PaymentContainer>
       <Title>결제정보</Title>
-      <PaymentForm>
-        <Checkbox mb={4} fontWeight={700}>
-          현금영수증 신청
-        </Checkbox>
-        <Select mb={2}>
-          <option value="개인소득공제">개인소득공제</option>
-          <option value="사업자증빙용">사업자증빙용</option>
-        </Select>
-        <Input placeholder="(-없이) 숫자만 입력해주세요." mb={4} />
-      </PaymentForm>
+      <ReceiptForm />
       <TotalAmount>
         <dl>
           <dt>최종 결제금액</dt>
@@ -32,7 +23,12 @@ const PaymentContainer = styled.aside`
   width: 360px;
 `;
 
-const PaymentForm = styled.div``;
+const Title = styled.span`
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+`;
 
 const TotalAmount = styled.div`
   padding: 18px 20px;
@@ -54,10 +50,4 @@ const TotalAmount = styled.div`
   dd {
     font-size: 20px;
   }
-`;
-
-const Title = styled.span`
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 28px;
 `;
