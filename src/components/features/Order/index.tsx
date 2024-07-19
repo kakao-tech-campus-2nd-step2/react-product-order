@@ -18,23 +18,27 @@ export const Order = () => {
     const number = numberRef.current?.value;
     const message = messageRef.current?.value;
 
+    // 현금 영수증 신청을 한 경우 (체크 박스 활성화 상태)
     if (check) {
       if (number && message) {
         if (Number.isNaN(Number(number))) {
-          alert('현금 영수증 번호는 숫자만 입력해주세요');
+          alert('현금 영수증 전화번호는 숫자만 입력 가능합니다!');
         } else {
           alert('주문이 완료되었습니다.');
         }
-      } else if (!number) {
-        alert('현금 영수증 번호를 입력해주세요');
       } else if (!message) {
-        alert('메시지를 입력해주세요');
-      }
-    } else {
+        alert('선물과 함께 보낼 카드 메시지를 작성해 주세요!');
+      } else if (!number) {
+        alert('현금 영수증에 필요한 전화번호를 입력해주세요!');
+      } 
+    } 
+    
+    // 현금 영수증 신청을 하지 않은 경우 (체크 박스 비활성화 상태)
+    else {
       if (message) {
         alert('주문이 완료되었습니다.');
       } else if (!message) {
-        alert('메시지를 입력해주세요');
+        alert('선물과 함께 보낼 카드 메시지를 작성해 주세요!');
       }
     }
   };
