@@ -9,7 +9,6 @@ import {
 	Image,
 	Input,
 	Select,
-	// Spinner,
 	Stack,
 	Text,
 	Textarea,
@@ -18,7 +17,7 @@ import {
 import styled from "@emotion/styled";
 
 import { Spinner } from "@/components/common/Spinner";
-import useForm from "@/hooks/useForm";
+import usePaymentForm from "@/hooks/usePaymentForm";
 
 interface PaymentPageProps {
 	data: {
@@ -33,16 +32,10 @@ interface PaymentPageProps {
 
 const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }) => {
 	const {
-		message,
-		setMessage,
-		receiptRequested,
-		setReceiptRequested,
-		receiptType,
-		receiptNumber,
-		setReceiptNumber,
-		handleReceiptTypeChange,
+		register,
 		handleSubmit,
-	} = useForm();
+		onSubmit,
+	} = usePaymentForm();
 	
 	
 	if (loading) {
@@ -64,7 +57,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }
 	return (
 		<>
 		{data && <Box maxW="1200px" mx="auto" p={4}>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<HStack spacing={8} align="flex-start">
 					<VStack spacing={8} align="stretch" flex={2}>
 					<Box>
@@ -72,8 +65,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }
 						<Textarea
 						mt={4}
 						placeholder="선물과 함께 보낼 메시지를 적어보세요"
-						value={message}
-						onChange={(e) => setMessage(e.target.value)}
+						{...register("message", { required: "메시지를 입력해주세요.", maxLength: { value: 100, message: "메시지는 100자 이내로 입력해주세요." } })}
 						bg="gray.50"
 						/>
 					</Box>
@@ -99,15 +91,15 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }
 					<Text fontSize="2xl" fontWeight="bold" mb={4}>결제 정보</Text>
 					<Stack spacing={4}>
 						<Checkbox
-						isChecked={receiptRequested}
+						{...register("receiptRequested")}
+						defaultChecked
 						colorScheme="yellow"
-						onChange={(e) => setReceiptRequested(e.target.checked)}
 						>
 						현금영수증 신청
 						</Checkbox>
 						<FormControl>
 						<FormLabel>현금영수증 종류</FormLabel>
-						<Select value={receiptType} onChange={handleReceiptTypeChange}>
+						<Select {...register("receiptType")}>
 							<option value="개인소득공제">개인소득공제</option>
 							<option value="사업자지출증빙">사업자지출증빙</option>
 						</Select>
@@ -116,8 +108,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }
 							<FormLabel>현금영수증 번호</FormLabel>
 							<Input
 								placeholder="(-없이) 숫자만 입력해주세요."
-								value={receiptNumber}
-								onChange={(e) => setReceiptNumber(e.target.value)}
+								{...register("receiptNumber", { pattern: { value: /^[0-9]+$/, message: "현금영수증 번호는 숫자만 입력해주세요." } })}
 							/>
 						</FormControl>
 						<Divider />
