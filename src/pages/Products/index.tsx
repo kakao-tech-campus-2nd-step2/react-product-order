@@ -2,7 +2,7 @@ import { Button, Divider, Flex, Image, Input, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { useGetProductsDetail } from '@/api';
+import { useGetProductsDetail, useGetProductsOption } from '@/api';
 import Loading from '@/components/common/Loading';
 import { RouterPath } from '@/routes/path';
 import { authSessionStorage } from '@/utils/storage';
@@ -10,6 +10,11 @@ import { authSessionStorage } from '@/utils/storage';
 export const ProductsPage = () => {
   const { productsId = '' } = useParams<{ productsId: string }>();
   const { data: productsDetail, isError, isLoading } = useGetProductsDetail({ productsId });
+  const {
+    data: productsOptions,
+    isError: isOptionsError,
+    isLoading: isOptionsLoading,
+  } = useGetProductsOption({ productsId });
   const [count, setCount] = useState<number>(1);
   const currentAuthToken = authSessionStorage.get();
   const navigate = useNavigate();
@@ -27,6 +32,7 @@ export const ProductsPage = () => {
 
   const changeCount = (addCount: number) => {
     if (count + addCount < 1) return;
+    if (productsOptions && count + addCount > productsOptions.options.giftOrderLimit) return;
     setCount((prevCount) => prevCount + addCount);
   };
 
@@ -46,7 +52,11 @@ export const ProductsPage = () => {
 
   return (
     <Flex h="calc(100vh - 54px)" w="100%" justify="center" py="10">
-      <Loading isLoading={isLoading} error={isError} errorRedirect="/">
+      <Loading
+        isLoading={isLoading || isOptionsLoading}
+        error={isError || isOptionsError}
+        errorRedirect="/"
+      >
         <Flex w="100%" maxW="1280px">
           <Flex w="100%" maxW="920px" align="start">
             <Image w="45%" aspectRatio="1/1" src={productsDetail?.detail.imageURL} />
