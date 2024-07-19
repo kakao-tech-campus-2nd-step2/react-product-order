@@ -22,6 +22,14 @@ const PaymentPage = () => {
       alert('카드 메시지는 100자 이내로 입력해주세요!');
       return;
     }
+    if (cashReceipt && cashReceiptNumber.length === 0) {
+      alert('현금영수증 번호를 입력해주세요!');
+      return;
+    }
+    if (cashReceipt && !/^\d+$/.test(cashReceiptNumber)) {
+      alert('현금 영수증 번호는 숫자만 입력해주세요!');
+      return;
+    }
 
     alert('주문이 완료되었습니다.');
   };
