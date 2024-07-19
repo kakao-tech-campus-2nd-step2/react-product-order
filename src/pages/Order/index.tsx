@@ -76,7 +76,7 @@ const OrderPage = () => {
                 quantity={quantity}
                 isError={setIsError}
               />
-              <OrderBuySection price={amount * quantity} isError={isError} />
+              <OrderBuySection price={amount * quantity} />
             </Box>
           </Container>
         </Box>
