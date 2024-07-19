@@ -23,10 +23,7 @@ const router = createBrowserRouter([
         path: RouterPath.theme,
         element: <ThemePage />,
       },
-      {
-        path: RouterPath.product, // 추가
-        element: <ProductDetail />, // 추가
-      },
+
       {
         path: RouterPath.myAccount,
         element: <PrivateRoute />,
@@ -40,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: RouterPath.notFound,
         element: <Navigate to={RouterPath.home} />,
+      },
+      {
+        path: RouterPath.product,
+        element: <ProductDetail />,
       },
     ],
   },
