@@ -7,4 +7,4 @@
 - [x] `/api/v1/products/{productId}/detail`에 대한 API 구현
 - [x] `/api/v1/products/{productId}/options`에 대한 API 구현
 - [x] 없는 상품의 경우 메인 페이지로 리다이렉트
-- [] 나에게 선물하기 버튼 클릭 시 로그인이 되어있지 않다면 로그인 페이지로 리다이렉트
+- [x] 나에게 선물하기 버튼 클릭 시 로그인이 되어있지 않다면 로그인 페이지로 리다이렉트

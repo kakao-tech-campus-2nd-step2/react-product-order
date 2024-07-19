@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { MemoryRouter } from 'react-router-dom';
+import AuthProvider from '@/context/auth/AuthProvider';
 import GlobalStyles from '@assets/styles';
 import ProductOrder from '.';
 
@@ -12,8 +13,10 @@ const meta: Meta<typeof ProductOrder> = {
   decorators: (Story) => (
     <ChakraProvider>
       <MemoryRouter>
-        <GlobalStyles />
-        <Story />
+        <AuthProvider>
+          <GlobalStyles />
+          <Story />
+        </AuthProvider>
       </MemoryRouter>
     </ChakraProvider>
   ),

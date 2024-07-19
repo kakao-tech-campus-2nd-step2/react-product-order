@@ -1,10 +1,20 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import { ROUTE_PATH } from '@routes/path';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@context/auth/useAuth';
 import { Button } from '@components/common';
 import QuantitySelector from './QuantitySelector';
 
 export default function ProductOrder() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleOrderClick = () => {
+    const targetPath = isAuthenticated ? ROUTE_PATH.ORDER : ROUTE_PATH.LOGIN;
+    navigate(targetPath);
+  };
+
   return (
     <ProductOrderContainer>
       <QuantitySelector />
@@ -15,9 +25,9 @@ export default function ProductOrder() {
             <dd>145000원</dd>
           </dl>
         </TotalAmount>
-        <Link to="/order">
-          <Button theme="darkGray">나에게 선물하기</Button>
-        </Link>
+        <Button theme="darkGray" onClick={handleOrderClick}>
+          나에게 선물하기
+        </Button>
       </div>
     </ProductOrderContainer>
   );
