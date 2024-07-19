@@ -33,6 +33,11 @@ export default () => {
         event.preventDefault();
 
         const formData = Object.fromEntries(new FormData(event.currentTarget));
+        if (formData.messageCardMessage === '') {
+            alert('메세지를 입력해주세요.');
+            return;
+        }
+
         // TODO Options 구현 후 수정
         // TODO 메세지 탬플릿, 센더/리시버 id
         const data: OrderReq = {
