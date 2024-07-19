@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import KAKAO_LOGO from '@/assets/kakao_logo.svg';
@@ -28,6 +28,20 @@ export const LoginPage = () => {
     const redirectUrl = queryParams.get('redirect') ?? `${window.location.origin}/`;
     return window.location.replace(redirectUrl);
   };
+
+  const handleEnter = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleConfirm();
+    }
+  };
+
+  // TODO: LoginPage unmount될 때 이벤트 없어지는지 확인
+  useEffect(() => {
+    window.addEventListener('keypress', handleEnter);
+    return () => {
+      window.removeEventListener('keypress', handleEnter);
+    };
+  }, [id, password]);
 
   return (
     <Wrapper>
