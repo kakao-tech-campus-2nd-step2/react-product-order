@@ -6,10 +6,9 @@ import { Box, Checkbox, Divider, Input, Select, Text } from '@chakra-ui/react';
 
 type Props = {
   price: number;
-  isError: boolean;
 };
 
-const OrderBuySection = ({ price, isError }: Props) => {
+const OrderBuySection = ({ price }: Props) => {
   const {
     control,
     formState: { errors },
@@ -78,11 +77,12 @@ const OrderBuySection = ({ price, isError }: Props) => {
               />
             )}
           />
-          {errors.cashReceiptNumber && (
-            <Text fontSize='12px' color='red'>
-              {errors.cashReceiptNumber.message}
-            </Text>
-          )}
+          {errors.cashReceiptNumber &&
+            typeof errors.cashReceiptNumber.message === 'string' && (
+              <Text fontSize='12px' color='red'>
+                {errors.cashReceiptNumber.message}
+              </Text>
+            )}
         </Box>
         <Divider />
         <S.PriceBox>
