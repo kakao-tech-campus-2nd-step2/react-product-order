@@ -5,11 +5,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchProductDetails, fetchProductOptions } from '@/api/instance';
 import { Spinner } from '@/components/common/Spinner';
+import { useAuth } from '@/provider/Auth';
 import { Option, ProductDetailData } from '@/types';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
+  const anthInfo = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
 
   const {
@@ -34,12 +36,25 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (productError || optionsError) {
-      navigate('/');
+      navigate('/'); //상품 정보 또는 옵션 정보 로드 중 오류발생하면 메인페이지로 이동
     }
   }, [productError, optionsError, navigate]);
 
   const handleGiftClick = () => {
-    navigate('/payment');
+    if (!anthInfo?.token) {
+      if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
+        navigate('/login'); //로그인 아니면 로그인페이지로 이동
+      }
+    } else if (product) {
+      navigate('/payment', {
+        //로그인 되어있으면 결제로 이동
+        state: {
+          product,
+          quantity,
+          totalPrice: product.detail.price.sellingPrice * quantity,
+        },
+      });
+    }
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
