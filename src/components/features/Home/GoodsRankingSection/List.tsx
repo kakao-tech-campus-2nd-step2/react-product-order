@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import { RankingGoodsItems } from '@/components/common/GoodsItem/Ranking';
@@ -13,6 +14,7 @@ type Props = {
 
 export const GoodsRankingList = ({ goodsList }: Props) => {
   const [hasMore, setHasMore] = useState(false);
+  const navigate = useNavigate();
 
   const currentGoodsList = hasMore ? goodsList : goodsList.slice(0, 6);
 
@@ -36,6 +38,7 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
             title={name}
             amount={price.sellingPrice}
             subtitle={brandInfo.name}
+            onClick={() => navigate(`/products/${id}`)} // 상품 클릭 시 상세 페이지로 이동
           />
         ))}
       </Grid>
