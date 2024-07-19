@@ -1,16 +1,17 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { IconButton, Input, useNumberInput, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
 
 interface PaymentInfoProps {
   label: string;
+  price: number;
 }
 
-const PaymentInfo = ({ label }: PaymentInfoProps) => {
+const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
     defaultValue: 1,
@@ -22,13 +23,19 @@ const PaymentInfo = ({ label }: PaymentInfoProps) => {
   const input = getInputProps();
   const navigate = useNavigate();
   const authInfo = useAuth();
+  const { productId: currentProductId } = useParams();
 
   const handleLogin = () => {
     navigate(getDynamicPath.login());
   };
 
-  const handleOrder = () => {
-    navigate(RouterPath.order);
+  const handleOrder = (productId: string, count: number) => {
+    navigate(RouterPath.order, {
+      state: {
+        productId,
+        count,
+      },
+    });
   };
 
   const handleGiftBtnClick = () => {
@@ -40,7 +47,7 @@ const PaymentInfo = ({ label }: PaymentInfoProps) => {
         handleLogin();
       }
     } else {
-      handleOrder();
+      handleOrder(currentProductId || '', input.value);
     }
   };
 
@@ -55,9 +62,12 @@ const PaymentInfo = ({ label }: PaymentInfoProps) => {
         </NumberInputWrapper>
       </VStack>
       <Wrapper>
-        <TotalPrice>총 결제 금액</TotalPrice>
-        <GiftForMeButton onClick={handleGiftBtnClick}>나에게 선물하기</GiftForMeButton>
+        <TotalPrice>
+          <div>총 결제 금액</div>
+          <div>{price * input.value}원</div>
+        </TotalPrice>
       </Wrapper>
+      <GiftForMeButton onClick={handleGiftBtnClick}>나에게 선물하기</GiftForMeButton>
     </>
   );
 };

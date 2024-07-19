@@ -24,7 +24,6 @@ export const GoodsHeaderSection = ({ productId }: Props) => {
   if (error || !data) {
     return <TextView>에러가 발생했습니다.</TextView>;
   }
-  console.log(data);
 
   return (
     <StyledDiv>
@@ -35,7 +34,7 @@ export const GoodsHeaderSection = ({ productId }: Props) => {
         <GiftDescription>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</GiftDescription>
       </SimpleInfoWrapper>
       <PaymentInfoWrapper>
-        <PaymentInfo label={data.name} />
+        <PaymentInfo label={data.name} price={data.price.basicPrice} />
       </PaymentInfoWrapper>
     </StyledDiv>
   );

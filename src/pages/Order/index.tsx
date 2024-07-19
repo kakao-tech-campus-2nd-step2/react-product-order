@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
 import { Spinner } from '@/components/common/Spinner';
@@ -8,7 +9,10 @@ import { GiftSummary } from '@/components/features/Order/GiftSummary';
 import { OrderInfo } from '@/components/features/Order/OrderInfo';
 
 export const OrderPage = () => {
-  const { data, isLoading } = useGetGoodsDetail({ productId: '8026405'.toString() });
+  const location = useLocation();
+  const { productId, count } = location.state || {};
+  console.log(productId, count);
+  const { data, isLoading } = useGetGoodsDetail({ productId: productId });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +38,7 @@ export const OrderPage = () => {
           <GiftSummary imageURL={data.imageURL} brandName={data.brandInfo.name} name={data.name} />
         )}
       </GiftWrapper>
-      {data && <OrderInfo price={data.price.basicPrice} />}
+      {data && <OrderInfo price={data.price.basicPrice * count} />}
     </Wrapper>
   );
 };
