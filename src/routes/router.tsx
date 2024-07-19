@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import { App, Home, Theme, Login, MyAccount } from '@pages/index';
+import { App, Home, Theme, Login, MyAccount, Product } from '@pages/index';
 import PrivateRoute from './components/PrivateRoute';
 import { ROUTE_PATH } from './path';
 
@@ -14,6 +14,14 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: ROUTE_PATH.LOGIN,
+        element: <Login />,
+      },
+      {
+        path: ROUTE_PATH.PRODUCT,
+        element: <Product />,
+      },
+      {
         element: <PrivateRoute />,
         children: [
           {
@@ -25,10 +33,6 @@ export const router = createBrowserRouter([
             element: <MyAccount />,
           },
         ],
-      },
-      {
-        path: ROUTE_PATH.LOGIN,
-        element: <Login />,
       },
     ],
   },
