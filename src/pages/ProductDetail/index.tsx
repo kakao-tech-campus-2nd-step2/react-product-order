@@ -1,3 +1,4 @@
+import { Button } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -40,6 +41,11 @@ const ProductDetail: React.FC = () => {
         <Title>{product.name}</Title>
         <Price>{sellingPrice}원</Price>
         <Description>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Description>
+        <ButtonContainer>
+          <Button colorScheme="teal" variant="outline">
+            나에게 선물하기
+          </Button>
+        </ButtonContainer>
       </DetailsContainer>
     </Container>
   );
@@ -69,9 +75,9 @@ const DetailsContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* 상단 정렬 */
+  justify-content: flex-start;
   padding-left: 20px;
-  padding-top: 20px; /* 위쪽 여백 추가 */
+  padding-top: 20px;
 `;
 
 const Title = styled.h2`
@@ -85,6 +91,11 @@ const Price = styled.p`
   font-size: 24px;
   color: red;
   font-weight: bold;
+`;
+
+const ButtonContainer = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 const Description = styled.p`
