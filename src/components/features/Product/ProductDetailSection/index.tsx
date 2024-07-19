@@ -1,7 +1,6 @@
 import { Box, Divider, Flex, Heading, Image, Text } from '@chakra-ui/react';
 
 interface ProductDetailSectionProps {
-  id: number;
   name: string;
   imageURL: string;
   price: {
