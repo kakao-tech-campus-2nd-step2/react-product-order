@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react';
 
 import { Image } from '@/components/common/Image';
-import { goodsDetailData } from '@/types';
+import type { goodsDetailData } from '@/types';
 
 export default function GoodsInfo({ price, imageURL, name }: goodsDetailData) {
   return (
