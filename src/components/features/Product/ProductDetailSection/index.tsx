@@ -1,8 +1,15 @@
 import { Box, Divider, Flex, Heading, Image, Text } from '@chakra-ui/react';
 
-import type { GoodsData } from '@/types';
+interface ProductDetailSectionProps {
+  id: number;
+  name: string;
+  imageURL: string;
+  price: {
+    sellingPrice: number;
+  };
+}
 
-export const ProductDetailSection = (data: GoodsData) => {
+export const ProductDetailSection = (data: ProductDetailSectionProps) => {
   return (
     <Box as="main" maxW="900px">
       <Box as="article" w="100%" padding="32px 32px 80px">

@@ -56,8 +56,6 @@ export const ProductDetailPage = () => {
             name={data.name}
             imageURL={data.imageURL}
             price={data.price}
-            wish={data.wish}
-            brandInfo={data.brandInfo}
           />
           <ProductOrderSection
             id={parseInt(productId!)}
