@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   Image,
+  Input,
   Select,
   Text,
   Textarea
@@ -67,6 +68,9 @@ export const PaymentPage = () => {
               <option value="business">사업자증빙용</option>
             </Select>
           </FormControl>
+            <FormControl ml={100} mb={20}>
+              <Input placeholder=" (-없이) 숫자로만 입력해주세요." size="xl" w="260px" h="40px"/>
+            </FormControl>
           </Box>
       </Flex>
     </Box>
