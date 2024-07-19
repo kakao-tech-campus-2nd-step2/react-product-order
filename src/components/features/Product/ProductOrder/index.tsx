@@ -15,8 +15,6 @@ export default function ProductOrder({ name, giftOrderLimit }: ProductOrderProps
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  console.info(giftOrderLimit);
-
   const handleOrderClick = () => {
     const targetPath = isAuthenticated ? ROUTE_PATH.ORDER : ROUTE_PATH.LOGIN;
     navigate(targetPath);

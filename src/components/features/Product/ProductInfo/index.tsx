@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { Image } from '@chakra-ui/react';
-
 import { Container } from '@components/common';
 
 const IMAGE_SIZE = 450;

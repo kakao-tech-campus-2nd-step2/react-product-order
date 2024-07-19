@@ -6,24 +6,11 @@ import ProductInfo from '@components/features/Product/ProductInfo';
 import ProductOrder from '@components/features/Product/ProductOrder';
 import { ROUTE_PATH } from '@routes/path';
 import useRedirectIfNoParam from '@hooks/useRedirectIfNoParam';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
-import { getProductsDetail, getProductsOptions } from '@apis/products';
-import { ProductDetailResponse, ProductOptionResponse } from '@internalTypes/responseTypes';
-import { AxiosError } from 'axios';
+import useProductData from './hooks/useProductData';
 
 export default function Product() {
-  const { productId } = useParams<{ productId: string }>();
-  const { data: productDetailData } = useQuery<ProductDetailResponse, AxiosError>({
-    queryKey: ['productDetail', productId],
-    queryFn: () => getProductsDetail({ productId }),
-  });
+  const { productDetailData, productOptionData } = useProductData();
   useRedirectIfNoParam('productId', ROUTE_PATH.HOME);
-
-  const { data: productOptionData } = useQuery<ProductOptionResponse, AxiosError>({
-    queryKey: ['productOption', productId],
-    queryFn: () => getProductsOptions({ productId }),
-  });
 
   return (
     <Layout>
