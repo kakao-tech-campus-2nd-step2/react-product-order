@@ -1,6 +1,6 @@
 import { Box, Button, Image, Input, Text } from '@chakra-ui/react';
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate,useParams } from 'react-router-dom';
 
 import { getDynamicPath } from '@/routes/path';
 
@@ -10,12 +10,14 @@ import { useGift } from '../../provider/Auth';
 
 const ProductDetailPage = () => {
   const { productId } = useParams<{ productId?: string }>();
+  const navigate = useNavigate();
   const { quantity, setQuantity, setSelectedProduct } = useGift();
 
   console.log('Product ID from params:', productId);
 
   if (!productId) {
-    return <div>Invalid product ID</div>;
+    navigate('/'); // Redirect to the main page if productId is invalid
+    return null;
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -26,10 +28,9 @@ const ProductDetailPage = () => {
   console.log('Product details:', productDetails);
 
   if (detailsLoading || optionsLoading) return <div>Loading...</div>;
-  if (detailsError || optionsError) return <div>Error loading product details or options</div>;
-
-  if (!productDetails || !productDetails.price) {
-    return <div>상품 정보를 불러오는 중 문제가 발생했습니다.</div>;
+  if (detailsError || optionsError || !productDetails || !productDetails.price) {
+    navigate('/'); // Redirect to the main page if there's an error or no product details
+    return null;
   }
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
