@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { GoodsItem, Grid, CenteredContainer, StatusHandler } from '@components/common';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useGoodsItemListQuery from '@hooks/useGoodsItemListQuery';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ThemeProductsRequest } from '@internalTypes/requestTypes';
+import { getDynamicPath } from '@utils/getDynamicPath';
+import { ROUTE_PATH } from '@routes/path';
 
 const GRID_GAP = 14;
 const GRID_COLUMNS = 4;
@@ -31,13 +33,14 @@ export default function GoodsItemList() {
         >
           <Grid gap={GRID_GAP} columns={GRID_COLUMNS}>
             {products.map((product) => (
-              <GoodsItem
-                key={product.id}
-                imageSrc={product.imageURL}
-                amount={product.price.basicPrice}
-                subtitle={product.brandInfo.name}
-                title={product.name}
-              />
+              <Link key={product.id} to={getDynamicPath(ROUTE_PATH.PRODUCT, { productId: product.id.toString() })}>
+                <GoodsItem
+                  imageSrc={product.imageURL}
+                  amount={product.price.basicPrice}
+                  subtitle={product.brandInfo.name}
+                  title={product.name}
+                />
+              </Link>
             ))}
             {hasNextPage && <div ref={ref} />}
           </Grid>

@@ -4,6 +4,6 @@ export const ROUTE_PATH = {
   THEME: '/theme/:themeKey',
   LOGIN: '/login',
   MY_ACCOUNT: '/my-account',
-  PRODUCT: '/products/:id',
+  PRODUCT: '/products/:productId',
   ORDER: '/order',
 };
