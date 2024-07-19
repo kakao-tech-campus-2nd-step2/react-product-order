@@ -13,7 +13,21 @@ interface ProductDetail {
   price: {
     basicPrice: number;
   };
+  giftOrderLimit?: number;
 }
+
+const fetchProductDetails = async (productId: string) => {
+  try {
+    const response = await axios.get(`https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`);
+    const optionsResponse = await axios.get(`https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/options`);
+    return {
+      detail: response.data.detail,
+      options: optionsResponse.data.options
+    };
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -24,24 +38,25 @@ export const ProductPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProductDetail = async () => {
-      try {
-        const response = await axios.get(`https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`);
-        if (!response.data.detail) {
-            throw new Error('Product not found');
+    if (!productId) return;
+
+    setLoading(true);
+    fetchProductDetails(productId)
+      .then(data => {
+        if (data) {
+          setProductDetail({...data.detail, giftOrderLimit: data.options.giftOrderLimit});
+        } else {
+          setFetchError(true);
         }
-        const data = response.data.detail;
-        setProductDetail(data);
         setLoading(false);
-      } catch (error) {
-        console.error('Error fetching product detail:', error);
+      })
+      .catch(err => {
+        console.error('Error fetching product details:', err);
         setFetchError(true);
         setLoading(false);
-      }
-    };
-
-    fetchProductDetail();
+      });
   }, [productId]);
+
 
   const handleGiftToSelf = () => {
     const authToken = authSessionStorage.get();
@@ -49,6 +64,7 @@ export const ProductPage: React.FC = () => {
       navigate(RouterPath.login);
       return;
     }
+
 
     if (productId) {
         if (productDetail) {
@@ -85,6 +101,12 @@ export const ProductPage: React.FC = () => {
     return <Box textAlign="center" py="20"><Text>No product details available.</Text></Box>;
   }
 
+  const handleQuantityChange = (_valueAsString: string, valueAsNumber: number) => {
+    if (valueAsNumber >= 1 && valueAsNumber <= (productDetail?.giftOrderLimit || 1)) {
+      setQuantity(valueAsNumber);
+    }
+  };
+
   return (
     <Flex p={5} align="center" justify="center" wrap="wrap">
       <Box flex="1" p={5} maxWidth="500px">
@@ -94,7 +116,7 @@ export const ProductPage: React.FC = () => {
         <Text fontSize="3xl" fontWeight="bold">{productDetail.name}</Text>
         <Text fontSize="2xl">{productDetail.price.basicPrice}원</Text>
         <Text>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</Text>
-        <NumberInput size="sm" defaultValue={1} min={1} max={20} onChange={(_, valueAsNumber) => setQuantity(valueAsNumber)}>
+        <NumberInput size="sm" defaultValue={1} min={1} max={productDetail.giftOrderLimit} value={quantity} onChange={handleQuantityChange}>
           <NumberInputField />
           <NumberInputStepper>
             <NumberIncrementStepper />
