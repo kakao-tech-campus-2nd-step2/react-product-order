@@ -23,6 +23,8 @@ export const PaymentPage = () => {
   };
   const [receiptType, setReceiptType] = useState('personal');
   const [message, setMessage] = useState('');
+  const [receiptNumber, setReceiptNumber] = useState('');
+  const [isReceiptChecked, setIsReceiptChecked] = useState(false);
 
   const handlePayment = () => {
     if (!message.trim()) {
@@ -31,6 +33,10 @@ export const PaymentPage = () => {
     }
     if (message.length > 100) {
       window.alert("메세지는 100자 이내로 입력해주세요.");
+      return;
+    }
+    if (isReceiptChecked && !receiptNumber.trim()) {
+      window.alert("현금 영수증 선택을 해제하거나 현금영수증 번호를 입력하세요.");
       return;
     }
     window.alert("주문이 완료되었습니다.")
@@ -59,7 +65,8 @@ export const PaymentPage = () => {
             <Text fontSize="lg" ml={100} mb={40} fontWeight="bold">결제 정보</Text>
             <Checkbox
             ml={100} mb={20}
-            defaultChecked
+            isChecked={isReceiptChecked}
+            onChange={(e) => setIsReceiptChecked(e.target.checked)}
             sx={{
               '.chakra-checkbox__control': {
                 borderRadius: '0px',
@@ -86,7 +93,10 @@ export const PaymentPage = () => {
             </Select>
           </FormControl>
             <FormControl ml={100} mb={20}>
-              <Input placeholder=" (-없이) 숫자로만 입력해주세요." size="xl" w="260px" h="40px"/>
+              <Input placeholder=" (-없이) 숫자로만 입력해주세요." size="xl" w="260px" h="40px"
+              value={receiptNumber}
+              onChange={(e) => setReceiptNumber(e.target.value)}
+              />
             </FormControl>
             <Text fontSize="lg" fontWeight="bold" ml={100} mb={20} textAlign="center">최종 결제 금액 {totalPrice}원</Text>
             <Button bg="#feeb00" color="black" onClick={handlePayment} ml={100} p={20} width="260px">
