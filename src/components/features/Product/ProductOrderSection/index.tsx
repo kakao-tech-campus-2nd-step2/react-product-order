@@ -14,9 +14,16 @@ import { useNavigate } from 'react-router-dom';
 
 import { useGetProductOptions } from '@/api/hooks/useGetProductOptions';
 import { getDynamicPath } from '@/routes/path';
-import type { GoodsData } from '@/types';
 
-export const ProductOrderSection = (ProductData: GoodsData) => {
+interface ProductOrderSectionProps {
+  id: number;
+  name: string;
+  price: {
+    sellingPrice: number;
+  }
+}
+
+export const ProductOrderSection = (ProductData: ProductOrderSectionProps) => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 

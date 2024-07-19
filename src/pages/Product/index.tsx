@@ -60,10 +60,7 @@ export const ProductDetailPage = () => {
           <ProductOrderSection
             id={parseInt(productId!)}
             name={data.name}
-            imageURL={data.imageURL}
             price={data.price}
-            wish={data.wish}
-            brandInfo={data.brandInfo}
           />
         </Flex>
       </Flex>
