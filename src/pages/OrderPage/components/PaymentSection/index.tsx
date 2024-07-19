@@ -1,7 +1,10 @@
+import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
+import { z } from 'zod';
+
 import { useProductDetail } from '@/api/hooks/useProductDetail';
-import { OrderFormType } from '@/types/orderType';
+import { OrderSchema } from '@/schema/index';
 
 import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
@@ -12,18 +15,10 @@ import { CashCheckForm } from './CashCheckForm';
 import { buttonStyle, containerStyle } from './styles';
 
 type PaymentSectionProps = {
-  formData: OrderFormType;
-  handleCheckboxChange: (checkboxField: keyof OrderFormType) => void;
-  handleInputChange: (inputField: keyof OrderFormType, value: string) => void;
-  setProductDetail: (productId: number, productQuantity: number) => void;
+  form: ReturnType<typeof useForm<z.infer<typeof OrderSchema>>>;
 };
 
-export const PaymentSection = ({
-  formData,
-  handleCheckboxChange,
-  handleInputChange,
-  setProductDetail,
-}: PaymentSectionProps) => {
+export const PaymentSection = ({ form }: PaymentSectionProps) => {
   const location = useLocation();
   const { productId, quantity } = location.state;
   const { productPrice } = useProductDetail(productId);
@@ -36,11 +31,7 @@ export const PaymentSection = ({
         결제 정보
       </Text>
       <Divider />
-      <CashCheckForm
-        formData={formData}
-        handleCheckboxChange={handleCheckboxChange}
-        handleInputChange={handleInputChange}
-      />
+      <CashCheckForm form={form} />
       <Divider />
       <Container justifyContent="space-between" alignItems="center">
         <Text isBold>최종 결제금액</Text>
@@ -49,12 +40,7 @@ export const PaymentSection = ({
         </Text>
       </Container>
       <Divider />
-      <Button
-        size="large"
-        type="submit"
-        onClick={() => setProductDetail(productId, quantity)}
-        css={buttonStyle}
-      >
+      <Button size="large" type="submit" css={buttonStyle}>
         {finalPrice} 결제하기
       </Button>
     </Container>

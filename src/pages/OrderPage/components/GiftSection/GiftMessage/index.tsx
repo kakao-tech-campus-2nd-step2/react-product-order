@@ -1,5 +1,10 @@
-import { OrderFormType } from '@/types/orderType';
+import { useForm } from 'react-hook-form';
 
+import { z } from 'zod';
+
+import { OrderSchema } from '@/schema/index';
+
+import { FormField } from '@/components/ui/Form';
 import { Container } from '@/components/ui/Layout/Container';
 import { Text } from '@/components/ui/Text';
 import { TextArea } from '@/components/ui/TextArea';
@@ -12,16 +17,10 @@ import {
 } from './styles';
 
 type GiftMessageProps = {
-  formData: OrderFormType;
-  handleInputChange: (inputField: keyof OrderFormType, value: string) => void;
+  form: ReturnType<typeof useForm<z.infer<typeof OrderSchema>>>;
 };
 
-export const GiftMessage = ({
-  formData,
-  handleInputChange,
-}: GiftMessageProps) => {
-  const textLength = formData.gitfMessage.length;
-
+export const GiftMessage = ({ form }: GiftMessageProps) => {
   return (
     <Container
       flexDirection="column"
@@ -32,15 +31,27 @@ export const GiftMessage = ({
       <Text size="lg" isBold>
         나에게 주는 선물
       </Text>
-      <div css={textAreaContainerStyle}>
-        <TextArea
-          placeholder="선물과 함께 보낼 메세지를 적어보세요"
-          value={formData.gitfMessage}
-          onChange={(e) => handleInputChange('gitfMessage', e.target.value)}
-          css={textAreaStyle}
-        />
-        <span css={textLengthStyle(textLength > 100)}>{textLength}/100</span>
-      </div>
+      <FormField
+        control={form.control}
+        name="gitfMessage"
+        render={({ field }) => {
+          const textLength = field.value.length;
+
+          return (
+            <div css={textAreaContainerStyle}>
+              <TextArea
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="선물과 함께 보낼 메세지를 적어보세요"
+                css={textAreaStyle}
+              />
+              <span css={textLengthStyle(textLength > 100)}>
+                {textLength}/100
+              </span>
+            </div>
+          );
+        }}
+      />
     </Container>
   );
 };

@@ -1,4 +1,8 @@
-import { OrderFormType } from '@/types/orderType';
+import { useForm } from 'react-hook-form';
+
+import { z } from 'zod';
+
+import { OrderSchema } from '@/schema/index';
 
 import { Divider } from '@/components/ui/Divider';
 import { Container } from '@/components/ui/Layout/Container';
@@ -8,17 +12,13 @@ import { GiftMessage } from './GiftMessage';
 import { dividerStyle } from './styles';
 
 type GiftSectionProps = {
-  formData: OrderFormType;
-  handleInputChange: (inputField: keyof OrderFormType, value: string) => void;
+  form: ReturnType<typeof useForm<z.infer<typeof OrderSchema>>>;
 };
 
-export const GiftSection = ({
-  formData,
-  handleInputChange,
-}: GiftSectionProps) => {
+export const GiftSection = ({ form }: GiftSectionProps) => {
   return (
     <Container flexDirection="column">
-      <GiftMessage formData={formData} handleInputChange={handleInputChange} />
+      <GiftMessage form={form} />
       <Divider css={dividerStyle} />
       <GiftDetail />
     </Container>
