@@ -5,12 +5,16 @@ import type { Products } from '@/api/products/types';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
 
+export interface IOrderItemInfo extends Products.PaymentThumbnail {
+  cnt: string;
+}
+
 export const useProductPreReceipt = (
   productName: string,
   currentProductInfo: Products.PaymentThumbnail,
 ) => {
   const [cntMap, setCntMap] = useState(
-    new Map().set(productName, { ...currentProductInfo, cnt: '1' }),
+    new Map<string, IOrderItemInfo>().set(productName, { ...currentProductInfo, cnt: '1' }),
   );
   const authInfo = useAuth();
   const navigate = useNavigate();

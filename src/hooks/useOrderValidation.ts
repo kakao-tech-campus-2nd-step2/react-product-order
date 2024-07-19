@@ -1,19 +1,11 @@
 import type { FormEvent, RefObject } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
-export const useOrderPage = () => {
-  const location = useLocation();
+import type { IOrderItemInfo } from '@/hooks/useProductPreReceipt';
+
+export const useOrderValidation = (orderListAndPrice: IOrderItemInfo[]) => {
   const [message, setMessage] = useState('');
   const [warning, setWarning] = useState('');
-  const { state } = location;
-
-  const memState = useMemo(() => {
-    const cntMap = state.cntMap;
-    const orderList = [cntMap.get(state.defaultKey)];
-    const totalPrice = state.totalPrice;
-    return { orderList, totalPrice };
-  }, [state]);
 
   const rawCacheReceiptRefs = [
     useRef<HTMLInputElement>(null),
@@ -39,7 +31,7 @@ export const useOrderPage = () => {
       //TODO: post 요청
       console.log(
         message,
-        memState,
+        orderListAndPrice,
         checkboxCurrent.checked,
         typeCurrent.value,
         numberCurrent.value,
@@ -47,7 +39,7 @@ export const useOrderPage = () => {
 
       alert('주문이 완료되었습니다.');
     },
-    [memState, message],
+    [orderListAndPrice, message],
   );
 
   useEffect(() => {
@@ -59,7 +51,7 @@ export const useOrderPage = () => {
     }
   }, [warning]);
 
-  return { setMessage, memState, onSubmit, cacheReceiptRefs, warning };
+  return { setMessage, onSubmit, cacheReceiptRefs, warning };
 };
 
 const isAnyRefInvalid = (
