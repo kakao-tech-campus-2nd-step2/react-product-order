@@ -1,29 +1,19 @@
 import { Button, Checkbox, Divider, HStack, Input, Select, Text, VStack } from '@chakra-ui/react';
-
-interface PaymentInfo {
-  cashReceipt: boolean;
-  setCashReceipt: (value: boolean) => void;
-  receiptType: string;
-  setReceiptType: (value: string) => void;
-  receiptNumber: string;
-  setReceiptNumber: (value: string) => void;
-}
+import { useState } from 'react';
 
 interface Props {
-  handleOrder: () => void;
+  handleOrder: (cashReceipt: boolean, receiptNumber: string) => void;
   totalPrice: number;
-  paymentInfo: PaymentInfo;
 }
 
-export const PaymentInfoSection = ({ handleOrder, totalPrice, paymentInfo }: Props) => {
-  const {
-    cashReceipt,
-    setCashReceipt,
-    receiptType,
-    setReceiptType,
-    receiptNumber,
-    setReceiptNumber,
-  } = paymentInfo;
+export const PaymentInfoSection = ({ handleOrder, totalPrice }: Props) => {
+  const [cashReceipt, setCashReceipt] = useState(false);
+  const [receiptType, setReceiptType] = useState('');
+  const [receiptNumber, setReceiptNumber] = useState('');
+
+  const onOrderClick = () => {
+    handleOrder(cashReceipt, receiptNumber);
+  };
 
   return (
     <VStack p={4} spacing={4} align="stretch">
@@ -63,7 +53,7 @@ export const PaymentInfoSection = ({ handleOrder, totalPrice, paymentInfo }: Pro
         </Text>
       </HStack>
       <Divider />
-      <Button colorScheme="yellow" py={2} w="full" onClick={handleOrder}>
+      <Button colorScheme="yellow" py={2} w="full" onClick={onOrderClick}>
         {totalPrice}원 결제하기
       </Button>
     </VStack>

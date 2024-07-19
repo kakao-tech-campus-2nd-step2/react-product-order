@@ -9,15 +9,15 @@ import { breakpoints } from '@/styles/variants';
 import type { ProductDetail, ProductOption } from '@/types';
 import { orderLocalStorage } from '@/utils/storage';
 
+const MAX_MESSAGE_LENGTH = 100;
+const validateReceiptNumber = (number: string) => /^\d+$/.test(number);
+
 export const OrderPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<
     (ProductDetail & { selectedOption: ProductOption | null; quantity: number }) | undefined
   >(undefined);
   const [message, setMessage] = useState('');
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [cashReceipt, setCashReceipt] = useState(false);
-  const [receiptType, setReceiptType] = useState('');
-  const [receiptNumber, setReceiptNumber] = useState('');
 
   useEffect(() => {
     const product = orderLocalStorage.get();
@@ -29,13 +29,13 @@ export const OrderPage = () => {
     }
   }, []);
 
-  const handleOrder = () => {
+  const handleOrder = (cashReceipt: boolean, receiptNumber: string) => {
     if (!message.trim()) {
       alert('메시지를 입력해주세요.');
       return;
     }
-    if (message.length > 100) {
-      alert('메시지는 100자 이내로 입력해주세요.');
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      alert(`메시지는 ${MAX_MESSAGE_LENGTH}자 이내로 입력해주세요.`);
       return;
     }
     if (cashReceipt) {
@@ -43,22 +43,13 @@ export const OrderPage = () => {
         alert('현금영수증 번호를 입력해주세요.');
         return;
       }
-      if (!/^\d+$/.test(receiptNumber)) {
+      if (!validateReceiptNumber(receiptNumber)) {
         alert('현금영수증 번호는 숫자로만 입력해주세요.');
         return;
       }
     }
     alert('주문이 완료되었습니다.');
     orderLocalStorage.set(null);
-  };
-
-  const paymentInfo = {
-    cashReceipt,
-    setCashReceipt,
-    receiptType,
-    setReceiptType,
-    receiptNumber,
-    setReceiptNumber,
   };
 
   if (!selectedProduct) {
@@ -76,11 +67,7 @@ export const OrderPage = () => {
         <Divider />
         <GiftSummarySection product={selectedProduct} />
       </VStack>
-      <PaymentInfoSection
-        handleOrder={handleOrder}
-        totalPrice={totalPrice}
-        paymentInfo={paymentInfo}
-      />
+      <PaymentInfoSection handleOrder={handleOrder} totalPrice={totalPrice} />
     </Wrapper>
   );
 };
