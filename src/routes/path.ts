@@ -5,4 +5,5 @@ export const ROUTE_PATH = {
   LOGIN: '/login',
   MY_ACCOUNT: '/my-account',
   PRODUCT: '/products/:id',
+  ORDER: '/order',
 };
