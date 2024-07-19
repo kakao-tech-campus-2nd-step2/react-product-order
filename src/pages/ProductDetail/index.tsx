@@ -95,6 +95,7 @@ const ProductDetailPage = () => {
             },
             loading: optionLoading,
             errorMessage: optionErrorMessage,
+            quantity: quantity,
           }}
           >
             <Button bg="black" color="white" w="90%" h="50px" fontSize="sm">나에게 선물하기</Button>

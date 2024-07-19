@@ -28,9 +28,10 @@ interface PaymentPageProps {
 	};
 	loading: boolean;
 	errorMessage: string;
+	quantity: number;
 }
 
-const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }) => {
+const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage, quantity}) => {
 	const {
 		register,
 		handleSubmit,
@@ -81,7 +82,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }
 							/>
 							<VStack align="start" spacing={1}>
 							<Text fontWeight="bold">{data?.options.productName}</Text>
-							<Text> X 1개</Text>
+							<Text> X {quantity}개</Text>
 							</VStack>
 						</HStack>
 						</Box>
@@ -114,10 +115,10 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ data, loading, errorMessage }
 						<Divider />
 						<HStack w="100%" justifyContent="space-between">
 						<Text fontWeight="bold">최종 결제금액</Text>
-						<Text fontSize="2xl" fontWeight="bold">{data?.options.productPrice}원</Text>
+						<Text fontSize="2xl" fontWeight="bold">{data?.options.productPrice * quantity}원</Text>
 						</HStack>
 						<Button type="submit" colorScheme="yellow" size="lg" w="100%">
-						{data?.options.productPrice}원 결제하기
+						{data?.options.productPrice * quantity}원 결제하기
 						</Button>
 					</Stack>
 					</VStack>
