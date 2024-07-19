@@ -1,20 +1,26 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { Image } from '@chakra-ui/react';
+
 import { Container } from '@components/common';
-import ProductImage from '@assets/images/goodsItem.jpg';
 
 const IMAGE_SIZE = 450;
 
-export default function ProductInfo() {
+interface ProductInfoProps {
+  image?: string;
+  name?: string;
+  price?: number;
+}
+
+export default function ProductInfo({ image, name, price }: ProductInfoProps) {
   return (
     <ProductContainer>
       <article>
         <Container justifyContent="space-between">
-          <Image src={ProductImage} maxW={IMAGE_SIZE} maxH={IMAGE_SIZE} mr={6} />
+          <Image src={image} maxW={IMAGE_SIZE} maxH={IMAGE_SIZE} mr={6} />
           <div>
-            <ProductTitle>[단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)</ProductTitle>
-            <ProductPrice>145000원</ProductPrice>
+            <ProductTitle>{name}</ProductTitle>
+            <ProductPrice>{price}원</ProductPrice>
             <GiftInfo>
               <hr />
               <p>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</p>

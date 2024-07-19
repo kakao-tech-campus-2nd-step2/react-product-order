@@ -6,7 +6,11 @@ import { useAuth } from '@context/auth/useAuth';
 import { Button } from '@components/common';
 import QuantitySelector from './QuantitySelector';
 
-export default function ProductOrder() {
+interface ProductOrderProps {
+  name?: string;
+}
+
+export default function ProductOrder({ name }: ProductOrderProps) {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -17,7 +21,10 @@ export default function ProductOrder() {
 
   return (
     <ProductOrderContainer>
-      <QuantitySelector />
+      <QuantitySelectorConatiner>
+        <Title>{name}</Title>
+        <QuantitySelector />
+      </QuantitySelectorConatiner>
       <div>
         <TotalAmount>
           <dl>
@@ -38,6 +45,20 @@ const ProductOrderContainer = styled.aside`
   flex-direction: column;
   justify-content: space-between;
   max-width: 360px;
+`;
+
+const QuantitySelectorConatiner = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 14px 16px;
+  border: 1px solid rgb(237, 237, 237);
+  border-radius: 2px;
+`;
+
+const Title = styled.p`
+  font-weight: 700;
+  margin-bottom: 12px;
 `;
 
 const TotalAmount = styled.div`

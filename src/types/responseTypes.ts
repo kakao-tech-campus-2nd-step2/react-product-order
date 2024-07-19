@@ -17,26 +17,28 @@ export interface ThemeProductsResponse {
   };
 }
 
-export interface ProductDetailResponse extends ProductData {
-  isAccessableProductPage: boolean;
-  review: {
-    averageRating: number;
-    totalReviewCount: number;
-  };
-  productDescription: {
-    images: string[];
-  };
-  productDetailInfo: {
-    announcements: {
-      displayOrder: number;
-      name: string;
-      value: string;
-    }[];
-    terms: {
-      displayOrder: number;
-      title: string;
-      description: string;
-    }[];
+export interface ProductDetailResponse {
+  detail: ProductData & {
+    isAccessableProductPage: boolean;
+    review: {
+      averageRating: number;
+      totalReviewCount: number;
+    };
+    productDescription: {
+      displayImage: string;
+    };
+    productDetailInfo: {
+      announcements: {
+        name: string;
+        value: string;
+        displayOrder: number;
+      }[];
+      terms: {
+        displayCode: string;
+        title: string;
+        description: string;
+      }[];
+    };
   };
 }
 

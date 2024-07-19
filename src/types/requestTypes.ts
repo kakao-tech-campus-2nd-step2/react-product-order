@@ -10,7 +10,7 @@ export interface ThemeProductsRequest {
 }
 
 export interface ProductDetailRequest {
-  productId: string;
+  productId?: string;
 }
 
 export interface ProductOptionsRequest {
