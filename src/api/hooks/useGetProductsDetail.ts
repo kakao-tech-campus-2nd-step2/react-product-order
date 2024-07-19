@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { fetchData } from '@/api/hooks/getAPI';
-import { DetailData, ProductDetailParams } from '@/types';
+import type { DetailData, ProductDetailParams } from '@/types';
 
 export default function useGetProductsDetail({ id }: ProductDetailParams) {
   const [data, setData] = useState<DetailData>();
