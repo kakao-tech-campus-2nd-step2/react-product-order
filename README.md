@@ -35,4 +35,4 @@
 
 ## 3단계
 
-- [ ] 기존 작성한 form 관리를 react-hook-form을 이용해 변경
+- [x] 기존 작성한 form 관리를 react-hook-form을 이용해 변경

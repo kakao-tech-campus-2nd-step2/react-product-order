@@ -1,15 +1,8 @@
 import { Text, Textarea, VStack } from '@chakra-ui/react';
+import { useFormContext } from 'react-hook-form';
 
-interface Props {
-  message: string;
-  setMessage: (message: string) => void;
-}
-
-export const GiftMessageSection = ({ message, setMessage }: Props) => {
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newMessage = e.target.value;
-    setMessage(newMessage);
-  };
+export const GiftMessageSection = () => {
+  const { register } = useFormContext();
 
   return (
     <VStack p={16} width="100%" alignItems="center">
@@ -19,8 +12,7 @@ export const GiftMessageSection = ({ message, setMessage }: Props) => {
       <Textarea
         backgroundColor="gray.100"
         placeholder="선물과 함께 보낼 메시지를 적어보세요"
-        value={message}
-        onChange={handleChange}
+        {...register('message')}
       />
     </VStack>
   );
