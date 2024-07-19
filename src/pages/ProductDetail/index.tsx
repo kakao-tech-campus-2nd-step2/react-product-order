@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+import { Spinner } from '@/components/common/Spinner';
 
 const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -13,9 +14,14 @@ const ProductDetail: React.FC = () => {
     console.log('Product data:', data);
   }, [productId, data]);
 
-  if (isLoading) return <TextView>Loading...</TextView>;
-  if (isError) return <TextView>Error loading product details</TextView>;
-  if (!data) return <TextView>No product details available.</TextView>;
+  if (isLoading)
+    return (
+      <LoadingContainer>
+        <Spinner size={48} />
+      </LoadingContainer>
+    );
+  if (isError) return <TextView>상품을 불러오는 도중에 에러가 발생했습니다.</TextView>;
+  if (!data) return <TextView>상품이 없습니다.</TextView>;
 
   const product = data.detail;
   const imageUrl = product.imageURL;
@@ -59,4 +65,11 @@ const TextView = styled.div`
   align-items: center;
   padding: 40px 16px 60px;
   font-size: 16px;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 `;
