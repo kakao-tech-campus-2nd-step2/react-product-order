@@ -77,6 +77,7 @@ export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) 
         </Select>
         <Box w="100%" h="8px" />
         <Input
+          ref={cashReceiptNumberRef}
           name="cashReceiptNumber"
           placeholder="(-없이) 숫자만 입력해주세요."
           w="100%"
