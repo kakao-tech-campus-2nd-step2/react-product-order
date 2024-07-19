@@ -2,6 +2,8 @@ import { Button } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import React from 'react';
 
+import { QuantitySelector } from './QuerySelector';
+
 export type ProductDetailContentProps = {
   imageUrl: string;
   name: string;
@@ -15,6 +17,9 @@ export const ProductDetailContent: React.FC<ProductDetailContentProps> = ({
   price,
   onButtonClick,
 }) => {
+  const handleQuantityChange = (quantity: number) => {
+    console.log('Quantity changed', quantity);
+  };
   return (
     <Container>
       <ImageContainer>
@@ -25,6 +30,9 @@ export const ProductDetailContent: React.FC<ProductDetailContentProps> = ({
         <Price>{price}원</Price>
         <Description>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</Description>
         <ButtonContainer>
+          <QuantityContainer>
+            <QuantitySelector onQuantityChange={handleQuantityChange} />
+          </QuantityContainer>
           <Button colorScheme="teal" variant="outline" onClick={onButtonClick}>
             나에게 선물하기
           </Button>
@@ -83,4 +91,9 @@ const Description = styled.p`
   margin-top: 20px;
   font-size: 16px;
   color: #555;
+`;
+
+const QuantityContainer = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
