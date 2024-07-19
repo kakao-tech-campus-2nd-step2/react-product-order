@@ -72,3 +72,25 @@ export type ProductOrderRequestBody = {
   cashReceiptType?: "PERSONAL" | "BUSINESS";
   cashReceiptNumber?: string;
 };
+
+export type MoreOptionData = {
+  key: string;
+  value: string;
+  level: number;
+  options: MoreOptionData[];
+  id: number;
+  usable: boolean;
+  price: number;
+  stockQuantity: number;
+  unlimitedStockQuantity: boolean;
+};
+
+export type ProductOptionData = {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  hasOption: boolean;
+  giftOrderLimit: number;
+  names: string[];
+  options: MoreOptionData[];
+};
