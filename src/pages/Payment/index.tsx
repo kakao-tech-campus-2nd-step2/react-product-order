@@ -1,12 +1,15 @@
 import {
   Box,
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
   Image,
+  Select,
   Text,
   Textarea
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export const PaymentPage = () => {
@@ -16,6 +19,7 @@ export const PaymentPage = () => {
     imageURL: string;
     totalPrice: number;
   };
+  const [receiptType, setReceiptType] = useState('personal');
 
   return (
     <Box p={8}>
@@ -33,6 +37,37 @@ export const PaymentPage = () => {
             </Box>
           </Flex>
         </Box>
+        <Box flex="1" maxW="400px">
+            <Text fontSize="lg" ml={100} mb={40} fontWeight="bold">결제 정보</Text>
+            <Checkbox
+            ml={100} mb={20}
+            defaultChecked
+            sx={{
+              '.chakra-checkbox__control': {
+                borderRadius: '0px',
+                borderColor: 'lightgray',
+                borderWidth: '2px',
+                bg: 'lightblue',
+              },
+              '.chakra-checkbox__control:checked': {
+                bg: 'teal.500',
+                borderColor: 'lightgray',
+                borderWidth: '2px',
+              }
+            }}
+            >
+              현금영수증 신청</Checkbox>
+          <FormControl ml={100} mb={4}>
+            <Select 
+              value={receiptType} 
+              onChange={(e) => setReceiptType(e.target.value)} 
+              w="260px" h="40px"
+            >
+              <option value="personal">개인소득공제</option>
+              <option value="business">사업자증빙용</option>
+            </Select>
+          </FormControl>
+          </Box>
       </Flex>
     </Box>
   );
