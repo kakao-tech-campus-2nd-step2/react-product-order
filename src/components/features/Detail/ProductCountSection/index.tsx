@@ -14,7 +14,9 @@ interface ProductCountSectionProps {
   productId: string;
 }
 const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
-  const { register, setValue, getValues } = useForm({ defaultValues: { count: DEFAULT_COUNT } });
+  const { register, setValue, getValues, watch } = useForm({
+    defaultValues: { count: DEFAULT_COUNT },
+  });
   const {
     data: detailData,
     isPending: isDetailPending,
@@ -45,7 +47,7 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
 
   const { giftOrderLimit } = optionData.options;
 
-  const totalPrice = basicPrice * getValues('count');
+  const totalPrice = basicPrice * watch('count');
 
   const handleOrder = () => {
     if (!authInfo) {
@@ -59,21 +61,44 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
     navigate('/order');
   };
 
+  const handleCountUp = () => {
+    const prevCount = +getValues('count');
+    if (prevCount >= giftOrderLimit) return;
+    setValue('count', prevCount + 1);
+  };
+  const handleCountDown = () => {
+    const prevCount = +getValues('count');
+    if (prevCount <= 1) return;
+    setValue('count', prevCount - 1);
+  };
+  const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newCount = +e.target.value;
+    if (newCount > giftOrderLimit) {
+      setValue('count', giftOrderLimit);
+      return;
+    }
+    if (newCount < 1) {
+      setValue('count', 1);
+      return;
+    }
+    setValue('count', newCount);
+  };
+
   return (
     <FormControl>
       <Stack direction="column" justifyContent="space-between">
         <Box border="1px solid" height="fit-content">
           <Text fontWeight="bold">{name}</Text>
           <Stack direction="row">
-            <Button width={10} onClick={() => setValue('count', +getValues('count') + 1)}>
+            <Button width={10} onClick={handleCountUp}>
               +
             </Button>
             <Input
               type="number"
               {...register('count', { required: true, max: giftOrderLimit, min: 1 })}
-              onChange={(e) => setValue('count', +e.target.value)}
+              onChange={handleCountChange}
             />
-            <Button onClick={() => setValue('count', +getValues('count') - 1)}>-</Button>
+            <Button onClick={handleCountDown}>-</Button>
           </Stack>
         </Box>
 
