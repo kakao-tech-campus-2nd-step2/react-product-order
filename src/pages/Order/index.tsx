@@ -22,9 +22,15 @@ const Order: React.FC = () => {
   const [taxNumber, setTaxNumber] = useState('');
   const [cardMessage, setCardMessage] = useState('');
   const [cardMessageError, setCardMessageError] = useState('');
+  const [taxNumberError, setTaxNumberError] = useState('');
 
-  const handleReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReceipt(e.target.checked);
+    if (!e.target.checked) {
+      setTaxNumberError('');
+    }
+  };
+
   const handleTaxTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setTaxType(e.target.value);
   const handleTaxNumberChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -41,11 +47,15 @@ const Order: React.FC = () => {
 
   const handlePayment = () => {
     if (!cardMessage) {
-      alert('메시지를 입력해주세요.');
+      setCardMessageError('메시지를 입력해주세요.');
       return;
     }
     if (cardMessage.length > 100) {
       setCardMessageError('메시지를 100자 이내로 입력해주세요.');
+      return;
+    }
+    if (receipt && !taxNumber) {
+      alert('현금영수증 번호를 입력해주세요.');
       return;
     }
     alert('결제하기 버튼을 눌렀습니다.');
@@ -107,13 +117,18 @@ const Order: React.FC = () => {
             <option value="business">사업자지출증빙</option>
           </Select>
         </FormControl>
-        <FormControl mb={4}>
+        <FormControl mb={4} isInvalid={!!taxNumberError}>
           <FormLabel>현금영수증 번호</FormLabel>
           <Input
             placeholder="(-없이) 숫자만 입력해주세요."
             value={taxNumber}
             onChange={handleTaxNumberChange}
           />
+          {taxNumberError && (
+            <Text color="red.500" mt={2}>
+              {taxNumberError}
+            </Text>
+          )}
         </FormControl>
         <Box mb={4}>
           <Text>최종 결제금액</Text>
