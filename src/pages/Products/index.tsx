@@ -36,18 +36,19 @@ export const ProductsPage = () => {
     setCount((prevCount) => prevCount + addCount);
   };
 
-  const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const regExp = /^[0-9\b]+$/;
-    if (regExp.test(e.key)) {
-      const nowCount = parseInt(e.currentTarget.value + e.key);
-      if (nowCount < 1) setCount(1);
-      else setCount(nowCount);
-    } else if (e.key === 'Backspace') {
-      const nowCount = parseInt(e.currentTarget.value.slice(0, -1)) || 1;
-      if (nowCount < 1) setCount(1);
-      else setCount(nowCount);
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const numberButNonNumber = ['e', 'E', '+', '-'];
+    if (numberButNonNumber.includes(e.key)) {
+      e.preventDefault();
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (value < 1 || isNaN(value)) setCount(1);
+    else if (productsOptions && value > productsOptions.options.giftOrderLimit)
+      setCount(productsOptions.options.giftOrderLimit);
+    else setCount(value);
   };
 
   return (
@@ -84,8 +85,9 @@ export const ProductsPage = () => {
                   -
                 </Button>
                 <Input
-                  value={count}
-                  onKeyDown={handleInputKey}
+                  value={count.toString()}
+                  onKeyDown={handleInputKeyDown}
+                  onChange={handleInputChange}
                   type="number"
                   min="1"
                   mx="3"

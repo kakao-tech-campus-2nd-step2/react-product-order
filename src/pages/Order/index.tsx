@@ -34,6 +34,11 @@ export const OrderPage = () => {
   const orderPrice = location.state.price.basicPrice * location.state.count;
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length > 100) {
+      alert('100자 이내로 작성해주세요');
+      return;
+    }
     setOrderInfo({ ...orderInfo, message: e.target.value });
   };
 
@@ -43,6 +48,13 @@ export const OrderPage = () => {
 
   const handleReceiptTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOrderInfo({ ...orderInfo, receiptType: e.target.value as OrderInfo['receiptType'] });
+  };
+
+  const handleReceiptNumberKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const numberButNonNumber = ['e', 'E', '+', '-'];
+    if (numberButNonNumber.includes(e.key)) {
+      e.preventDefault();
+    }
   };
 
   const handleReceiptNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +103,7 @@ export const OrderPage = () => {
               bg="#EDF2F6"
               border="none"
               resize="none"
+              maxLength={100}
               _focus={{ bg: 'white' }}
               placeholder="선물과 함께 보낼 메세지를 적어보세요"
               value={orderInfo.message}
@@ -143,7 +156,9 @@ export const OrderPage = () => {
               <option>사업자증빙용</option>
             </Select>
             <Input
+              type="number"
               value={orderInfo.receiptNumber}
+              onKeyDown={handleReceiptNumberKeyDown}
               onChange={handleReceiptNumberChange}
               pattern="[0-9]*"
               placeholder="(-없이) 숫자만 입력해주세요"
