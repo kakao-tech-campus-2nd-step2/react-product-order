@@ -26,8 +26,17 @@ export const ProductsDetail = ({ productId }: Props) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value)
-    if (isNaN(value) || value < 1 || (giftOrderLimit && value > giftOrderLimit)) return
-    setItemCount(value)
+    if (isNaN(value)) {
+      return
+    }
+
+    if (value > giftOrderLimit) {
+      alert(`최대 선물 가능 수량은 ${giftOrderLimit}개 입니다.`)
+      setItemCount(giftOrderLimit)
+    } 
+    else {
+      setItemCount(value)
+    }
   }
 
   const handleIncrement = () => {
@@ -108,6 +117,7 @@ export const ProductsDetail = ({ productId }: Props) => {
                 value={itemCount}
                 onChange={handleChange}
                 mx={2}
+                min={1} // 입력란에서 최소 수량을 1로 설정
               />
               <Button size="sm" onClick={handleIncrement}>+</Button>
             </QuantityControl>
