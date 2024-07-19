@@ -11,8 +11,14 @@ import {
   Text,
   Textarea
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
+
+interface FormValues {
+  message: string;
+  receiptNumber: string;
+  receiptType: string;
+}
 
 export const PaymentPage = () => {
   const location = useLocation();
@@ -21,26 +27,33 @@ export const PaymentPage = () => {
     imageURL: string;
     totalPrice: number;
   };
-  const [receiptType, setReceiptType] = useState('personal');
-  const [message, setMessage] = useState('');
-  const [receiptNumber, setReceiptNumber] = useState('');
-  const [isReceiptChecked, setIsReceiptChecked] = useState(false);
 
-  const handlePayment = () => {
-    if (!message.trim()) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { register, handleSubmit, watch, setValue } = useForm<FormValues>({
+    defaultValues: {
+      message: '',
+      receiptNumber: '',
+      receiptType: 'personal',
+    }
+  });
+
+  const isReceiptChecked = watch('receiptNumber') !== '';
+
+  const onSubmit = (data: FormValues) => {
+    if (!data.message.trim()) {
       window.alert("메세지를 입력해주세요.");
       return;
     }
-    if (message.length > 100) {
+    if (data.message.length > 100) {
       window.alert("메세지는 100자 이내로 입력해주세요.");
       return;
     }
     if (isReceiptChecked) {
-      if (!receiptNumber.trim()) {
+      if (!data.receiptNumber.trim()) {
         window.alert("현금영수증 선택을 해제하거나 현금영수증 번호를 입력하세요.");
         return;
       }
-      if (!/^\d+$/.test(receiptNumber)) {
+      if (!/^\d+$/.test(data.receiptNumber)) {
         window.alert("현금영수증 번호는 숫자로만 입력해주세요.");
         return;
       }
@@ -55,8 +68,7 @@ export const PaymentPage = () => {
           <FormControl mb={4}>
             <FormLabel fontWeight="bold">나에게 주는 선물</FormLabel>
             <Textarea placeholder="선물과 함께 보낼 메시지를 적어보세요" size="xl" h="200px" w="100%" 
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            {...register('message', { required: true })}
             />
           </FormControl>
           <Text fontWeight="bold" mb={2}>선물내역</Text>
@@ -71,8 +83,10 @@ export const PaymentPage = () => {
             <Text fontSize="lg" ml={100} mb={40} fontWeight="bold">결제 정보</Text>
             <Checkbox
             ml={100} mb={20}
-            isChecked={isReceiptChecked}
-            onChange={(e) => setIsReceiptChecked(e.target.checked)}
+            {...register('receiptNumber')}
+            onChange={(e) => {
+              setValue('receiptNumber', e.target.checked ? '' : "");
+            }}
             sx={{
               '.chakra-checkbox__control': {
                 borderRadius: '0px',
@@ -90,8 +104,7 @@ export const PaymentPage = () => {
               현금영수증 신청</Checkbox>
           <FormControl ml={100} mb={4}>
             <Select 
-              value={receiptType} 
-              onChange={(e) => setReceiptType(e.target.value)} 
+              {...register('receiptType')}
               w="260px" h="40px"
             >
               <option value="personal">개인소득공제</option>
@@ -100,13 +113,17 @@ export const PaymentPage = () => {
           </FormControl>
             <FormControl ml={100} mb={20}>
               <Input placeholder=" (-없이) 숫자로만 입력해주세요." size="xl" w="260px" h="40px"
-              value={receiptNumber}
-              onChange={(e) => setReceiptNumber(e.target.value)}
-              type="text"
+              {...register('receiptNumber', {
+                required: isReceiptChecked ? '현금영수증 번호를 입력해주세요.' : false,
+                pattern: {
+                  value: /^\d+$/,
+                  message: '현금영수증 번호는 숫자로만 입력해주세요.',
+                }
+              })}
               />
             </FormControl>
             <Text fontSize="lg" fontWeight="bold" ml={100} mb={20} textAlign="center">최종 결제 금액 {totalPrice}원</Text>
-            <Button bg="#feeb00" color="black" onClick={handlePayment} ml={100} p={20} width="260px">
+            <Button bg="#feeb00" color="black" onClick={handleSubmit(onSubmit)} ml={100} p={20} width="260px">
               {totalPrice}원 결제하기
             </Button>
           </Box>

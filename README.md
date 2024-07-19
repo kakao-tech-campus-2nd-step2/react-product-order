@@ -74,3 +74,19 @@
 ### 질문
 
 - 현재 코드에서 현금 영수증 체크박스가 보이지 않는데 글씨를 선택하면 체크 표시가 나타납니다. 테두리를 설정했는데 빈체크박스가 나오지 않는 이유를 모르겠습니다. 어떻게 수정하면 좋을까요?
+
+- Payment 코드를 react-hook-form으로 바꾸는 과정에서 아래와 같이 오류가 발생합니다. `npm install react-hook-form`명령으로 설치 했는데 왜 이런 문제가 발생하는지 궁금합니다.
+
+> ERROR in src/pages/Payment/index.tsx:14:25
+> TS2307: Cannot find module 'react-hook-form' or its corresponding type declarations.
+
+> 12 | Textarea
+> 13 | } from '@chakra-ui/react';
+
+> 14 | import { useForm } from 'react-hook-form';
+
+>       |                         ^^^^^^^^^^^^^^^^^
+>
+> 15 | import { useLocation } from 'react-router-dom';
+> 16 |
+> 17 | interface FormValues {
