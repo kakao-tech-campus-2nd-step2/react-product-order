@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Grid, GridItem, HStack, Image,Input, Select, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Checkbox, Grid, GridItem, HStack, Image, Input, Select, Text, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -59,8 +59,8 @@ export const Order = () => {
         p={4}
       >
         <GridItem>
-          <VStack align="start" spacing={10}>
-            <Box>
+          <VStack align="center" spacing={10}>
+            <Box textAlign="center">
               <Text fontSize="2xl" fontWeight="bold">나에게 주는 선물</Text>
               <Input
                 backgroundColor="gray.100"
@@ -68,7 +68,8 @@ export const Order = () => {
                 ref={messageRef}
                 mt={4}
                 size="lg"
-                width="300px"
+                width="750px" 
+                height="150px" 
               />
             </Box>
             <Box w="100%">
