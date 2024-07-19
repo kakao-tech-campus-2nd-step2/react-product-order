@@ -61,4 +61,5 @@ export type ProductOptionData = {
   id: number;
   name: string;
   price: number;
+  giftOrderLimit?: number;
 };
