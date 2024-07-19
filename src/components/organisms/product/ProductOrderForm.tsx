@@ -3,21 +3,24 @@ import { defaultBorderColor, textColors } from '@styles/colors';
 import {
   Checkbox, Divider, Input, Select, Text,
 } from '@chakra-ui/react';
-import {
-  ChangeEvent, useCallback,
-} from 'react';
 import Button from '@components/atoms/button/Button';
-import { OrderRequestBody } from '@/types/request';
-import { ProductDetailData } from '@/dto';
+import {
+  FieldErrors,
+  FieldValues,
+  UseFormGetValues,
+  UseFormRegister,
+} from 'react-hook-form';
+import { FormErrorMessages } from '@constants/ErrorMessage';
 import { CashReceiptOptions } from '@/constants';
-import { OrderFormErrorStatus } from '@/types';
+import { OrderFormData } from '@/types';
+import { ProductDetailData } from '@/dto';
 
-interface ProductOrderFormProps {
-  productDetails: ProductDetailData;
-  orderData: OrderRequestBody;
-  setOrderData: (orderData: OrderRequestBody) => void;
-  errorStatus: OrderFormErrorStatus;
-  handleSubmit: () => void;
+interface ProductOrderFormProps<T extends FieldValues> {
+  register: UseFormRegister<T>,
+  errors: FieldErrors<T>,
+  getValues: UseFormGetValues<T>,
+  productDetails: ProductDetailData,
+  count: number,
 }
 
 function InternalFormDivider() {
@@ -31,22 +34,13 @@ function InternalFormDivider() {
 }
 
 function ProductOrderForm({
-  productDetails, orderData, setOrderData, errorStatus, handleSubmit,
-}: ProductOrderFormProps) {
-  const handleDataChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { value, name } = e.target;
-    setOrderData({ ...orderData, [name]: value });
-  }, [orderData, setOrderData]);
-
-  const handleCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setOrderData({ ...orderData, hasCashReceipt: e.target.checked });
-  }, [orderData, setOrderData]);
-
+  register, errors, getValues, productDetails, count,
+}: ProductOrderFormProps<OrderFormData>) {
   const cashReceiptTypeText = {
     [CashReceiptOptions.PERSONAL]: '개인소득공제',
     [CashReceiptOptions.BUSINESS]: '사업자증빙용',
   };
-  const finalPrice = productDetails.price.sellingPrice * orderData.productQuantity;
+  const finalPrice = productDetails.price.sellingPrice * count;
 
   return (
     <Container
@@ -71,17 +65,14 @@ function ProductOrderForm({
       >
         <Checkbox
           borderColor={defaultBorderColor}
-          defaultChecked={orderData.hasCashReceipt}
-          onChange={handleCheckboxChange}
+          {...register('hasCashReceipt')}
         >
           현금영수증 신청
         </Checkbox>
         <Select
           paddingTop="16px"
-          onChange={handleDataChange}
           borderColor={defaultBorderColor}
-          defaultValue={orderData.cashReceiptType}
-          name="cashReceiptType"
+          {...register('cashReceiptType')}
         >
           <option value={CashReceiptOptions.PERSONAL}>
             {cashReceiptTypeText[CashReceiptOptions.PERSONAL]}
@@ -93,14 +84,20 @@ function ProductOrderForm({
         <Input
           borderColor={defaultBorderColor}
           marginTop="5px"
-          onChange={handleDataChange}
-          value={orderData.cashReceiptNumber}
-          name="cashReceiptNumber"
-          disabled={!orderData.hasCashReceipt}
+          {...register('cashReceiptNumber', {
+            required: {
+              value: getValues().hasCashReceipt,
+              message: FormErrorMessages.RECEIPT_NUMBER_REQUIRED,
+            },
+            pattern: {
+              value: /^[0-9]*$/,
+              message: FormErrorMessages.RECEIPT_NUMBER_NOT_NUMERIC,
+            },
+          })}
         />
         {
-          errorStatus.hasReceiptError ? (
-            <Text color={textColors.error}>{errorStatus.receiptErrorCaption}</Text>
+          errors.cashReceiptNumber ? (
+            <Text color={textColors.error}>{errors.cashReceiptNumber.message}</Text>
           ) : null
         }
       </Container>
@@ -120,7 +117,7 @@ function ProductOrderForm({
         style={{
           marginTop: '16px',
         }}
-        onClick={handleSubmit}
+        type="submit"
       />
     </Container>
   );
