@@ -1,43 +1,40 @@
 import { Box, Checkbox, Flex, Image, Input, Select, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import { Container } from '@/components/common/layouts/Container';
 
+interface FormData {
+  message: string;
+  cashReceiptNumber?: string;
+  cashReceipt: boolean;
+  receiptType: string;
+}
+
 export const Order = () => {
   const location = useLocation();
-  // console.log(location.state);
-  const [formData, setFormData] = useState({ message: '', cashReceiptNumber: '' });
-  const [isCashReceiptChecked, setIsCashReceiptChecked] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>();
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
-  };
+  const isCashReceiptChecked = watch('cashReceipt');
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsCashReceiptChecked(e.target.checked);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, cashReceiptNumber: e.target.value });
-  };
-
-  const handleSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const { message, cashReceiptNumber } = formData;
-
-    if (!message.trim().length) {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    if (!data.message.trim().length) {
       alert('메세지를 입력해주세요.');
       return;
     }
-    if (message.length > 100) {
+    if (data.message.length > 100) {
       alert('100자 이하로 입력하세요.');
       return;
     }
-    if (isCashReceiptChecked && !cashReceiptNumber.trim().length) {
+    if (data.cashReceipt && !data.cashReceiptNumber?.trim().length) {
       alert('현금 영수증 번호를 입력해주세요.');
       return;
     }
@@ -53,11 +50,10 @@ export const Order = () => {
           <MessageInputWrapper>
             <MessageInput
               type="text"
-              id="message"
-              value={formData.message}
-              onChange={handleMessageChange}
+              {...register('message', { required: true, maxLength: 100 })}
               placeholder="선물과 함께 보낼 메시지를 적어주세요"
             />
+            {errors.message && <span>메시지를 입력해주세요 (100자 이하)</span>}
           </MessageInputWrapper>
         </TopSection>
         <MiddleLine />
@@ -69,7 +65,7 @@ export const Order = () => {
               alt="이미지"
               width="86px"
               height="86px"
-            ></Image>
+            />
             <GiftHistoryDescription>
               <Text color="rgb(136,136,136)" fontSize="13px" fontWeight="400">
                 {location.state.productData.detail.brandInfo.name}
@@ -82,45 +78,47 @@ export const Order = () => {
         </BottomSection>
       </Left>
       <Right>
-        <Flex direction="column">
-          <Box w="full" borderWidth="1px" borderRadius="lg" overflow="hidden" p={5}>
-            <Flex direction="column" align="flex-start" mb={4}>
-              <Text fontWeight="bold" mb={20}>
-                결제 정보
-              </Text>
-              <Flex align="center" mb={10}>
-                <Checkbox colorScheme="yellow" onChange={handleCheckboxChange}>
-                  현금영수증 신청
-                </Checkbox>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Flex direction="column">
+            <Box w="full" borderWidth="1px" borderRadius="lg" overflow="hidden" p={5}>
+              <Flex direction="column" align="flex-start" mb={4}>
+                <Text fontWeight="bold" mb={20}>
+                  결제 정보
+                </Text>
+                <Flex align="center" mb={10}>
+                  <Checkbox colorScheme="yellow" {...register('cashReceipt')}>
+                    현금영수증 신청
+                  </Checkbox>
+                </Flex>
+                <Selectgroup mb={2} {...register('receiptType')}>
+                  <option value="personal" defaultChecked>
+                    개인소득공제
+                  </option>
+                  <option value="business">사업자 지출증빙</option>
+                </Selectgroup>
+                {isCashReceiptChecked && (
+                  <InputCustom
+                    placeholder="(-없이) 숫자만 입력해주세요."
+                    {...register('cashReceiptNumber')}
+                  />
+                )}
+                <Flex
+                  justify="space-between"
+                  w="100%"
+                  p={15}
+                  borderRadius="md"
+                  mb={4}
+                  borderBottom="1px solid rgb(237,237,237)"
+                  borderTop="1px solid rgb(237,237,237)"
+                >
+                  <Text>최종 결제금액</Text>
+                  <Text fontWeight="bold">{location.state.price}원</Text>
+                </Flex>
+                <Button type="submit">{location.state.price}원 결제하기</Button>
               </Flex>
-              <Selectgroup mb={2}>
-                <option value="personal" defaultChecked>
-                  개인소득공제
-                </option>
-                <option value="business">사업자 지출증빙</option>
-              </Selectgroup>
-              <InputCustom
-                placeholder="(-없이) 숫자만 입력해주세요."
-                value={formData.cashReceiptNumber}
-                onChange={handleInputChange}
-                mb={4}
-              />
-              <Flex
-                justify="space-between"
-                w="100%"
-                p={15}
-                borderRadius="md"
-                mb={4}
-                borderBottom="1px solid rgb(237,237,237)"
-                borderTop="1px solid rgb(237,237,237)"
-              >
-                <Text>최종 결제금액</Text>
-                <Text fontWeight="bold">{location.state.price}원</Text>
-              </Flex>
-              <Button onClick={handleSubmitClick}>{location.state.price}원 결제하기</Button>
-            </Flex>
-          </Box>
-        </Flex>
+            </Box>
+          </Flex>
+        </form>
       </Right>
     </Container>
   );
@@ -222,7 +220,7 @@ const GiftHistorySection = styled.div`
 
 const GiftHistoryDescription = styled.div`
   width: 314px;
-  hegiht: 88px;
+  height: 88px;
   display: flex;
   flex-direction: column;
   margin-left: 10px;
