@@ -33,12 +33,12 @@ export type GoodsData = {
   };
 };
 
-export type ProductDetailParams = {
+export type ProductParams = {
   id: string;
 };
 
 export type DetailData = {
-  brandInfo: {name: string}
+  brandInfo: { name: string };
   name: string;
   imageURL: string;
   price: { sellingPrice: number };
@@ -50,8 +50,9 @@ export type goodsDetailData = {
   name?: string;
   brandName?: string;
   amount?: number;
+  limit?: number;
 };
 
 export type productInfoProps = {
   productInfo: goodsDetailData;
-}
+};
