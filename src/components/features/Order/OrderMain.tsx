@@ -1,16 +1,18 @@
 import { Box, Flex, Image, Text, Textarea } from "@chakra-ui/react";
+import type { UseFormRegister, UseFormWatch } from "react-hook-form";
 
 import type { ProductDetailResponseData } from "@/api/hooks/useGetProductDetail";
+import type { FormValues } from "@/pages/Order";
 
-export const OrderMain = (
-  quantity: number,
-  data: ProductDetailResponseData,
-  message: string,
-  setMessage: React.Dispatch<React.SetStateAction<string>>,
-) => {
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  };
+type OrderMainProps = {
+  quantity: number;
+  data: ProductDetailResponseData;
+  register: UseFormRegister<FormValues>;
+  watch: UseFormWatch<FormValues>;
+};
+
+export const OrderMain = ({ quantity, data, register, watch }: OrderMainProps) => {
+  const message = watch("message");
 
   return (
     <Box width="100%" maxWidth="900px">
@@ -34,7 +36,8 @@ export const OrderMain = (
           <Box width="100%" padding="14px 30px">
             <Box width="100%" padding="12px 30px 16px">
               <Textarea
-                name="messageCardTextMessage"
+                {...register("message")}
+                name="message"
                 placeholder="선물과 함께 보낼 메시지를 적어보세요"
                 fontSize="md"
                 paddingInlineStart="4"
@@ -58,7 +61,6 @@ export const OrderMain = (
                 resize="none"
                 height="100px"
                 value={message}
-                onChange={handleInputChange}
               />
             </Box>
           </Box>
@@ -101,7 +103,7 @@ export const OrderMain = (
                 fontSize="14px"
                 lineHeight="18px"
                 marginTop="3px"
-                color="gray.900" // Use Chakra UI's gray color palette
+                color="gray.900"
                 overflow="hidden"
                 fontWeight="normal"
               >

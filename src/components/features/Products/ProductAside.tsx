@@ -1,28 +1,44 @@
+// ProductAside.tsx
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import type { UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 import type { ProductDetailResponseData } from "@/api/hooks/useGetProductDetail";
 
-type HandleClickFunction = () => void;
+type HandleSubmitFunction = (event?: React.BaseSyntheticEvent) => Promise<void>;
 
-export const AsideContent = (
-  data: ProductDetailResponseData,
-  quantity: number,
-  setQuantity: React.Dispatch<React.SetStateAction<number>>,
-  handleClick: HandleClickFunction,
-  giftOrderLimit: number,
-) => {
+interface AsideContentProps {
+  data: ProductDetailResponseData;
+  register: UseFormRegister<{ quantity: number }>;
+  setValue: UseFormSetValue<{ quantity: number }>;
+  quantity: number;
+  handleSubmit: HandleSubmitFunction;
+  giftOrderLimit: number;
+}
+
+export const AsideContent = ({
+  data,
+  register,
+  setValue,
+  quantity,
+  handleSubmit,
+  giftOrderLimit,
+}: AsideContentProps) => {
   const decreaseQuantity = () => {
-    setQuantity(quantity - 1);
+    if (quantity > 1) {
+      setValue("quantity", quantity - 1);
+    }
   };
 
   const increaseQuantity = () => {
-    setQuantity(quantity + 1);
+    if (quantity < giftOrderLimit) {
+      setValue("quantity", quantity + 1);
+    }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (!isNaN(value) && value >= 1 && value <= giftOrderLimit) {
-      setQuantity(value);
+      setValue("quantity", value);
     }
   };
 
@@ -114,7 +130,7 @@ export const AsideContent = (
               aria-valuetext={quantity.toString()}
               autoComplete="off"
               autoCorrect="off"
-              onChange={handleInputChange}
+              {...register("quantity", { onChange: handleInputChange })}
               value={quantity}
             />
             <Button
@@ -194,7 +210,7 @@ export const AsideContent = (
             color="white"
             backgroundColor="rgb(17, 17, 17)"
             boxSizing="border-box"
-            onClick={handleClick}
+            onClick={handleSubmit}
           >
             나에게 선물하기
           </Button>

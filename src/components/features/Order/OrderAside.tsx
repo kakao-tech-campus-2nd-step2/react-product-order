@@ -1,34 +1,24 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Button, Checkbox, Divider, Input, Select, Text } from "@chakra-ui/react";
+import type { FieldErrors, UseFormRegister, UseFormWatch } from "react-hook-form";
 
 import type { ProductDetailResponseData } from "@/api/hooks/useGetProductDetail";
+import type { FormValues } from "@/pages/Order";
 
-type HandleSubmitFunction = () => void;
+type OrderAsideProps = {
+  quantity: number;
+  data: ProductDetailResponseData;
+  register: UseFormRegister<FormValues>;
+  watch: UseFormWatch<FormValues>;
+  errors: FieldErrors;
+};
 
-export const OrderAside = (
-  quantity: number,
-  data: ProductDetailResponseData,
-  isChecked: boolean,
-  setChecked: React.Dispatch<React.SetStateAction<boolean>>,
-  cashReceiptType: string,
-  setCashReceiptType: React.Dispatch<React.SetStateAction<string>>,
-  cashReceiptNumber: string,
-  setCashReceiptNumber: React.Dispatch<React.SetStateAction<string>>,
-  handleSubmit: HandleSubmitFunction,
-) => {
+export const OrderAside = ({ quantity, data, register, watch }: OrderAsideProps) => {
+  const isChecked = watch("isChecked");
+  const cashReceiptType = watch("cashReceiptType");
+  const cashReceiptNumber = watch("cashReceiptNumber");
+
   const price = quantity * data.detail.price.sellingPrice;
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setCashReceiptType(event.target.value);
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCashReceiptNumber(event.target.value);
-  };
 
   return (
     <Box
@@ -68,8 +58,8 @@ export const OrderAside = (
         />
         <Box width="100%" padding="16px">
           <Checkbox
+            {...register("isChecked")}
             isChecked={isChecked}
-            onChange={handleCheckboxChange}
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -124,6 +114,7 @@ export const OrderAside = (
           <Box width="100%" height="16px" />
           <Box width="100%" height="fit-content" position="relative">
             <Select
+              {...register("cashReceiptType")}
               name="cashReceiptType"
               variant="outline"
               size="md"
@@ -137,13 +128,13 @@ export const OrderAside = (
               background="inherit"
               icon={<ChevronDownIcon boxSize="1em" />}
               value={cashReceiptType}
-              onChange={handleSelectChange}
             >
               <option value="PERSONAL">개인소득공제</option>
               <option value="BUSINESS">사업자증빙용</option>
             </Select>
             <Box width="100%" height="8px" />
             <Input
+              {...register("cashReceiptNumber")}
               name="cashReceiptNumber"
               placeholder="(-없이) 숫자만 입력해주세요."
               width="100%"
@@ -161,7 +152,6 @@ export const OrderAside = (
               _placeholder={{ color: "gray.500" }}
               transition="all 0.2s"
               value={cashReceiptNumber}
-              onChange={handleInputChange}
             />
           </Box>
         </Box>
@@ -219,7 +209,6 @@ export const OrderAside = (
           backgroundColor="rgb(254, 229, 0)"
           _hover={{ backgroundColor: "yellow.400" }}
           boxSizing="border-box"
-          onClick={handleSubmit}
         >
           {price}원 결제하기
         </Button>
