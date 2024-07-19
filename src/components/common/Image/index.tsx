@@ -4,11 +4,12 @@ type Props = {
   radius?: 'circle' | number;
   ratio?: 'square' | 'auto' | number;
   maxWidth?: string;
+  cursor?: string;
 } & React.ImgHTMLAttributes<HTMLImageElement>;
 
 export const Image = ({ ...props }: Props) => <Wrapper {...props} />;
 
-const Wrapper = styled.img<Pick<Props, 'ratio' | 'radius' | 'maxWidth'>>(
+const Wrapper = styled.img<Pick<Props, 'ratio' | 'radius' | 'maxWidth' | 'cursor'>>(
   {
     objectFit: 'cover',
     objectPosition: 'center',
@@ -17,6 +18,13 @@ const Wrapper = styled.img<Pick<Props, 'ratio' | 'radius' | 'maxWidth'>>(
     if (maxWidth) {
       return {
         maxWidth: maxWidth,
+      };
+    }
+  },
+  ({ cursor }) => {
+    if (cursor) {
+      return {
+        cursor: cursor,
       };
     }
   },
