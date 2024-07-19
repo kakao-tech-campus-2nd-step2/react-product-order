@@ -17,7 +17,7 @@ export const OrderPage = () => {
   const { form, handleSubmit, alertMessage, setAlertMessage } = useOrderForm();
 
   useEffect(() => {
-    if (alertMessage.message) {
+    if (alertMessage) {
       onOpen();
     } else {
       onClose();
@@ -26,7 +26,7 @@ export const OrderPage = () => {
 
   useEffect(() => {
     if (!isOpen) {
-      setAlertMessage({ isSuccess: true, message: '' });
+      setAlertMessage('');
     }
   }, [setAlertMessage, isOpen]);
 
@@ -44,11 +44,7 @@ export const OrderPage = () => {
         </form>
       </Form>
       {isOpen && (
-        <Alert
-          message={alertMessage.message}
-          isOpen={isOpen}
-          onClose={onClose}
-        />
+        <Alert message={alertMessage} isOpen={isOpen} onClose={onClose} />
       )}
     </BaseLayout>
   );

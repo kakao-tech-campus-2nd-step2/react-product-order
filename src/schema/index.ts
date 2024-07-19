@@ -22,18 +22,10 @@ export const OrderSchema = z
         });
       }
 
-      if (!data.cashReceiptNumber.match(/^\d+$/)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: '(-없이) 숫자만 입력해주세요.',
-          path: ['cashReceiptNumber'],
-        });
-      }
-
       if (!data.cashReceiptNumber.match(/^01\d{9}$/)) {
         ctx.addIssue({
           code: 'custom',
-          message: '번호를 정확히 입력해주세요.',
+          message: '(-없이) 번호를 정확히 입력해주세요.',
           path: ['cashReceiptNumber'],
         });
       }

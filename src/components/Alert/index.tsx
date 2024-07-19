@@ -27,7 +27,7 @@ export const Alert = ({ message, isOpen, onClose }: AlertProps) => {
     >
       <AlertDialogOverlay />
       <AlertDialogContent>
-        <AlertDialogHeader> 카카오 선물하기</AlertDialogHeader>
+        <AlertDialogHeader>카카오 선물하기</AlertDialogHeader>
         <AlertDialogBody>{message}</AlertDialogBody>
         <AlertDialogFooter>
           <Button onClick={onClose}>확인</Button>
