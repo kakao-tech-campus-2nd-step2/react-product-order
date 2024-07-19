@@ -1,7 +1,9 @@
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Box, Button as ChakraButton, Image, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container } from 'src/components/common/layouts/Container';
 
@@ -24,6 +26,10 @@ const fetchGoodsOption = async (productId: string | undefined) => {
   return response.data;
 };
 
+interface FormData {
+  count: number;
+}
+
 export const GoodsDetail = () => {
   const navigate = useNavigate();
   const authInfo = useAuth();
@@ -41,31 +47,43 @@ export const GoodsDetail = () => {
     enabled: !!productId,
   });
 
-  const [count, setCount] = useState(1);
-  const [price, setPrice] = useState(productData?.detail.price.basicPrice);
-  const orderLimit = optionData?.options.giftOrderLimit ?? 0;
+  const { register, handleSubmit, setValue, watch } = useForm<FormData>({
+    defaultValues: { count: 1 },
+  });
 
-  const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCount = Number(e.target.value);
-    if (isNaN(newCount) || newCount < 0) return;
-    if (count <= orderLimit) {
-      setCount(newCount);
-    } else {
-      setCount(orderLimit);
+  const [price, setPrice] = useState(productData?.detail.price.basicPrice);
+
+  const count = watch('count');
+  const orderLimit = optionData?.options.giftOrderLimit ?? 1;
+
+  useEffect(() => {
+    if (productData?.detail.price.basicPrice && count) {
+      setPrice(productData?.detail.price.basicPrice * count);
+    }
+    if (count > orderLimit) {
+      setValue('count', orderLimit);
       alert(`최대 가능 주문 수량은 ${orderLimit}입니다.`);
     }
-  };
+    if (count <= 0) {
+      setValue('count', 1);
+    }
+  }, [count, orderLimit, productData?.detail.price.basicPrice, setValue]);
 
   const handlePlusButton = () => {
     if (count >= orderLimit) {
       alert(`최대 가능 주문 수량은 ${orderLimit}입니다.`);
       return;
     }
-    setCount(count + 1);
+    setValue('count', count + 1);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleMinusButton = () => {
+    if (count > 1) {
+      setValue('count', count - 1);
+    }
+  };
+
+  const onSubmit: SubmitHandler<FormData> = () => {
     if (!authInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
         navigate(getDynamicPath.login());
@@ -80,15 +98,6 @@ export const GoodsDetail = () => {
       });
     }
   };
-
-  useEffect(() => {
-    if (productData?.detail.price.basicPrice && count) {
-      setPrice(productData?.detail.price.basicPrice * count);
-    }
-    if (count === 0) {
-      setPrice(0);
-    }
-  }, [count, productData?.detail.price.basicPrice]);
 
   return (
     <Container maxWidth="1280px" flexDirection="row" justifyContent="center">
@@ -134,11 +143,17 @@ export const GoodsDetail = () => {
               <ControllButton
                 disabled={count === 1}
                 style={{ opacity: count === 1 ? 0.5 : 1 }}
-                onClick={() => setCount(count - 1)}
+                onClick={handleMinusButton}
               >
                 -
               </ControllButton>
-              <ControllInput value={count} onChange={handleCountChange} />
+              <ControllInput
+                {...register('count', {
+                  valueAsNumber: true,
+                  min: { value: 1, message: '최소 1개 이상 선택해야 합니다.' },
+                  max: { value: orderLimit, message: `최대 수문 수량은 ${orderLimit} 입니다.` },
+                })}
+              />
               <ControllButton
                 style={{ opacity: count === orderLimit ? 0.5 : 1 }}
                 onClick={handlePlusButton}
@@ -152,7 +167,7 @@ export const GoodsDetail = () => {
               <Text>총 결제 금액</Text>
               <Text fontWeight="700">{price}</Text>
             </PriceBox>
-            <GiveButton onClick={handleSubmit}>나에게 선물하기</GiveButton>
+            <GiveButton onClick={handleSubmit(onSubmit)}>나에게 선물하기</GiveButton>
           </SubmitBox>
         </Box>
       </RightContainer>
@@ -246,7 +261,7 @@ const PriceBox = styled.div`
   margin-top: 15px;
 `;
 
-const GiveButton = styled.button`
+const GiveButton = styled(ChakraButton)`
   width: 100%;
   max-width: 318px;
   height: 60px;
