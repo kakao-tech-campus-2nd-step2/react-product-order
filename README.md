@@ -25,3 +25,8 @@
 
 - [o] 카드 메시지 - 입력 필수, 100자 이내
 - [o] 현금 영수증 - 번호 입력 확인, 숫자만 입력하도록 안내
+
+## step3
+
+- [] 기존에 만든 form/input을 react-hook-form으로 변경
+- [] validate를 react-hook-form 기능 활용
