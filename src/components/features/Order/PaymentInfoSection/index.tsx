@@ -1,15 +1,29 @@
 import { Button, Checkbox, Divider, HStack, Input, Select, Text, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
+
+interface PaymentInfo {
+  cashReceipt: boolean;
+  setCashReceipt: (value: boolean) => void;
+  receiptType: string;
+  setReceiptType: (value: string) => void;
+  receiptNumber: string;
+  setReceiptNumber: (value: string) => void;
+}
 
 interface Props {
   handleOrder: () => void;
   totalPrice: number;
+  paymentInfo: PaymentInfo;
 }
 
-export const PaymentInfoSection = ({ handleOrder, totalPrice }: Props) => {
-  const [cashReceipt, setCashReceipt] = useState(false);
-  const [receiptType, setReceiptType] = useState('');
-  const [receiptNumber, setReceiptNumber] = useState('');
+export const PaymentInfoSection = ({ handleOrder, totalPrice, paymentInfo }: Props) => {
+  const {
+    cashReceipt,
+    setCashReceipt,
+    receiptType,
+    setReceiptType,
+    receiptNumber,
+    setReceiptNumber,
+  } = paymentInfo;
 
   return (
     <VStack p={4} spacing={4} align="stretch">
@@ -25,7 +39,11 @@ export const PaymentInfoSection = ({ handleOrder, totalPrice }: Props) => {
       >
         현금영수증 신청
       </Checkbox>
-      <Select value={receiptType} onChange={(e) => setReceiptType(e.target.value)}>
+      <Select
+        value={receiptType}
+        onChange={(e) => setReceiptType(e.target.value)}
+        isDisabled={!cashReceipt}
+      >
         <option value="personal">개인소득공제</option>
         <option value="company">사업자증빙용</option>
       </Select>
@@ -33,6 +51,7 @@ export const PaymentInfoSection = ({ handleOrder, totalPrice }: Props) => {
         placeholder="(-없이) 숫자만 입력해주세요."
         value={receiptNumber}
         onChange={(e) => setReceiptNumber(e.target.value)}
+        isDisabled={!cashReceipt}
       />
       <Divider />
       <HStack justify="space-between" w="full">
