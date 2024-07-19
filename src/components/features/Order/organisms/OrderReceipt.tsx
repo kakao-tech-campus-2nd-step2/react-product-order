@@ -1,4 +1,5 @@
 import { Box, Divider, VStack } from '@chakra-ui/react';
+import { memo } from 'react';
 
 import { Button } from '@/components/common/Button';
 import { OrderSubTitle } from '@/components/features/Order/atoms/OrderSubTitle';
@@ -9,7 +10,7 @@ import { OrderRequestCashReceipt } from '@/components/features/Order/molecules/O
 
 export interface IOrderReceipt extends IOrderPrice, IOrderRequestCashReceipt {}
 
-export const OrderReceipt = ({ totalPrice, cacheReceiptRefs }: IOrderReceipt) => (
+export const OrderReceipt = memo(({ totalPrice, cacheReceiptRefs }: IOrderReceipt) => (
   <Box
     width="100%"
     height="100%"
@@ -28,4 +29,4 @@ export const OrderReceipt = ({ totalPrice, cacheReceiptRefs }: IOrderReceipt) =>
       <Button type="submit">{totalPrice}원 결제하기</Button>
     </VStack>
   </Box>
-);
+));
