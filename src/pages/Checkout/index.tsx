@@ -1,35 +1,21 @@
-import React from 'react';
+import { Box, Button, Text } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
 
-import { useGift } from '../../provider/Auth';
+const CheckoutPage = () => {
+  const { productId } = useParams<{ productId: string }>();
 
-const Checkout = () => {
-  const { selectedProduct, quantity, message, setMessage } = useGift();
-
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+  const handleCheckout = () => {
+    // 결제 처리 로직 추가
+    console.log(`Product ${productId} has been purchased.`);
   };
 
-  const totalPrice = selectedProduct ? selectedProduct.price.sellingPrice * quantity : 0;
-
   return (
-    <div>
-      {selectedProduct ? (
-        <>
-          <h1>나에게 주는 선물</h1>
-          <p>선택한 제품: {selectedProduct.name}</p>
-          <p>수량: {quantity}</p>
-          <p>총 가격: {totalPrice}원</p>
-          <div>
-            <label>메세지: </label>
-            <textarea value={message} onChange={handleMessageChange}></textarea>
-          </div>
-          <button>결제하기</button>
-        </>
-      ) : (
-        <p>선택된 제품이 없습니다.</p>
-      )}
-    </div>
+    <Box p="6">
+      <Text fontWeight="bold" as="h1" fontSize="2xl">결제 페이지</Text>
+      <Text>상품 ID: {productId}</Text>
+      <Button colorScheme="teal" mt="4" onClick={handleCheckout}>결제하기</Button>
+    </Box>
   );
 };
 
-export default Checkout;
+export default CheckoutPage;
