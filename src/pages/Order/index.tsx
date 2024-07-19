@@ -1,12 +1,29 @@
 import styled from '@emotion/styled';
+import { useEffect, useState } from 'react';
 
 import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
+import { Spinner } from '@/components/common/Spinner';
 import { GiftMessage } from '@/components/features/Order/GiftMessage';
 import { GiftSummary } from '@/components/features/Order/GiftSummary';
 import { OrderInfo } from '@/components/features/Order/OrderInfo';
 
 export const OrderPage = () => {
-  const { data } = useGetGoodsDetail({ productId: '8026405'.toString() });
+  const { data, isLoading } = useGetGoodsDetail({ productId: '8026405'.toString() });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setLoading(false);
+    }
+  }, [isLoading]);
+
+  if (loading) {
+    return (
+      <TextView>
+        <Spinner />
+      </TextView>
+    );
+  }
 
   return (
     <Wrapper>
@@ -42,4 +59,13 @@ const Hr = styled.div`
   width: 100%;
   background-color: rgb(237, 237, 237);
   height: 8px;
+`;
+
+const TextView = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px 60px;
+  font-size: 16px;
 `;
