@@ -86,11 +86,13 @@ export type MoreOptionData = {
 };
 
 export type ProductOptionData = {
-  productId: number;
-  productName: string;
-  productPrice: number;
-  hasOption: boolean;
-  giftOrderLimit: number;
-  names: string[];
-  options: MoreOptionData[];
+  options: {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    hasOption: boolean;
+    giftOrderLimit: number;
+    names: string[];
+    options: MoreOptionData[];
+  },
 };
