@@ -1,9 +1,13 @@
 import { Box, Button, Text } from '@chakra-ui/react';
+import { useState } from 'react';
 
 import GiftButton from '@/components/features/GoodsDetail/SideBar/GiftButton';
 import GoodsCount from '@/components/features/GoodsDetail/SideBar/GoodsCount';
+import type { goodsDetailData } from '@/types';
 
-export default function SideBar() {
+export default function SideBar({ price, name }: goodsDetailData) {
+  const [amount, setAmount] = useState(1);
+
   return (
     <Box
       width="360px"
@@ -14,7 +18,7 @@ export default function SideBar() {
       justifyContent="space-between"
       alignItems="center"
     >
-      <GoodsCount />
+      <GoodsCount name={name} amount={amount} setAmount={setAmount} />
       <Box>
         <Button
           boxSizing="border-box"
@@ -31,7 +35,7 @@ export default function SideBar() {
             총 결제 금액
           </Text>
           <Text fontSize={20} fontWeight={700}>
-            0원
+            {price * amount}
           </Text>
         </Button>
         <GiftButton />
