@@ -1,4 +1,5 @@
 import { Box, Button, Image, Input, Text } from '@chakra-ui/react';
+import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,6 +15,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const anthInfo = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
+  const giftOrderLimit = 100;
 
   const {
     data: product,
@@ -25,16 +27,6 @@ const ProductDetail = () => {
     enabled: !!productId,
   });
 
-  // const {
-  //   data: optionsData,
-  //   error: optionsError,
-  //   isLoading: isOptionsLoading,
-  // } = useQuery<Option[], Error>({
-  //   queryKey: ['options', productId ?? ''],
-  //   queryFn: () => fetchProductOptions(productId ?? ''),
-  //   enabled: !!productId,
-  // });
-
   useEffect(() => {
     if (productError) {
       navigate('/');
@@ -44,11 +36,9 @@ const ProductDetail = () => {
   const handleGiftClick = () => {
     if (!anthInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        console.log('로그인 페이지로 이동');
         navigate(RouterPath.login);
       }
     } else if (product) {
-      console.log('결제페이지로 이동', product, product.detail.price.sellingPrice * quantity);
       navigate(RouterPath.payment, {
         state: {
           product,
@@ -56,14 +46,14 @@ const ProductDetail = () => {
           totalPrice: product.detail.price.sellingPrice * quantity,
         },
       });
-    } else {
-      console.log('선택된 옵션이 없습니다.');
     }
   };
-
   const handleQuantityChange = (value: number) => {
-    if (value > 0) {
+    if (value > 0 && value <= giftOrderLimit) {
       setQuantity(value);
+    } else if (value > giftOrderLimit) {
+      alert(`최대 주문 가능 수량은 ${giftOrderLimit}개입니다.`);
+      setQuantity(giftOrderLimit);
     }
   };
 
@@ -94,17 +84,19 @@ const ProductDetail = () => {
               {product.detail.price.sellingPrice?.toLocaleString() ?? 0} 원
               <Text>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</Text>
             </Text>
-            <Button onClick={() => handleQuantityChange(quantity - 1)}>-</Button>
-            <Input
-              type="number"
-              value={quantity}
-              min={1}
-              marginBottom={4}
-              onChange={(e) => handleQuantityChange(parseInt(e.target.value, 10))}
-              textAlign="center"
-              width="50px"
-            />
-            <Button onClick={() => handleQuantityChange(quantity + 1)}>+</Button>
+            <QuantityWrapper>
+              <Button onClick={() => handleQuantityChange(quantity - 1)}>-</Button>
+              <QuantityInput
+                type="number"
+                value={quantity}
+                min={1}
+                marginBottom={4}
+                onChange={(e) => handleQuantityChange(parseInt(e.target.value, 10))}
+                textAlign="center"
+                width="50px"
+              />
+              <Button onClick={() => handleQuantityChange(quantity + 1)}>+</Button>
+            </QuantityWrapper>
             <Text fontSize="xl" fontWeight="bold" marginBottom={4}>
               총 결제 금액: {totalPrice.toLocaleString()} 원
             </Text>
@@ -119,3 +111,14 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
+const QuantityWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+`;
+
+const QuantityInput = styled(Input)`
+  text-align: center;
+  width: 150px;
+  margin: 0 10px;
+`;
