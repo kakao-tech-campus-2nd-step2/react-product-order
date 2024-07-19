@@ -1,6 +1,7 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
-import { IconButton, Input, useNumberInput, VStack } from '@chakra-ui/react';
+import { IconButton, Input, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '@/provider/Auth';
@@ -12,15 +13,7 @@ interface PaymentInfoProps {
 }
 
 const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
-    step: 1,
-    defaultValue: 1,
-    min: 1,
-  });
-
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
+  const [count, setCount] = useState<number>(1);
   const navigate = useNavigate();
   const authInfo = useAuth();
   const { productId: currentProductId } = useParams();
@@ -29,11 +22,11 @@ const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
     navigate(getDynamicPath.login());
   };
 
-  const handleOrder = (productId: string, count: number) => {
+  const handleOrder = (productId: string, countValue: number) => {
     navigate(RouterPath.order, {
       state: {
         productId,
-        count,
+        count: countValue,
       },
     });
   };
@@ -47,7 +40,23 @@ const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
         handleLogin();
       }
     } else {
-      handleOrder(currentProductId || '', input.value);
+      console.log(currentProductId, count);
+      handleOrder(currentProductId || '', count);
+    }
+  };
+
+  const increment = () => {
+    setCount((prevCount) => prevCount + 1);
+  };
+
+  const decrement = () => {
+    setCount((prevCount) => (prevCount > 1 ? prevCount - 1 : 1));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = Number(e.target.value);
+    if (!isNaN(newValue) && newValue > 0) {
+      setCount(newValue);
     }
   };
 
@@ -56,15 +65,15 @@ const PaymentInfo = ({ label, price }: PaymentInfoProps) => {
       <VStack maxW="320px" padding="10px" borderRadius="3" borderColor="gray.200" borderWidth="1px">
         <StyledLabel>{label}</StyledLabel>
         <NumberInputWrapper>
-          <IconButton aria-label="Decrease value" {...dec} icon={<MinusIcon />} />
-          <Input {...input} />
-          <IconButton aria-label="Increase value" {...inc} icon={<AddIcon />} />
+          <IconButton aria-label="Decrease value" onClick={decrement} icon={<MinusIcon />} />
+          <Input type="number" value={count} onChange={handleInputChange} />
+          <IconButton aria-label="Increase value" onClick={increment} icon={<AddIcon />} />
         </NumberInputWrapper>
       </VStack>
       <Wrapper>
         <TotalPrice>
           <div>총 결제 금액</div>
-          <div>{price * input.value}원</div>
+          <div>{price * count}원</div>
         </TotalPrice>
       </Wrapper>
       <GiftForMeButton onClick={handleGiftBtnClick}>나에게 선물하기</GiftForMeButton>
