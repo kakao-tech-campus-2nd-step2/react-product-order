@@ -20,3 +20,15 @@ validation 구현하기
 3. 카드 메시지가 100글자 넘어가면 100글자 이내로 입력하라고 안내
 4. 현금 영수증 체크된 경우 현금영수증 번호가 입력되었는지 확인
 5. 번호 입력은 숫자만 입력되도록 안내
+
+#### 4주차 3단계
+
+react hook form 사용하기
+
+1. react hook form 설치
+2. 기존 일반 form으로 작성된 부분 react hook form으로 변경  
+   각각 input validation 설정  
+   errror 처리  
+   submit 처리
+
+#### 4주차 4단계
