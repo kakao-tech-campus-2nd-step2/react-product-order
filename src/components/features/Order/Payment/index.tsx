@@ -4,6 +4,10 @@ import { Button } from '@components/common';
 import ReceiptForm from './ReceiptForm';
 
 export default function Payment() {
+  const handleClick = () => {
+    console.info('hello');
+  };
+
   return (
     <PaymentContainer>
       <Title>결제정보</Title>
@@ -14,7 +18,9 @@ export default function Payment() {
           <dd>49900원</dd>
         </dl>
       </TotalAmount>
-      <Button theme="kakao">49900원 결제하기</Button>
+      <Button theme="kakao" onClick={handleClick}>
+        49900원 결제하기
+      </Button>
     </PaymentContainer>
   );
 }
