@@ -3,8 +3,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { RouterPath } from '@/routes/path'
-import { useAuth } from '@/provider/Auth';
+import { getDynamicPath, RouterPath } from '@/routes/path'
+import { authSessionStorage } from '@/utils/storage';
 
 interface ProductDetail {
   id: number;
@@ -22,7 +22,6 @@ export const ProductPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const navigate = useNavigate();
-  const authInfo = useAuth();
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -45,18 +44,28 @@ export const ProductPage: React.FC = () => {
   }, [productId]);
 
   const handleGiftToSelf = () => {
-    if (!authInfo) {
+    const authToken = authSessionStorage.get();
+    if (!authToken) {
       navigate(RouterPath.login);
-    } else if (productDetail){
-            navigate(RouterPath.order, {
-              state: {
+      return;
+    }
+
+    if (productId) {
+        if (productDetail) {
+        navigate(getDynamicPath.order(productId), {
+            state : {
                 name: productDetail.name,
+                imageURL : productDetail.imageURL,
                 price: productDetail.price.basicPrice,
                 quantity,
                 totalPrice: productDetail.price.basicPrice * quantity
-              }
-        });
-    } 
+      }
+    }
+          );
+        }
+    } else {
+      navigate(RouterPath.home);
+    }
   };
 
   if (loading) {
