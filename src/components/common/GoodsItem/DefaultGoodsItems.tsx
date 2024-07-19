@@ -43,6 +43,7 @@ export const DefaultGoodsItems = ({
 
 const Wrapper = styled.div`
   width: 100%;
+  cursor: pointer;
 `;
 
 const InfoWrapper = styled.div`
@@ -70,9 +71,6 @@ const Title = styled.h3`
   color: #333;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 `;
 
 const Amount = styled.p`
