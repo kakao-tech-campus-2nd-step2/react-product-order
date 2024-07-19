@@ -4,8 +4,8 @@ import { Divider, useDisclosure } from '@chakra-ui/react';
 
 import BaseLayout from '@/layouts/BaseLayout';
 
-import { Alert } from '@/components/Alert';
 import { Content } from '@/components/Content';
+import { Alert } from '@/components/ui/Dialog/Alert';
 import { Form } from '@/components/ui/Form';
 
 import { GiftSection } from './components/GiftSection';
