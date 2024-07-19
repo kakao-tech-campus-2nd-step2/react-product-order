@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import * as S from './styles';
 import { MainBox } from '@/components/features/Product/ProductInfoSection/styles.ts';
@@ -19,25 +20,8 @@ const OrderDetailSection = ({
   quantity,
   isError,
 }: Props) => {
-  const [message, setMessage] = useState<string>('');
-  const [hasError, setHasError] = useState<boolean>(false);
-  const [isEmpty, setIsEmpty] = useState<boolean>(false);
-  const handleChangeMessage = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const { value } = event.target;
-    setMessage(value);
-    if (value.length > 100) {
-      setHasError(true);
-      isError(true);
-    } else if (value.length < 1) {
-      setIsEmpty(true);
-      isError(true);
-    } else {
-      setHasError(false);
-      isError(false);
-    }
-  };
+  const { control, watch } = useFormContext();
+  const message = watch('message');
 
   return (
     <MainBox>
@@ -56,26 +40,44 @@ const OrderDetailSection = ({
           </Box>
           <Box width='100%' px='14px' py='30px'>
             <Box width='100%' paddingTop='12px' px='30px' paddingBottom='16px'>
-              <Textarea
-                name='messageCardTextMessage'
-                placeholder='선물과 함께 보낼 메시지를 적어보세요'
-                width='100%'
-                height='100px'
-                background='var(--chakra-colors-gray-100)'
-                resize='none'
-                borderWidth='2px'
-                borderColor='var(--chakra-colors-transparent)'
-                borderStyle='solid'
-                value={message}
-                onChange={handleChangeMessage}
-              ></Textarea>
-              {hasError && (
+              <Controller
+                name='message'
+                control={control}
+                rules={{
+                  validate: (value) => {
+                    if (value.length > 100) {
+                      isError(true);
+                      return '카드 메시지가 100글자를 초과하였습니다. 100자 이내로 입력해주세요.';
+                    } else if (value.length < 1) {
+                      isError(true);
+                      return '카드 메시지를 입력해주세요.';
+                    }
+                    isError(false);
+                    return true;
+                  },
+                }}
+                render={({ field }) => (
+                  <Textarea
+                    {...field}
+                    name='messageCardTextMessage'
+                    placeholder='선물과 함께 보낼 메시지를 적어보세요'
+                    width='100%'
+                    height='100px'
+                    background='var(--chakra-colors-gray-100)'
+                    resize='none'
+                    borderWidth='2px'
+                    borderColor='var(--chakra-colors-transparent)'
+                    borderStyle='solid'
+                  />
+                )}
+              />
+              {message.length > 100 && (
                 <Text fontSize='12px' color='red' mt='5px'>
                   카드 메시지가 100글자를 초과하였습니다. 100자 이내로
                   입력해주세요.
                 </Text>
               )}
-              {isEmpty && (
+              {message.length < 1 && (
                 <Text fontSize='12px' color='red' mt='5px'>
                   카드 메시지를 입력해주세요.
                 </Text>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useFormContext, Controller } from 'react-hook-form';
 
 import * as S from './styles';
 import { AsideBox } from '@/components/features/Product/ProductBuySection/styles.ts';
@@ -8,33 +8,12 @@ type Props = {
   price: number;
   isError: boolean;
 };
+
 const OrderBuySection = ({ price, isError }: Props) => {
-  const [cashReceiptNumber, setCashReceiptNumber] = useState('');
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const filteredValue = value.replace(/[^0-9]/g, '');
-    setCashReceiptNumber(filteredValue);
-  };
-
-  const handleCheck = (checked: boolean) => {
-    setIsChecked(checked);
-  };
-
-  const handleSubmit = () => {
-    if (isError) {
-      alert('카드 메시지를 100자 이내로 입력해주세요.');
-      return;
-    }
-
-    if (isChecked && !cashReceiptNumber) {
-      alert('현금영수증 번호를 입력해주세요!');
-      return;
-    }
-
-    alert('결제가 완료되었습니다.');
-  };
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <AsideBox>
@@ -57,29 +36,53 @@ const OrderBuySection = ({ price, isError }: Props) => {
         </S.AsideTitleBox>
         <Divider borderWidth='0px 0px 1px' color='rgb(237, 237, 237)' />
         <Box width='100%' padding='16px'>
-          <Checkbox onChange={(e) => handleCheck(e.target.checked)}>
-            <Text
-              fontSize='15px'
-              lineHeight='24px'
-              fontWeight='700'
-              color='rgb(0, 0, 0)'
-            >
-              현금영수증 신청
-            </Text>
-          </Checkbox>
-          <Box width='100%' backgroundColor='inherit' height='16px'></Box>
-          <Select width='100%'>
-            <S.OptionItems value='PERSONAL'>개인소득공제</S.OptionItems>
-            <S.OptionItems value='BUSINESS'>사업자증빙용</S.OptionItems>
-          </Select>
-          <Box height='8px' width='100%' backgroundColor='inherit'></Box>
-          <Input
-            width='100%'
-            name='cashReceiptNumber'
-            placeholder='(-없이) 숫자만 입력해주세요.'
-            value={cashReceiptNumber}
-            onChange={handleInputChange}
+          <Controller
+            name='isChecked'
+            control={control}
+            render={({ field }) => (
+              <Checkbox {...field} isChecked={field.value}>
+                <Text
+                  fontSize='15px'
+                  lineHeight='24px'
+                  fontWeight='700'
+                  color='rgb(0, 0, 0)'
+                >
+                  현금영수증 신청
+                </Text>
+              </Checkbox>
+            )}
           />
+          <Box width='100%' backgroundColor='inherit' height='16px'></Box>
+          <Controller
+            name='cashReceiptType'
+            control={control}
+            render={({ field }) => (
+              <Select width='100%' {...field}>
+                <S.OptionItems value='PERSONAL'>개인소득공제</S.OptionItems>
+                <S.OptionItems value='BUSINESS'>사업자증빙용</S.OptionItems>
+              </Select>
+            )}
+          />
+          <Box height='8px' width='100%' backgroundColor='inherit'></Box>
+          <Controller
+            name='cashReceiptNumber'
+            control={control}
+            rules={{
+              pattern: { value: /^[0-9]*$/, message: '숫자만 입력해주세요.' },
+            }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                width='100%'
+                placeholder='(-없이) 숫자만 입력해주세요.'
+              />
+            )}
+          />
+          {errors.cashReceiptNumber && (
+            <Text fontSize='12px' color='red'>
+              {errors.cashReceiptNumber.message}
+            </Text>
+          )}
         </Box>
         <Divider />
         <S.PriceBox>
@@ -103,9 +106,7 @@ const OrderBuySection = ({ price, isError }: Props) => {
         </S.PriceBox>
         <Divider />
         <Box width='100%' height='32px' backgroundColor='inherit'></Box>
-        <S.SubmitButton onClick={handleSubmit}>
-          {price}원 결제하기
-        </S.SubmitButton>
+        <S.SubmitButton type='submit'>{price}원 결제하기</S.SubmitButton>
       </Box>
     </AsideBox>
   );
