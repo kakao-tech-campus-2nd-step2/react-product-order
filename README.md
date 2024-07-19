@@ -37,6 +37,6 @@
 
 <h3>3️⃣ Step 3 체크리스트</h3>
 
-- [ ] 기존에 만든 Form / Input 을 react-hook-form 으로 변경
+- [x] 기존에 만든 Form / Input 을 react-hook-form 으로 변경
 
-- [ ] Validate 또한 react-hook-form 기능을 활용
+- [x] Validate 또한 react-hook-form 기능을 활용
