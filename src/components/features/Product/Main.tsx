@@ -2,15 +2,21 @@ import styled from '@emotion/styled';
 
 import { breakpoints } from '@/styles/variants';
 
-export const Main = () => {
+type Props = {
+  name: string;
+  imageURL: string;
+  price: number;
+};
+
+export const Main = ({ name, imageURL, price }: Props) => {
   return (
     <StyledMain>
       <Article>
         <Header>
-          <Image src="" alt="" />
+          <Image src={imageURL} alt={name} />
           <TitleContainer>
-            <Title></Title>
-            <Price></Price>
+            <Title>{name}</Title>
+            <Price>{price}원</Price>
             <Hr />
             <Description>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</Description>
             <Hr />

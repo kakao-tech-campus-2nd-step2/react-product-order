@@ -1,9 +1,14 @@
-export const Aside = () => {
+type Props = {
+  name: string;
+  price: number;
+};
+
+export const Aside = ({ name, price }: Props) => {
   return (
     <aside>
       <div>
         <div>
-          <p></p>
+          <p>{name}</p>
           <div>
             <button></button>
             <input type="text" />
@@ -12,7 +17,7 @@ export const Aside = () => {
         </div>
         <div>
           <div>
-            총 결제 금액<span>원</span>
+            총 결제 금액<span>{price}원</span>
           </div>
           <button></button>
         </div>
