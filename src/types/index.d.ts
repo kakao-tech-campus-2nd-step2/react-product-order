@@ -1,5 +1,6 @@
 import { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import FetchStatus from '@constants/FetchStatus';
+import { OrderRequestBody } from '@types/request';
 import { ProductDetailData, ThemeData } from '@/dto';
 import { CashReceiptOptions } from '@/constants';
 
@@ -79,6 +80,9 @@ interface OrderFormErrorStatus {
   isMessageModified: boolean;
   isReceiptNumberModified: boolean;
 }
+
+export type OrderFormData =
+  Pick<OrderRequestBody, 'messageCardTextMessage' | 'cashReceiptNumber' | 'hasCashReceipt' | 'cashReceiptType'>;
 
 export type CashReceiptType = typeof CashReceiptOptions[string];
 
