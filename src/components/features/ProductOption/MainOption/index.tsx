@@ -1,13 +1,29 @@
-import { Textarea } from '@chakra-ui/react'
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Textarea } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
 import { useGetProductsDetail } from '@/api/hooks/useGetProductDetail';
 import { useGetProductsOption } from '@/api/hooks/useGetProductOption';
 import { Spinner } from '@/components/common/Spinner';
-
 import { PaymentOption } from '../PaymentOption';
 
-import { useState } from 'react';
+const formSchema = z.object({
+  message: z.string().nonempty('메시지를 입력해주세요.').max(100, '메시지는 100자 이내로 입력해주세요.'),
+  cashReceipt: z.boolean(),
+  cashReceiptNumber: z.string().nullable().optional(),
+}).refine((data) => {
+  if (data.cashReceipt && !data.cashReceiptNumber) {
+    return false;
+  }
+  return true;
+}, {
+  message: '현금영수증 번호를 입력해주세요.',
+  path: ['cashReceiptNumber'],
+});
+
+type FormSchemaType = z.infer<typeof formSchema>;
 
 type Props = {
   productId: string;
@@ -16,70 +32,30 @@ type Props = {
 };
 
 export const MainOption = ({ productId, productCount, allPrice }: Props) => {
-  const { data, isError, isLoading } =
-    useGetProductsDetail({
-      productId,
-    });
+  const { data, isError, isLoading } = useGetProductsDetail({ productId });
+  const { dataOption } = useGetProductsOption({ productId });
 
-  const { dataOption } =
-    useGetProductsOption({
-      productId,
-    });
+  const { control, handleSubmit, formState: { errors }, watch } = useForm<FormSchemaType>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      message: '',
+      cashReceipt: false,
+      cashReceiptNumber: null,
+    }
+  });
 
-  const [message, setMessage] = useState('');
-  const [cashReceipt, setCashReceipt] = useState(false);
-  const [cashReceiptNumber, setCashReceiptNumber] = useState('');
+  const cashReceipt = watch('cashReceipt');
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+  const onSubmit: SubmitHandler<FormSchemaType> = () => {
+    alert('Form Submitted!');
   };
 
-  const handleCashReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCashReceipt(e.target.checked);
-  };
-
-  const handleCashReceiptNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value)) {
-      setCashReceiptNumber(e.target.value);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    let newErrors = '';
-    if (!message) {
-      newErrors = '메시지를 입력해주세요.';
-    } else if (message.length > 100) {
-      newErrors = '메시지는 100자 이내로 입력해주세요.';
-    }
-    if (cashReceipt && !cashReceiptNumber) {
-      newErrors = '현금영수증 번호를 입력해주세요.';
-    }
-
-    if (newErrors) {
-      alert(newErrors);
-      return;
-    } else {
-      alert('Form submitted');
-      return;
-    }
-  };
-
-  if (isLoading)
-    return (
-      <TextView>
-        <Spinner />
-      </TextView>
-    );
-  if (isError)
-    return <TextView>에러가 발생했습니다.</TextView>;
-  if (!data) return <></>;
-  if (!dataOption) return <></>;
+  if (isLoading) return <TextView><Spinner /></TextView>;
+  if (isError) return <TextView>에러가 발생했습니다.</TextView>;
+  if (!data || !dataOption) return null;
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
         <InsideWrapper>
           <MessageWrapper>
@@ -88,12 +64,18 @@ export const MainOption = ({ productId, productCount, allPrice }: Props) => {
             </MessageTitle>
             <MessageContent>
               <Content>
-                <Textarea
-                  size='md'
-                  placeholder='선물과 함께 보낼 메시지를 적어보세요'
-                  value={message}
-                  onChange={handleMessageChange} />
+                <Controller
+                  name="message"
+                  control={control}
+                  render={({ field }) => (
+                    <Textarea
+                      size='md'
+                      placeholder='선물과 함께 보낼 메시지를 적어보세요'
+                      {...field} />
+                  )}
+                />
               </Content>
+              {errors.message && <p>{errors.message.message}</p>}
             </MessageContent>
           </MessageWrapper>
           <Border />
@@ -116,10 +98,9 @@ export const MainOption = ({ productId, productCount, allPrice }: Props) => {
       </Wrapper>
       <PaymentOption
         allPrice={allPrice}
+        control={control}
+        errors={errors}
         cashReceipt={cashReceipt}
-        cashReceiptNumber={cashReceiptNumber}
-        handleCashReceiptChange={handleCashReceiptChange}
-        handleCashReceiptNumberChange={handleCashReceiptNumberChange}
       />
     </Form>
   );

@@ -22,8 +22,6 @@ export const ProductOptionPage = () => {
     const count = searchParams.get('count');
     const price = searchParams.get('price');
 
-    console.log(count, price);
-
     return (
         <>
             <Wrapper>

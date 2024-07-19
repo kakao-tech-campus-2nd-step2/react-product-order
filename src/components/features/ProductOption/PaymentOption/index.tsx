@@ -1,23 +1,21 @@
-import { Checkbox, Divider, Input, Select } from '@chakra-ui/react'
+import { Controller } from 'react-hook-form';
+import { Checkbox, Divider, Input, Select } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-
 import { Button } from '@/components/common/Button';
 
-type Props = {
+type PaymentOptionProps = {
   allPrice: string | null;
+  control: any;
+  errors: any;
   cashReceipt: boolean;
-  cashReceiptNumber: string;
-  handleCashReceiptChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleCashReceiptNumberChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const PaymentOption = ({
   allPrice,
+  control,
+  errors,
   cashReceipt,
-  cashReceiptNumber,
-  handleCashReceiptChange,
-  handleCashReceiptNumberChange,
-}: Props) => {
+}: PaymentOptionProps) => {
   return (
     <Wrapper>
       <InsideWrapper>
@@ -26,22 +24,36 @@ export const PaymentOption = ({
         </PaymentTitle>
         <Divider />
         <Receipt>
-          <Checkbox
-            style={{ fontWeight: "700" }}
-            isChecked={cashReceipt}
-            onChange={handleCashReceiptChange}>현금영수증 신청</Checkbox>
+          <Controller
+            name="cashReceipt"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                style={{ fontWeight: "700" }}
+                isChecked={field.value}
+                onChange={field.onChange}>현금영수증 신청</Checkbox>
+            )}
+          />
           <Space />
           <Select defaultValue='personal'>
             <option value='personal'>개인소득공제</option>
-            <option value='buisiness'>사업자증빙용</option>
+            <option value='business'>사업자증빙용</option>
           </Select>
           <Space2 />
-          <Input
-            placeholder='(-없이) 숫자만 입력해주세요'
-            value={cashReceiptNumber}
-            onChange={handleCashReceiptNumberChange}
-            isDisabled={!cashReceipt}
+          <Controller
+            name="cashReceiptNumber"
+            control={control}
+            render={({ field }) => (
+              <Input
+                type='number'
+                placeholder='(-없이) 숫자만 입력해주세요'
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                isDisabled={!cashReceipt}
+              />
+            )}
           />
+          {errors.cashReceiptNumber && <p>{errors.cashReceiptNumber.message}</p>}
         </Receipt>
         <Divider />
         <ResultPayment>
@@ -50,7 +62,7 @@ export const PaymentOption = ({
         </ResultPayment>
         <Divider />
         <Space3 />
-        <Button type='submit' children={`${allPrice}원 결제하기`} />
+        <Button type='submit'>{allPrice}원 결제하기</Button>
       </InsideWrapper>
     </Wrapper>
   );
