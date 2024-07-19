@@ -35,9 +35,15 @@ export const PaymentPage = () => {
       window.alert("메세지는 100자 이내로 입력해주세요.");
       return;
     }
-    if (isReceiptChecked && !receiptNumber.trim()) {
-      window.alert("현금 영수증 선택을 해제하거나 현금영수증 번호를 입력하세요.");
-      return;
+    if (isReceiptChecked) {
+      if (!receiptNumber.trim()) {
+        window.alert("현금영수증 선택을 해제하거나 현금영수증 번호를 입력하세요.");
+        return;
+      }
+      if (!/^\d+$/.test(receiptNumber)) {
+        window.alert("현금영수증 번호는 숫자로만 입력해주세요.");
+        return;
+      }
     }
     window.alert("주문이 완료되었습니다.")
   };
@@ -96,6 +102,7 @@ export const PaymentPage = () => {
               <Input placeholder=" (-없이) 숫자로만 입력해주세요." size="xl" w="260px" h="40px"
               value={receiptNumber}
               onChange={(e) => setReceiptNumber(e.target.value)}
+              type="text"
               />
             </FormControl>
             <Text fontSize="lg" fontWeight="bold" ml={100} mb={20} textAlign="center">최종 결제 금액 {totalPrice}원</Text>
