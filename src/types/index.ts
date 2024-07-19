@@ -14,6 +14,7 @@ export type RankingFilterOption = {
 };
 
 export type GoodsData = {
+  description: string;
   id: number;
   name: string;
   imageURL: string;
@@ -31,4 +32,11 @@ export type GoodsData = {
     name: string;
     imageURL: string;
   };
+};
+
+export type ProductOption = {
+  id: number;
+  name: string;
+  additionalPrice: number;
+  giftOrderLimit: number;
 };

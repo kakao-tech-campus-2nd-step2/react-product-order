@@ -16,8 +16,7 @@ export const ThemeMockList = [ThemeMockData];
 export const GoodsMockData: GoodsData = {
   id: 123,
   name: 'BBQ 양념치킨+크림치즈볼+콜라1.25L',
-  imageURL:
-    'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
+  imageURL: 'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
   wish: {
     wishCount: 201,
     isWished: false,
@@ -30,9 +29,9 @@ export const GoodsMockData: GoodsData = {
   brandInfo: {
     id: 2088,
     name: 'BBQ',
-    imageURL:
-      'https://st.kakaocdn.net/product/gift/gift_brand/20220216170226_38ba26d8eedf450683200d6730757204.png',
+    imageURL: 'https://st.kakaocdn.net/product/gift/gift_brand/20220216170226_38ba26d8eedf450683200d6730757204.png',
   },
+  description: ''
 };
 
 export const GoodsMockList: GoodsData[] = Array.from({ length: 21 }, () => GoodsMockData);
