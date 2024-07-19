@@ -84,8 +84,8 @@ export type GoodsDetailOptionsData = {
 };
 
 export type FormData = {
-  cashReceiptNumber: string;
-  cashReceiptType: 'PERSONAL' | 'BUSINESS';
+  cashReceiptNumber?: string;
+  cashReceiptType?: 'PERSONAL' | 'BUSINESS';
   hasCashReceipt: boolean;
   messageCardTextMessage: string;
   productId: number;
