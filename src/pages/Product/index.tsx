@@ -157,7 +157,13 @@ export const ProductPage: React.FC = () => {
               <Input
                 type="number"
                 value={quantity}
-                onChange={(e) => setQuantity(Math.min(Number(e.target.value), giftOrderLimit || 0))}
+                onChange={(e) =>
+                  setQuantity(
+                    Number(e.target.value) > 0
+                      ? Math.min(Number(e.target.value), giftOrderLimit || 0)
+                      : 0,
+                  )
+                }
                 textAlign="center"
                 mx="2"
               />
