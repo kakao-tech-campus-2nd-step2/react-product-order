@@ -2,7 +2,7 @@
 import React from 'react';
 import { Navigate,useParams } from 'react-router-dom';
 
-import ProductContents from '@/components/features/product'; // ProductContents 컴포넌트의 경로를 정확히 입력하세요
+import ProductContents from '@/components/features/product'; 
 import { RouterPath } from '@/routes/path'; 
 
 type Params = {

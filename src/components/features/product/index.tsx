@@ -6,7 +6,7 @@ import { useNavigate} from 'react-router-dom';
 
 import { useGetProduct } from '@/api/hooks/useGetProductDetails'; // useGetProduct 훅이 정의된 경로를 정확히 입력하세요
 import { useAuth } from '@/provider/Auth';
-import { getDynamicPath } from '@/routes/path';
+import { getDynamicPath, RouterPath } from '@/routes/path';
 import type { GoodsData } from '@/types';
 
 type ProductPageProps = {
@@ -26,7 +26,6 @@ const ProductContents: React.FC<ProductPageProps> = ({ productId }) => {
     return <div>상품 정보를 찾을 수 없습니다.</div>;
   }
   
-
   const handleFormeClick = () => {
     if (!auth) {
       const redirect = confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?');
@@ -34,10 +33,20 @@ const ProductContents: React.FC<ProductPageProps> = ({ productId }) => {
         const currentPath = window.location.pathname;
         navigate(getDynamicPath.login(currentPath));
       }
+    } else {
+      console.log('로그인됨!');
+      navigate(RouterPath.order, {
+        state: {
+          productDetail: data.detail,
+          quantity,
+          price: data.detail.price.basicPrice * quantity,
+        },
+      });
     }
   };
-
+  
   const productData: GoodsData = data.detail;
+  const price = productData.price.basicPrice * quantity
   console.log(productData);
   return (
     <Box p={4} mr={20} ml={20}>
@@ -94,7 +103,7 @@ const ProductContents: React.FC<ProductPageProps> = ({ productId }) => {
             <Box width="100%">
               <HStack mt={4} p={2} pl={4} pr={4} borderRadius={10} backgroundColor="blackAlpha.50" justifyContent="space-between">
                 <Text fontSize="15px">총 결제 금액</Text>
-                <Text fontSize="20px" fontWeight="bold">{productData.price.basicPrice * quantity}원</Text>
+                <Text fontSize="20px" fontWeight="bold">{price}원</Text>
               </HStack>
               <Button
                   mt={5}
