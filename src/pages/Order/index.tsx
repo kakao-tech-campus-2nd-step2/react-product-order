@@ -31,6 +31,9 @@ export const OrderPage: React.FC = () => {
   const { state } = useLocation();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState('');
+  const [receiptRequested, setReceiptRequested] = useState(false);
+  const [receiptNumber, setReceiptNumber] = useState('');
 
   useEffect(() => {
     const fetchProductOrder = async () => {
@@ -65,7 +68,27 @@ export const OrderPage: React.FC = () => {
   }
 
   const handleSubmit = () => {
+    if (!message.trim()) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
+    if (message.length > 100) {
+      alert('메시지를 100자 이내로 입력해주세요.');
+      return;
+    }
+    if (receiptRequested && !receiptNumber.trim()) {
+      alert('현금 영수증 번호를 입력해주세요.');
+      return;
+    }
+    if (isNaN(Number(receiptNumber))) {
+      alert('현금 영수증 번호를 숫자만 입력해주세요.');
+      return;
+    }
     alert('결제가 완료되었습니다.');
+  };
+
+  const handleReceiptRequestChange = () => {
+    setReceiptRequested(!receiptRequested);
   };
 
   return (
@@ -87,6 +110,8 @@ export const OrderPage: React.FC = () => {
               mt="4"
               bgColor="#EDF2F7"
               height="100px"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
           </Box>
         </Flex>
@@ -126,7 +151,7 @@ export const OrderPage: React.FC = () => {
           mb="4"
         >
           <FormControl display="flex" alignItems="center">
-            <Checkbox mr="4" />
+            <Checkbox mr="4" onChange={handleReceiptRequestChange} isChecked={receiptRequested} />
             <FormLabel mb="0">현금 영수증 신청</FormLabel>
           </FormControl>
 
@@ -137,7 +162,13 @@ export const OrderPage: React.FC = () => {
             </Select>
           </FormControl>
           <FormControl mt="4">
-            <Input id="receiptNumber" type="text" placeholder="(-없이) 숫자만 입력해주세요." />
+            <Input
+              id="receiptNumber"
+              type="text"
+              placeholder="(-없이) 숫자만 입력해주세요."
+              value={receiptNumber}
+              onChange={(e) => setReceiptNumber(e.target.value)}
+            />
           </FormControl>
         </Flex>
         <Flex justifyContent="space-between" alignItems="center" bgColor="#F5F5F5" padding="20px">
