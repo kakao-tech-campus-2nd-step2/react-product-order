@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
 import { Spinner } from '@/components/common/Spinner';
@@ -8,11 +8,15 @@ import { Spinner } from '@/components/common/Spinner';
 const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const { data, isLoading, isError } = useGetProductDetail(productId || '');
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log('ProductDetail rendered with productId:', productId);
     console.log('Product data:', data);
-  }, [productId, data]);
+    if (!isLoading && !data) {
+      navigate('/');
+    }
+  }, [productId, data, isLoading, navigate]);
 
   if (isLoading)
     return (
