@@ -12,9 +12,8 @@
 
 #### react-hook-form와 zod
 
-- [ ] 세팅하기
-- [ ] 상품 상세 페이지의 number input 변경하기
-- [ ] form 변경하기
+- [x] 세팅하기
+- [x] order form 변경하기
 
 #### Chakra UI
 
