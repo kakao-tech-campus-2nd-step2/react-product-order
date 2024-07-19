@@ -9,6 +9,7 @@ export interface IReceiptItem {
   maxValues?: number;
   value: number;
   onChange: (name: string, value: string) => void;
+  defaultCnt?: number;
 }
 
 export const ReceiptItem = ({
@@ -17,12 +18,13 @@ export const ReceiptItem = ({
   maxValues = 100,
   value,
   onChange,
+  defaultCnt = 1,
 }: IReceiptItem) => {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
     min: minValues,
     max: maxValues,
-    defaultValue: 1,
+    defaultValue: defaultCnt,
     onChange: (cntStr) => {
       onChange(name, cntStr);
     },

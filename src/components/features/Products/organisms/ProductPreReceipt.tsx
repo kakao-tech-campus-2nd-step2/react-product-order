@@ -21,7 +21,7 @@ export const ProductPreReceipt = ({ productKey, currentProductInfo }: IPreReceip
   const options: Products.ProductOption = data.options;
   const productName = options.productName;
   const productOrderLimit = options.giftOrderLimit;
-  const { totalPriceMemo, setProductCnt, onClick } = useProductPreReceipt(
+  const { totalPriceMemo, setProductCnt, onClick, initCnt } = useProductPreReceipt(
     productName,
     currentProductInfo,
   );
@@ -44,6 +44,7 @@ export const ProductPreReceipt = ({ productKey, currentProductInfo }: IPreReceip
         value={options.productPrice}
         maxValues={productOrderLimit}
         onChange={setProductCnt}
+        defaultCnt={initCnt}
       />
       <Box pt="12px">
         <ReceiptPrice price={totalPriceMemo} />
