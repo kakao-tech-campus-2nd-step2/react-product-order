@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { useGetDetail } from '@/api/hooks/useGetProductDetail';
@@ -9,52 +10,47 @@ import { PaymentInfo } from '@/components/features/Order/PaymentInfo';
 import { breakpoints } from '@/styles/variants';
 
 export const Order = () => {
+  const { control, register, handleSubmit } = useForm();
+
   const location = useLocation();
   const params = location.state;
   const { data } = useGetDetail(params);
   if (!data) return <></>;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const message = formData.get('message')?.toString();
-    const cashReceipts = formData.get('cash_receipts') ? true : false;
-    const select = formData.get('select');
-    const phone = formData.get('phone');
-
-    if (message === '') {
-      alert('메시지를 입력하세요.');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSubmit = (formData: any) => {
+    if (!formData.isCashResceipts) {
+      //현금영수증 미신청시 message만 전달
+      console.log(formData.message);
       return;
     }
-    if (message && message.length > 100) {
-      alert('메시지는 100자 이내로 입력해주세요.');
-      return;
-    }
-    if (cashReceipts) {
-      if (!phone) {
-        alert('전화번호를 입력해주세요.');
-        return;
-      } else {
-        if (!Number(phone)) {
-          alert('전화번호는 숫자만 입력해주세요.');
-          return;
-        }
-      }
-    }
-    console.log(message, cashReceipts, select, phone);
+    console.log(formData);
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onErrors = (error: any) => {
+    if (error.message) {
+      alert(error.message.message);
+      return;
+    }
+    if (error.phone) {
+      alert(error.phone.message);
+      return;
+    }
+  };
+
   return (
     <Container maxWidth={breakpoints.lg}>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit(onSubmit, onErrors)}>
         <Container alignItems="center" style={{ alignItems: 'flex-start' }}>
-          <MessageBox />
+          <MessageBox register={register} />
           <GiftDetail brandName={data.brandInfo.name} imageUrl={data.imageURL} name={data.name} />
         </Container>
-        <PaymentInfo />
+        <PaymentInfo control={control} register={register} />
       </Form>
     </Container>
   );
 };
+
 const Form = styled.form`
   width: 100%;
   height: 100vh;
