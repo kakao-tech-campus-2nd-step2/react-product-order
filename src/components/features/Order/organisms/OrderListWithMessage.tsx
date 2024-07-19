@@ -1,4 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
+import { memo } from 'react';
 
 import type { Products } from '@/api/products/types';
 import { Spacing } from '@/components/common/layouts/Spacing';
@@ -13,7 +14,7 @@ export interface IOrderListInAView {
 
 const tempPlaceHolder = `선물과 함께 보낼 메시지를 적어보세요`;
 
-export const OrderListWithMessage = ({ setMessage, orderList }: IOrderListInAView) => (
+export const OrderListWithMessage = memo(({ setMessage, orderList }: IOrderListInAView) => (
   <Box
     width="100%"
     padding="44px 0 32px"
@@ -33,4 +34,4 @@ export const OrderListWithMessage = ({ setMessage, orderList }: IOrderListInAVie
       <OrderList orderList={orderList} />
     </Box>
   </Box>
-);
+));
