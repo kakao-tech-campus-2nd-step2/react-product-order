@@ -1,14 +1,17 @@
 import { Textarea } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import type { ChangeEvent } from 'react';
 
-export const GiftMessage = () => {
-  // const [cardMessage, setCardMessage] = useState('');
+interface Props {
+  cardMessage: string;
+  setCardMessage: (message: string) => void;
+}
 
-  // const handleCardMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-  //   const message = e.target.value;
-  //   if (message.length > 100) alert('메시지는 100자 이내로 입력해주세요.');
-  //   setCardMessage(message);
-  // };
+export const GiftMessage = ({ cardMessage, setCardMessage }: Props) => {
+  const handleCardMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const message = e.target.value;
+    setCardMessage(message);
+  };
 
   return (
     <div>
@@ -19,9 +22,9 @@ export const GiftMessage = () => {
             placeholder="선물과 함께 보낼 메시지를 적어보세요"
             resize="none"
             height="100"
-            // onChange={handleCardMessageChange}
+            onChange={handleCardMessageChange}
             variant="filled"
-            maxLength={100}
+            value={cardMessage}
           />
         </TextareaWrapper>
       </Wrapper>

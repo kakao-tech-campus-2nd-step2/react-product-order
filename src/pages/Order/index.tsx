@@ -11,9 +11,10 @@ import { OrderInfo } from '@/components/features/Order/OrderInfo';
 export const OrderPage = () => {
   const location = useLocation();
   const { productId, count } = location.state || {};
-  console.log(productId, count);
   const { data, isLoading } = useGetGoodsDetail({ productId: productId });
   const [loading, setLoading] = useState(true);
+
+  const [cardMessage, setCardMessage] = useState<string>('');
 
   useEffect(() => {
     if (!isLoading) {
@@ -32,13 +33,13 @@ export const OrderPage = () => {
   return (
     <Wrapper>
       <GiftWrapper>
-        <GiftMessage />
+        <GiftMessage cardMessage={cardMessage} setCardMessage={setCardMessage} />
         <Hr />
         {data && (
           <GiftSummary imageURL={data.imageURL} brandName={data.brandInfo.name} name={data.name} />
         )}
       </GiftWrapper>
-      {data && <OrderInfo price={data.price.basicPrice * count} />}
+      {data && <OrderInfo price={data.price.basicPrice * count} cardMessage={cardMessage} />}
     </Wrapper>
   );
 };
