@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Button } from '@components/common';
 import ReceiptForm from './ReceiptForm';
+import { validatePayment } from './validation';
 
 interface PaymentProps {
   message: string;
@@ -19,9 +20,9 @@ export default function Payment({
   onInputChange,
 }: PaymentProps) {
   const handleClick = () => {
-    if (!message) alert('메시지를 입력해주세요.');
-    if (hasCashRecipt && !cashReciptNumber) alert('현금영수증 번호를 입력해주세요.');
-    console.info(message, hasCashRecipt, cashReciptType, cashReciptNumber);
+    const errorMessage = validatePayment(message, hasCashRecipt, cashReciptNumber);
+    if (errorMessage) return alert(errorMessage);
+    return alert('주문이 완료되었습니다.');
   };
 
   return (
