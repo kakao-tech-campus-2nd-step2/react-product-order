@@ -89,9 +89,12 @@ function ProductOrderForm({
               value: getValues().hasCashReceipt,
               message: FormErrorMessages.RECEIPT_NUMBER_REQUIRED,
             },
-            pattern: {
-              value: /^[0-9]*$/,
-              message: FormErrorMessages.RECEIPT_NUMBER_NOT_NUMERIC,
+            validate: (data: string) => {
+              const regex = /^[0-9]*$/;
+
+              if (!getValues().hasCashReceipt || regex.test(data)) return true;
+
+              return FormErrorMessages.RECEIPT_NUMBER_NOT_NUMERIC;
             },
           })}
         />
