@@ -25,7 +25,6 @@ export const OptionSection = ({ productId }: { productId: string }) => {
   if (isError) {
     return <HandleBox>{error.message}</HandleBox>;
   }
-  console.log(data);
   const totalPrice = data.options.productPrice * Number(count);
   const handleClick = () => {
     if (!authToken) {
