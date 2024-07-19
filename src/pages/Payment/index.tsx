@@ -43,14 +43,7 @@ const PaymentPage = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-      >
-        <Text fontSize="2xl" fontWeight="bold">
-          선물하기
-        </Text>
-        <Text color="blue.500" cursor="pointer">
-          내 계정
-        </Text>
-      </Box>
+      ></Box>
       <Container maxWidth="1280px" flexDirection="row" justifyContent="center">
         <Box display="flex" padding="20px" justifyContent="space-between">
           <Box width="60%">

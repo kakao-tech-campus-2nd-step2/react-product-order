@@ -39,6 +39,10 @@ const router = createBrowserRouter([
         element: <ProductDetail />,
       },
       {
+        path: RouterPath.payment,
+        element: <PaymentPage />,
+      },
+      {
         path: RouterPath.notFound,
         element: <Navigate to={RouterPath.home} />,
       },
@@ -47,10 +51,6 @@ const router = createBrowserRouter([
   {
     path: RouterPath.login,
     element: <LoginPage />,
-  },
-  {
-    path: RouterPath.payment,
-    element: <PaymentPage />,
   },
 ]);
 
