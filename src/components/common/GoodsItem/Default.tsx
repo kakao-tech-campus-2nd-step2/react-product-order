@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 import { Image } from '@/components/common/Image';
+import { getDynamicPath } from '@/routes/path';
 
 export type DefaultGoodsItemsProps = {
   imageSrc: string;
   subtitle: string;
   title: string;
   amount: number;
+  productId: number;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const DefaultGoodsItems = ({
@@ -14,11 +17,26 @@ export const DefaultGoodsItems = ({
   subtitle,
   title,
   amount,
+  productId,
   ...props
 }: DefaultGoodsItemsProps) => {
+  const navigate = useNavigate();
+
+  const onClick = () => {
+    const productIdStr = productId + '';
+    navigate(getDynamicPath.product(productIdStr));
+  };
+
   return (
-    <Wrapper {...props}>
-      <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
+    <Wrapper {...props} onClick={onClick}>
+      <Image
+        src={imageSrc}
+        alt={`${title} 소개`}
+        width="100%"
+        ratio="square"
+        radius={4}
+        cursor="pointer"
+      />
       <InfoWrapper>
         <Subtitle>{subtitle}</Subtitle>
         <Title>{title}</Title>

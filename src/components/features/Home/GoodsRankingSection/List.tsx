@@ -30,6 +30,7 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
       >
         {currentGoodsList.map(({ id, imageURL, name, price, brandInfo }, index) => (
           <RankingGoodsItems
+            productId={id}
             key={id}
             rankingIndex={index + 1}
             imageSrc={imageURL}

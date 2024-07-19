@@ -24,6 +24,9 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "node_modules/eslint-plugin-react/lib/types.d.ts",
+  ],
   "exclude": ["node_modules", "build", "public"]
 }

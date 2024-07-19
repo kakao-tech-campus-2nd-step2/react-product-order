@@ -42,6 +42,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
         >
           {flattenGoodsList.map(({ id, imageURL, name, price, brandInfo }) => (
             <DefaultGoodsItems
+              productId={id}
               key={id}
               imageSrc={imageURL}
               title={name}
