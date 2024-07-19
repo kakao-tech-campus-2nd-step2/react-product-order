@@ -1,5 +1,5 @@
-import { Box, Button, Input, Stack, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { Box, Button, FormControl, Input, Stack, Text } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
@@ -14,6 +14,7 @@ interface ProductCountSectionProps {
   productId: string;
 }
 const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
+  const { register, setValue, getValues } = useForm({ defaultValues: { count: DEFAULT_COUNT } });
   const {
     data: detailData,
     isPending: isDetailPending,
@@ -25,7 +26,6 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
     isError: isOptionError,
   } = useGetProductOption(productId);
 
-  const [count, setCount] = useState(DEFAULT_COUNT);
   const authInfo = useAuth();
   const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
 
   const { giftOrderLimit } = optionData.options;
 
-  const totalPrice = basicPrice * count;
+  const totalPrice = basicPrice * getValues('count');
 
   const handleOrder = () => {
     if (!authInfo) {
@@ -55,62 +55,38 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
       navigate(getDynamicPath.login());
       return;
     }
-    orderLocalStorage.set({ productId, count });
+    orderLocalStorage.set({ productId, count: getValues('count') });
     navigate('/order');
   };
 
-  const handleCountInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-
-    if (value > giftOrderLimit) {
-      alert('선물 주문 가능 수량을 초과하였습니다.');
-      setCount(giftOrderLimit);
-      return;
-    }
-    if (value < 1) {
-      setCount(1);
-      return;
-    }
-    setCount(value);
-  };
-  const handleCountButtonClick = (value: number) => {
-    const newCount = count + value;
-    if (newCount > giftOrderLimit) {
-      alert('선물 주문 가능 수량을 초과하였습니다.');
-      setCount(giftOrderLimit);
-      return;
-    }
-
-    if (newCount < 1) {
-      setCount(1);
-      return;
-    }
-
-    setCount(newCount);
-  };
-
   return (
-    <Stack direction="column" justifyContent="space-between">
-      <Box border="1px solid" height="fit-content">
-        <Text fontWeight="bold">{name}</Text>
-        <Stack direction="row">
-          <Button width={10} onClick={() => handleCountButtonClick(1)}>
-            +
-          </Button>
-          <Input type="number" value={count} onChange={handleCountInputChange} />
-          <Button onClick={() => handleCountButtonClick(-1)}>-</Button>
-        </Stack>
-      </Box>
+    <FormControl>
+      <Stack direction="column" justifyContent="space-between">
+        <Box border="1px solid" height="fit-content">
+          <Text fontWeight="bold">{name}</Text>
+          <Stack direction="row">
+            <Button width={10} onClick={() => setValue('count', +getValues('count') + 1)}>
+              +
+            </Button>
+            <Input
+              type="number"
+              {...register('count', { required: true, max: giftOrderLimit, min: 1 })}
+              onChange={(e) => setValue('count', +e.target.value)}
+            />
+            <Button onClick={() => setValue('count', +getValues('count') - 1)}>-</Button>
+          </Stack>
+        </Box>
 
-      <Stack>
-        <Text width="100%" padding="1rem" backgroundColor="whitesmoke">
-          총 가격: {totalPrice}
-        </Text>
-        <Button flex="grow" onClick={handleOrder}>
-          선물하기
-        </Button>
+        <Stack>
+          <Text width="100%" padding="1rem" backgroundColor="whitesmoke">
+            총 가격: {totalPrice}
+          </Text>
+          <Button flex="grow" onClick={handleOrder}>
+            선물하기
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </FormControl>
   );
 };
 
