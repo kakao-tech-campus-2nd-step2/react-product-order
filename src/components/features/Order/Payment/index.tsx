@@ -5,17 +5,34 @@ import ReceiptForm from './ReceiptForm';
 
 interface PaymentProps {
   message: string;
+  hasCashRecipt: boolean;
+  cashReciptType: string;
+  cashReciptNumber: string;
+  onInputChange: (name: string, value: any) => void;
 }
 
-export default function Payment({ message }: PaymentProps) {
+export default function Payment({
+  message,
+  hasCashRecipt,
+  cashReciptType,
+  cashReciptNumber,
+  onInputChange,
+}: PaymentProps) {
   const handleClick = () => {
     if (!message) alert('메시지를 입력해주세요.');
+    if (hasCashRecipt && !cashReciptNumber) alert('현금영수증 번호를 입력해주세요.');
+    console.info(message, hasCashRecipt, cashReciptType, cashReciptNumber);
   };
 
   return (
     <PaymentContainer>
       <Title>결제정보</Title>
-      <ReceiptForm />
+      <ReceiptForm
+        hasCashRecipt={hasCashRecipt}
+        cashReciptType={cashReciptType}
+        cashReciptNumber={cashReciptNumber}
+        onInputChange={onInputChange}
+      />
       <TotalAmount>
         <dl>
           <dt>최종 결제금액</dt>

@@ -8,7 +8,8 @@ import Payment from '@components/features/Order/Payment';
 export default function Order() {
   const [orderData, setOrderData] = useState({
     message: '',
-    isCashRecipt: false,
+    hasCashRecipt: false,
+    cashReciptType: '개인소득공제',
     cashReciptNumber: '',
   });
 
@@ -24,7 +25,13 @@ export default function Order() {
       <CenteredContainer maxWidth="lg">
         <InnerContainer>
           <OrderMessage message={orderData.message} onMessageChange={handleOrderDataChange} />
-          <Payment message={orderData.message} />
+          <Payment
+            message={orderData.message}
+            hasCashRecipt={orderData.hasCashRecipt}
+            cashReciptType={orderData.cashReciptType}
+            cashReciptNumber={orderData.cashReciptNumber}
+            onInputChange={handleOrderDataChange}
+          />
         </InnerContainer>
       </CenteredContainer>
     </Layout>
