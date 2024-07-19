@@ -22,8 +22,13 @@ export const PaymentPage = () => {
     totalPrice: number;
   };
   const [receiptType, setReceiptType] = useState('personal');
+  const [message, setMessage] = useState('');
 
   const handlePayment = () => {
+    if (!message.trim()) {
+      window.alert("메세지를 입력해주세요.");
+      return;
+    }
     window.alert("주문이 완료되었습니다.")
   };
 
@@ -33,7 +38,10 @@ export const PaymentPage = () => {
         <Box flex="1" mb={6} pr={{ base: 0, md: 8 }} >
           <FormControl mb={4}>
             <FormLabel fontWeight="bold">나에게 주는 선물</FormLabel>
-            <Textarea placeholder="선물과 함께 보낼 메시지를 적어보세요" size="xl" h="200px" w="100%" />
+            <Textarea placeholder="선물과 함께 보낼 메시지를 적어보세요" size="xl" h="200px" w="100%" 
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            />
           </FormControl>
           <Text fontWeight="bold" mb={2}>선물내역</Text>
           <Flex>
