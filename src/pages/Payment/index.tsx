@@ -15,7 +15,7 @@ import { useLocation } from 'react-router-dom';
 
 export const PaymentPage = () => {
   const location = useLocation();
-  const { name, imageURL } = location.state as {
+  const { name, imageURL, totalPrice } = location.state as {
     name: string;
     imageURL: string;
     totalPrice: number;
@@ -71,6 +71,7 @@ export const PaymentPage = () => {
             <FormControl ml={100} mb={20}>
               <Input placeholder=" (-없이) 숫자로만 입력해주세요." size="xl" w="260px" h="40px"/>
             </FormControl>
+            <Text fontSize="lg" fontWeight="bold" ml={100} mb={20} textAlign="center">최종 결제 금액 {totalPrice}원</Text>
           </Box>
       </Flex>
     </Box>
