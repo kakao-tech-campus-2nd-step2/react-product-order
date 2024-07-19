@@ -5,7 +5,7 @@ import Checkout from '@/pages/Checkout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
-import ProductDetailPage from '@/pages/ProductDetail';
+import ProductDetailPage from '@/pages/ProductDetailPage';
 import { ThemePage } from '@/pages/Theme';
 
 import { PrivateRoute } from './components/PrivateRoute';
