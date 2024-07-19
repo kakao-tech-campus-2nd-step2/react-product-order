@@ -53,6 +53,11 @@ const CheckoutPage = () => {
       return;
     }
 
+    if (receiptEnabled && receipt.trim().length === 0) {
+      alert('현금 영수증 번호를 입력하세요');
+      return;
+    }
+
     try {
       alert('주문이 완료되었습니다.');
       navigate('/');
@@ -111,8 +116,16 @@ const CheckoutPage = () => {
           <Input
             placeholder="(-없이) 숫자만 입력해주세요."
             value={receipt}
-            onChange={(e) => setReceipt(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*$/.test(value)) {
+                setReceipt(value);
+              } else {
+                alert('숫자만 입력 가능합니다.');
+              }
+            }}
             mt="2"
+            isDisabled={!receiptEnabled}
           />
         </Box>
         <HStack justifyContent="space-between" mb="4">
