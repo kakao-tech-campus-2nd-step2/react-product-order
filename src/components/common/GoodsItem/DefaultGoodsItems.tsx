@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 import { Image } from '@/components/common/Image';
+import { RouterPath } from '@/routes';
 
 export type DefaultGoodsItemsProps = {
+  productKey: number;
   imageSrc: string;
   subtitle: string;
   title: string;
@@ -10,14 +13,21 @@ export type DefaultGoodsItemsProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const DefaultGoodsItems = ({
+  productKey,
   imageSrc,
   subtitle,
   title,
   amount,
   ...props
 }: DefaultGoodsItemsProps) => {
+  const navigate = useNavigate();
+
+  const handleItemClick = () => {
+    navigate(RouterPath.product.replace(':productKey', productKey.toString()));
+  };
+
   return (
-    <Wrapper {...props}>
+    <Wrapper onClick={handleItemClick} {...props}>
       <Image src={imageSrc} alt={`${title} 소개`} width="100%" ratio="square" radius={4} />
       <InfoWrapper>
         <Subtitle>{subtitle}</Subtitle>

@@ -1,12 +1,10 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { useThemeProducts } from '@/api/hooks/useThemeProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/DefaultGoodsItems';
 import { Container } from '@/components/common/layouts/Container';
 import { Grid } from '@/components/common/layouts/Grid';
-import { RouterPath } from '@/routes';
 import { ErrorMessageContainer } from '@/styles';
 import { breakpoints } from '@/styles/variants';
 
@@ -15,8 +13,6 @@ type Props = {
 };
 
 export const ThemeGoodsSection = ({ themeKey }: Props) => {
-  const navigate = useNavigate();
-
   // console.log('themeKey: ', themeKey);
 
   const { data, isLoading, isError, refetch } = useThemeProducts(themeKey);
@@ -26,11 +22,6 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
   useEffect(() => {
     refetch();
   }, [themeKey, refetch]);
-
-  const handleItemClick = (id: number) => {
-    const productKey = id.toString();
-    navigate(RouterPath.product.replace(':productKey', productKey));
-  };
 
   if (isLoading) return <ErrorMessageContainer>Loading...</ErrorMessageContainer>;
   if (isError) return <ErrorMessageContainer>에러가 발생했습니다.</ErrorMessageContainer>;
@@ -52,11 +43,12 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
               {goodsList.map(({ id, imageURL, name, price, brandInfo }) => (
                 <DefaultGoodsItems
                   key={id}
+                  productKey={id}
                   imageSrc={imageURL}
                   title={name}
                   amount={price.sellingPrice}
                   subtitle={brandInfo.name}
-                  onClick={() => handleItemClick(id)}
+                  // onClick={() => handleItemClick(id)}
                 />
               ))}
             </Grid>

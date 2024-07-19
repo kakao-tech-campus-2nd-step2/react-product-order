@@ -30,6 +30,7 @@ export const GoodsRankingList = ({ isError, goodsList }: Props) => {
       <Grid columns={3} gap={16}>
         {currentGoodsList.map(({ id, imageURL, name, price, brandInfo }, index) => (
           <RankingGoodsItems
+            productKey={id}
             key={id}
             rankingIndex={index + 1}
             imageSrc={imageURL}
