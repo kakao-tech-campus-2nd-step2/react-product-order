@@ -49,8 +49,20 @@ export const OrderPage = () => {
     setOrderInfo({ ...orderInfo, receiptNumber: e.target.value });
   };
 
+  const validate = () => {
+    if (!orderInfo.message) {
+      alert('메세지를 입력해주세요');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = () => {
-    console.log(orderInfo);
+    if (validate()) {
+      alert('결제가 완료되었습니다');
+      console.log(orderInfo);
+      setOrderInfo(defaultOrderInfo);
+    }
   };
 
   return (
