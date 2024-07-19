@@ -13,14 +13,15 @@ export interface IOrderRequestCashReceipt {
 }
 
 export const OrderRequestCashReceipt = ({ cacheReceiptRefs }: IOrderRequestCashReceipt) => {
+  const [checkboxRef, selectRef, numberRef] = cacheReceiptRefs;
   return (
     <Box width="100%" padding="16px">
       <VStack spacing="16px" align="start">
-        <OrderCacheCheckbox ref={cacheReceiptRefs[0]} />
+        <OrderCacheCheckbox ref={checkboxRef} />
         <Divider />
-        <OrderCashReceiptSelect ref={cacheReceiptRefs[1]} />
+        <OrderCashReceiptSelect ref={selectRef} />
         <Divider />
-        <OrderCacheReceiptInput ref={cacheReceiptRefs[2]} />
+        <OrderCacheReceiptInput ref={numberRef} />
       </VStack>
     </Box>
   );

@@ -20,9 +20,9 @@ export const useOrderValidation = (orderListAndPrice: IOrderItemInfo[]) => {
       e.preventDefault();
       if (isAnyRefInvalid(cacheReceiptRefs)) return;
 
-      const checkboxCurrent = cacheReceiptRefs[0].current as HTMLInputElement;
-      const typeCurrent = cacheReceiptRefs[1].current as HTMLSelectElement;
-      const numberCurrent = cacheReceiptRefs[2].current as HTMLInputElement;
+      const [checkboxCurrent, typeCurrent, numberCurrent] = cacheReceiptRefs.map(
+        (ref) => ref.current,
+      ) as [HTMLInputElement, HTMLSelectElement, HTMLInputElement];
 
       if (isCardMessageInvalid(message, setWarning)) return;
 
