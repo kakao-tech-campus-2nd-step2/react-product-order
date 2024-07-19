@@ -7,6 +7,7 @@ import { MyAccountPage } from '@/pages/MyAccount';
 import OrderPage from '@/pages/Order';
 import ProductsPage from '@/pages/Products';
 import { ThemePage } from '@/pages/Theme';
+import PaymentProvider from '@/provider/Payment/index';
 
 import { PrivateRoute } from './components/PrivateRoute';
 import { RouterPath } from './path';
@@ -36,11 +37,19 @@ const router = createBrowserRouter([
       },
       {
         path: RouterPath.products,
-        element: <ProductsPage />,
+        element: (
+          <PaymentProvider>
+            <ProductsPage />
+          </PaymentProvider>
+        ),
       },
       {
         path: RouterPath.order,
-        element: <OrderPage />,
+        element: (
+          <PaymentProvider>
+            <OrderPage />
+          </PaymentProvider>
+        ),
       },
       {
         path: RouterPath.notFound,

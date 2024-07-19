@@ -5,11 +5,12 @@ import { OrderContext } from '@/pages/Order';
 
 export default function Section1() {
   const orderData = useContext(OrderContext);
-  const [data, count, paymentInfo, setPaymentInfo] = [
+  const [data, count, paymentInfo, setPaymentInfo, imageURL] = [
     orderData?.options,
     orderData?.count,
     orderData?.paymentInfo,
     orderData?.setPaymentInfo,
+    orderData?.imageURL,
   ];
 
   const onChangeMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -60,10 +61,11 @@ export default function Section1() {
             borderRadius="0px"
             aspectRatio="1/1"
             w="86px"
+            src={imageURL}
           />
           <Flex flexDirection="column" pl="8px">
             <Text fontSize="13px" lineHeight="14px" color="rgb(136,136,136)">
-              상품명1
+              상품
             </Text>
             <Text
               fontSize="14px"

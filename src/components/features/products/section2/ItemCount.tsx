@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 type ItemCountProps = {
   name: string | undefined;
-  setTotalCount: (value: number) => void;
+  setTotalCount?: (value: number) => void;
 };
 
 export default function ItemCount({ name, setTotalCount }: ItemCountProps) {
@@ -19,7 +19,7 @@ export default function ItemCount({ name, setTotalCount }: ItemCountProps) {
   const input = getInputProps();
 
   useEffect(() => {
-    setTotalCount(input.value);
+    if (setTotalCount) setTotalCount(input.value);
   }, [input.value, setTotalCount]);
 
   return (

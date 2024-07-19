@@ -1,9 +1,10 @@
 import { Container, Flex } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { createContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import { Section1, Section2 } from '@/components/features/order';
+import { PaymentContext } from '@/provider/Payment/index';
 
 export type OrderDataType = {
   giftOrderLimit: number;
@@ -30,27 +31,29 @@ export type OrderContextType = {
   };
   setPaymentInfo: (info: PaymentInfo) => void;
   onClickPayment: () => void;
+  imageURL: string;
 };
 
 export const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
-const productInfo = sessionStorage.getItem('orderHistory')
-  ? JSON.parse(sessionStorage.getItem('orderHistory')!)
-  : {};
-
-const [id, count] = [productInfo.id, Number(productInfo.count)];
-
-const fetchOrder = async () => {
+const fetchOrder = async (id: string) => {
   const response = await axios.get(
-    `https://kakao-tech-campus-mock-sercer-root-yongjin.vercel.app/api/v1/products/${2383657}/options`,
+    `https://kakao-tech-campus-mock-sercer-root-yongjin.vercel.app/api/v1/products/${id}/options`,
   );
   return response.data;
 };
 
 export default function OrderPage() {
+  const payment = useContext(PaymentContext);
+  console.log(payment?.paymentInfo.productId);
+  const [count = 1, productId = '1', imageURL = ''] = [
+    payment?.paymentInfo.count,
+    payment?.paymentInfo.productId,
+    payment?.paymentInfo.imageURL,
+  ];
   const { data = { options: {} } } = useQuery({
-    queryKey: ['order', id],
-    queryFn: fetchOrder,
+    queryKey: ['order', payment?.paymentInfo.productId],
+    queryFn: () => fetchOrder(productId),
   });
 
   const [paymentInfo, setPaymentInfo] = useState({
@@ -83,7 +86,14 @@ export default function OrderPage() {
     <Container w="100%" maxW="1250px" h="100vh">
       <Flex>
         <OrderContext.Provider
-          value={{ options: data.options, count, paymentInfo, setPaymentInfo, onClickPayment }}
+          value={{
+            options: data.options,
+            count,
+            paymentInfo,
+            setPaymentInfo,
+            onClickPayment,
+            imageURL,
+          }}
         >
           <Section1 />
           <Section2 />
