@@ -1,12 +1,9 @@
 import React, { ReactNode } from 'react';
+import type * as CSS from 'csstype';
 import styled from '@emotion/styled';
 
-export interface ContainerProps {
-  maxWidth?: string;
+export interface ContainerProps extends CSS.Properties {
   children: ReactNode;
-  flexDirection?: 'row' | 'column';
-  justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around';
-  alignItems?: 'center' | 'flex-start' | 'flex-end' | 'baseline' | 'stretch';
 }
 
 export default function Container({ maxWidth, children, flexDirection, justifyContent, alignItems }: ContainerProps) {
