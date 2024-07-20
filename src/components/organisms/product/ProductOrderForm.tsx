@@ -1,155 +1,113 @@
+import { css } from '@emotion/react';
+import { defaultBorderColor } from '@styles/colors';
 import Container from '@components/atoms/container/Container';
-import { defaultBorderColor, textColors } from '@styles/colors';
-import {
-  Checkbox, Divider, Input, Select, Text,
-} from '@chakra-ui/react';
-import Button from '@components/atoms/button/Button';
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  FieldValues,
-  UseFormClearErrors,
-  UseFormRegister,
-  UseFormWatch,
-} from 'react-hook-form';
-import { FormErrorMessages } from '@constants/ErrorMessage';
+import ProductMessageForm from '@components/organisms/product/ProductMessageForm';
+import ProductOrderHistorySection from '@components/organisms/product/ProductOrderHistorySection';
+import ProductReceiptForm from '@components/organisms/product/ProductReceiptForm';
+import { useForm } from 'react-hook-form';
+import { useCallback, useEffect } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { QueryKeys } from '@constants/QueryKeys';
+import { fetchProductDetail } from '@utils/query';
+import { useNavigate } from 'react-router-dom';
+import Paths from '@constants/Paths';
+import { OrderRequestBody } from '@/types/request';
+import { OrderFormData, OrderHistoryData } from '@/types';
 import { CashReceiptOptions } from '@/constants';
-import { OrderFormData } from '@/types';
 import { ProductDetailData } from '@/dto';
 
-interface ProductOrderFormProps<T extends FieldValues> {
-  register: UseFormRegister<T>,
-  errors: FieldErrors<T>,
-  clearErrors: UseFormClearErrors<T>,
-  watch: UseFormWatch<T>,
-  productDetails: ProductDetailData,
-  control: Control<T>,
-  count: number,
+interface ProductOrderFormProps {
+  orderHistory: OrderHistoryData;
 }
 
-function InternalFormDivider() {
-  return (
-    <Divider
-      borderBottomColor={defaultBorderColor}
-      borderBottomWidth="2px"
-      flexDirection="column"
-    />
-  );
-}
+function ProductOrderForm({ orderHistory }: ProductOrderFormProps) {
+  const {
+    data: product,
+  } = useSuspenseQuery<ProductDetailData>({
+    queryKey: [QueryKeys.PRODUCT_DETAILS, orderHistory.productId],
+    queryFn: () => fetchProductDetail({ productId: orderHistory.productId.toString() }),
+  });
+  const navigate = useNavigate();
 
-function ProductOrderForm({
-  register, errors, clearErrors, watch, productDetails, control, count,
-}: ProductOrderFormProps<OrderFormData>) {
-  const cashReceiptTypeText = {
-    [CashReceiptOptions.PERSONAL]: '개인소득공제',
-    [CashReceiptOptions.BUSINESS]: '사업자증빙용',
-  };
-  const finalPrice = productDetails.price.sellingPrice * count;
-  const hasCashReceipt = watch('hasCashReceipt');
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    clearErrors,
+    control,
+    watch,
+  } = useForm<OrderFormData>({
+    mode: 'onChange',
+    defaultValues: {
+      messageCardTextMessage: '',
+      hasCashReceipt: false,
+      cashReceiptType: CashReceiptOptions.PERSONAL,
+      cashReceiptNumber: '',
+    },
+  });
+
+  const onSubmit = useCallback(async (data: OrderFormData) => {
+    if (!orderHistory) return;
+
+    const orderBody: OrderRequestBody = {
+      productId: orderHistory.productId,
+      productOptionId: 1,
+      productQuantity: orderHistory.productQuantity,
+      messageCardTemplateId: 0,
+      messageCardTextMessage: data.messageCardTextMessage,
+      senderId: 0,
+      receiverId: 0,
+      hasCashReceipt: data.hasCashReceipt,
+      cashReceiptType: data.cashReceiptType,
+      cashReceiptNumber: data.cashReceiptNumber,
+    };
+    alert(`${orderBody.productId}번 상품의 주문이 완료되었습니다.`);
+  }, [orderHistory]);
+
+  useEffect(() => {
+    if (!product) navigate(Paths.MAIN_PAGE);
+  }, [product, navigate]);
 
   return (
-    <Container
-      elementSize={{
-        width: '100%',
-        height: '100%',
-      }}
-      padding="16px"
-      flexDirection="column"
-      cssProps={{
-        borderLeft: `1px solid ${defaultBorderColor}`,
-      }}
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      css={css`
+        display: flex;
+        width: 100%;
+        max-width: 1280px;
+        border-right: 1px solid ${defaultBorderColor};
+        border-left: 1px solid ${defaultBorderColor};
+      `}
     >
-      <Text padding="16px 0" fontWeight="bold">
-        결제 정보
-      </Text>
-      <InternalFormDivider />
       <Container
         elementSize="full-width"
-        padding="16px"
+        alignItems="center"
         flexDirection="column"
+        padding="44px 0px 32px"
       >
-        <Controller
-          control={control}
-          name="hasCashReceipt"
-          render={({ field }) => (
-            <Checkbox
-              borderColor={defaultBorderColor}
-              {...field}
-              value=""
-              isChecked={field.value}
-              onChange={(e) => {
-                if (!e.target.checked) {
-                  clearErrors('cashReceiptNumber');
-                }
-
-                field.onChange(e);
-              }}
-            >
-              현금영수증 신청
-            </Checkbox>
-          )}
+        <ProductMessageForm
+          register={register}
+          errors={errors}
         />
-        <Select
-          paddingTop="16px"
-          borderColor={defaultBorderColor}
-          {...register('cashReceiptType')}
-        >
-          <option value={CashReceiptOptions.PERSONAL}>
-            {cashReceiptTypeText[CashReceiptOptions.PERSONAL]}
-          </option>
-          <option value={CashReceiptOptions.BUSINESS}>
-            {cashReceiptTypeText[CashReceiptOptions.BUSINESS]}
-          </option>
-        </Select>
-        <Controller
-          name="cashReceiptNumber"
+        <ProductOrderHistorySection productDetails={product} count={orderHistory.productQuantity} />
+      </Container>
+      <Container
+        elementSize="full-width"
+        alignItems="center"
+        flexDirection="column"
+        maxWidth="360px"
+      >
+        <ProductReceiptForm
+          productDetails={product}
+          count={orderHistory.productQuantity}
+          register={register}
+          errors={errors}
+          clearErrors={clearErrors}
           control={control}
-          rules={{
-            validate: (value: string | undefined) => {
-              const pattern = /^[0-9]*$/;
-
-              if (!value) return FormErrorMessages.RECEIPT_NUMBER_REQUIRED;
-
-              if (!hasCashReceipt || pattern.test(value)) return true;
-
-              return FormErrorMessages.RECEIPT_NUMBER_NOT_NUMERIC;
-            },
-          }}
-          disabled={!hasCashReceipt}
-          render={({ field }) => (
-            <Input
-              borderColor={defaultBorderColor}
-              marginTop="5px"
-              {...field}
-            />
-          )}
+          watch={watch}
         />
-        {
-          errors.cashReceiptNumber ? (
-            <Text color={textColors.error}>{errors.cashReceiptNumber.message}</Text>
-          ) : null
-        }
       </Container>
-      <InternalFormDivider />
-      <Container elementSize="full-width" justifyContent="space-between" padding="16px">
-        <Text>최종 결제금액</Text>
-        <Text fontWeight="bold">
-          {`${finalPrice}원`}
-        </Text>
-      </Container>
-      <InternalFormDivider />
-
-      <Button
-        theme="kakao"
-        text={`${finalPrice}원 결제하기`}
-        elementSize="big"
-        style={{
-          marginTop: '16px',
-        }}
-        type="submit"
-      />
-    </Container>
+    </form>
   );
 }
 
