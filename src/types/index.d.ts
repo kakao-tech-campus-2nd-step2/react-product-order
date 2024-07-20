@@ -73,6 +73,8 @@ export interface FixedSize {
   height: string,
 }
 
+export type OrderHistoryData = Pick<OrderRequestBody, 'productId' | 'productQuantity'>;
+
 export interface OrderFormStatus {
   isDirty: boolean;
   errorMessage?: FormErrorMessages[string] | boolean;

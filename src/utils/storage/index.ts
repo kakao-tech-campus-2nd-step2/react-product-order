@@ -1,6 +1,5 @@
 // source: 7월 8일자 라이브 클론코딩 강의
-
-import { OrderRequestBody } from '@/types/request';
+import { OrderHistoryData } from '@/types';
 
 const initStorage = <T extends keyof StorageKey>(key: T, storage: Storage) => {
   const storageKey = `${key}`;
@@ -29,5 +28,5 @@ const initStorage = <T extends keyof StorageKey>(key: T, storage: Storage) => {
 export const orderHistoryStorage = initStorage('orderHistory', sessionStorage);
 
 interface StorageKey {
-  orderHistory?: Pick<OrderRequestBody, 'productId' | 'productQuantity'>;
+  orderHistory?: OrderHistoryData;
 }
