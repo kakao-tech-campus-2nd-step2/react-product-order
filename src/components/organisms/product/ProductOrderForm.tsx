@@ -5,10 +5,13 @@ import {
 } from '@chakra-ui/react';
 import Button from '@components/atoms/button/Button';
 import {
+  Control,
+  Controller,
   FieldErrors,
   FieldValues,
-  UseFormGetValues,
+  UseFormClearErrors,
   UseFormRegister,
+  UseFormWatch,
 } from 'react-hook-form';
 import { FormErrorMessages } from '@constants/ErrorMessage';
 import { CashReceiptOptions } from '@/constants';
@@ -18,8 +21,10 @@ import { ProductDetailData } from '@/dto';
 interface ProductOrderFormProps<T extends FieldValues> {
   register: UseFormRegister<T>,
   errors: FieldErrors<T>,
-  getValues: UseFormGetValues<T>,
+  clearErrors: UseFormClearErrors<T>,
+  watch: UseFormWatch<T>,
   productDetails: ProductDetailData,
+  control: Control<T>,
   count: number,
 }
 
@@ -34,13 +39,14 @@ function InternalFormDivider() {
 }
 
 function ProductOrderForm({
-  register, errors, getValues, productDetails, count,
+  register, errors, clearErrors, watch, productDetails, control, count,
 }: ProductOrderFormProps<OrderFormData>) {
   const cashReceiptTypeText = {
     [CashReceiptOptions.PERSONAL]: '개인소득공제',
     [CashReceiptOptions.BUSINESS]: '사업자증빙용',
   };
   const finalPrice = productDetails.price.sellingPrice * count;
+  const hasCashReceipt = watch('hasCashReceipt');
 
   return (
     <Container
@@ -63,12 +69,27 @@ function ProductOrderForm({
         padding="16px"
         flexDirection="column"
       >
-        <Checkbox
-          borderColor={defaultBorderColor}
-          {...register('hasCashReceipt')}
-        >
-          현금영수증 신청
-        </Checkbox>
+        <Controller
+          control={control}
+          name="hasCashReceipt"
+          render={({ field }) => (
+            <Checkbox
+              borderColor={defaultBorderColor}
+              {...field}
+              value=""
+              isChecked={field.value}
+              onChange={(e) => {
+                if (!e.target.checked) {
+                  clearErrors('cashReceiptNumber');
+                }
+
+                field.onChange(e);
+              }}
+            >
+              현금영수증 신청
+            </Checkbox>
+          )}
+        />
         <Select
           paddingTop="16px"
           borderColor={defaultBorderColor}
@@ -81,22 +102,28 @@ function ProductOrderForm({
             {cashReceiptTypeText[CashReceiptOptions.BUSINESS]}
           </option>
         </Select>
-        <Input
-          borderColor={defaultBorderColor}
-          marginTop="5px"
-          {...register('cashReceiptNumber', {
-            required: {
-              value: getValues().hasCashReceipt,
-              message: FormErrorMessages.RECEIPT_NUMBER_REQUIRED,
-            },
-            validate: (data: string) => {
-              const regex = /^[0-9]*$/;
+        <Controller
+          name="cashReceiptNumber"
+          control={control}
+          rules={{
+            validate: (value: string | undefined) => {
+              const pattern = /^[0-9]*$/;
 
-              if (!getValues().hasCashReceipt || regex.test(data)) return true;
+              if (!value) return FormErrorMessages.RECEIPT_NUMBER_REQUIRED;
+
+              if (!hasCashReceipt || pattern.test(value)) return true;
 
               return FormErrorMessages.RECEIPT_NUMBER_NOT_NUMERIC;
             },
-          })}
+          }}
+          disabled={!hasCashReceipt}
+          render={({ field }) => (
+            <Input
+              borderColor={defaultBorderColor}
+              marginTop="5px"
+              {...field}
+            />
+          )}
         />
         {
           errors.cashReceiptNumber ? (

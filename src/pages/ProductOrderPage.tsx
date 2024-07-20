@@ -30,7 +30,9 @@ function ProductOrderPage() {
     register,
     formState: { errors },
     handleSubmit,
-    getValues,
+    clearErrors,
+    control,
+    watch,
   } = useForm<OrderFormData>({
     mode: 'onChange',
     defaultValues: {
@@ -98,7 +100,9 @@ function ProductOrderPage() {
               count={count}
               register={register}
               errors={errors}
-              getValues={getValues}
+              clearErrors={clearErrors}
+              control={control}
+              watch={watch}
             />
           </Container>
         </form>
