@@ -70,10 +70,10 @@ export const ProductsPage = () => {
     setCount(getValues('count') + addCount);
   };
 
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const numberButNonNumber = ['e', 'E', '+', '-'];
-    if (numberButNonNumber.includes(e.key)) {
-      e.preventDefault();
+  const handleReceiptNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (!/^\d+$/.test(value)) {
+      e.target.value = getValues('count').toString();
     }
   };
 
@@ -135,7 +135,7 @@ export const ProductsPage = () => {
                   w="100%"
                   h="36px"
                   textAlign="center"
-                  onKeyDown={handleInputKeyDown}
+                  onInput={handleReceiptNumberInput}
                   onChange={handleInputChange}
                 />
                 <Button onClick={() => changeCount(1)} w="36px" h="36px" boxSizing="border-box">

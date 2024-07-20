@@ -88,10 +88,10 @@ export const OrderPage = () => {
     setNeedReceiptState(e.target.checked);
   };
 
-  const handleReceiptNumberKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const numberButNonNumber = ['e', 'E', '+', '-'];
-    if (numberButNonNumber.includes(e.key)) {
-      e.preventDefault();
+  const handleReceiptNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (!/^\d+$/.test(value)) {
+      e.target.value = getValues('receiptNumber');
     }
   };
 
@@ -190,7 +190,7 @@ export const OrderPage = () => {
             <Input
               type="number"
               {...getRegister('receiptNumber')}
-              onKeyDown={handleReceiptNumberKeyDown}
+              onInput={handleReceiptNumberInput}
               placeholder="(-없이) 숫자만 입력해주세요"
             />
           </Flex>
