@@ -22,6 +22,9 @@ FE 카카오 선물하기 4주차 과제: Form
 
 ## step3
 
+- [ ] 기존에 만든 form / input을 react-hook-form으로 변경
+- [ ] validate 또한 react-hook-form 활용
+
 ## step4
 
 ## 선택
