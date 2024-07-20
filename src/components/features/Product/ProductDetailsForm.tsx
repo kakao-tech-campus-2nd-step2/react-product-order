@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
 import { useAuth } from '@/provider/Auth';
 import type { GoodsData } from '@/types';
@@ -14,19 +16,29 @@ type Props = {
   productId: string;
 };
 
+const schema = z.object({
+  quantity: z
+    .number()
+    .min(1, '최소 1개 이상 선택해야 합니다.')
+    .max(100, '최대 100개까지 주문 가능합니다.'),
+});
+
+type FormData = z.infer<typeof schema>;
+
 export const ProductDetailForm = ({ productDetail, productId }: Props) => {
-  const [quantity, setQuantity] = useState(1);
-  const [totalPrice, setTotalPrice] = useState(productDetail.price.sellingPrice);
   const navigate = useNavigate();
   const authInfo = useAuth();
 
-  const handleQuantityChange = (newQuantity: number) => {
-    const validQuantity = newQuantity > 100 ? 100 : newQuantity;
-    setQuantity(validQuantity);
-    setTotalPrice(validQuantity * productDetail.price.sellingPrice);
-  };
+  const { control, handleSubmit, watch } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      quantity: 1,
+    },
+  });
 
-  const handleOrder = () => {
+  const quantity = watch('quantity');
+
+  const onSubmit = (data: FormData) => {
     if (!authInfo) {
       const confirmLogin = window.confirm(
         '로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?',
@@ -35,32 +47,42 @@ export const ProductDetailForm = ({ productDetail, productId }: Props) => {
         navigate('/login');
       }
     } else {
-      navigate(`/order/${productId}`, { state: { quantity } });
+      navigate(`/order/${productId}`, { state: { quantity: data.quantity } });
     }
   };
 
+  const totalPrice = productDetail.price.sellingPrice * quantity;
+
   return (
     <Wrapper>
-      <ProductImage src={productDetail.imageURL} alt={productDetail.name} />
-      <DetailsWrapper>
-        <ProductDetails
-          name={productDetail.name}
-          price={productDetail.price.sellingPrice}
-          description="카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!"
-          id={productDetail.id}
-        />
-        <QuantityControlWrapper>
-          <QuantityControl
-            productName={productDetail.name}
-            quantity={quantity}
-            onQuantityChange={handleQuantityChange}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <ProductImage src={productDetail.imageURL} alt={productDetail.name} />
+        <DetailsWrapper>
+          <ProductDetails
+            name={productDetail.name}
+            price={productDetail.price.sellingPrice}
+            description="카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!"
+            id={productDetail.id}
           />
-        </QuantityControlWrapper>
-        <OrderWrapper>
-          <TotalPrice>총 결제 금액: {totalPrice.toLocaleString()}원</TotalPrice>
-          <OrderButton onClick={handleOrder}>나에게 선물하기</OrderButton>
-        </OrderWrapper>
-      </DetailsWrapper>
+          <QuantityControlWrapper>
+            <Controller
+              name="quantity"
+              control={control}
+              render={({ field }) => (
+                <QuantityControl
+                  productName={productDetail.name}
+                  quantity={field.value}
+                  onQuantityChange={field.onChange}
+                />
+              )}
+            />
+          </QuantityControlWrapper>
+          <OrderWrapper>
+            <TotalPrice>총 결제 금액: {totalPrice.toLocaleString()}원</TotalPrice>
+            <OrderButton type="submit">나에게 선물하기</OrderButton>
+          </OrderWrapper>
+        </DetailsWrapper>
+      </form>
     </Wrapper>
   );
 };
