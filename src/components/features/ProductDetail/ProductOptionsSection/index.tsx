@@ -1,7 +1,6 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import {
   Box,
-  Button,
   HStack,
   IconButton,
   Input,
@@ -9,58 +8,29 @@ import {
   RadioGroup,
   Spacer,
   Text,
-  useNumberInput,
   VStack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Controller, type UseFormReturn } from 'react-hook-form';
 
+import type { FormValues } from '@/pages/ProductDetail/formSchema';
 import type { ProductDetail, ProductOption } from '@/types';
-import { authSessionStorage, orderLocalStorage } from '@/utils/storage';
+
+import { GiftButton } from './GiftButton';
 
 interface Props {
   product: ProductDetail;
   productOptions: ProductOption[];
+  formMethods: UseFormReturn<FormValues>;
 }
 
-export const ProductOptionsSection = ({ product, productOptions = [] }: Props) => {
-  const [quantity, setQuantity] = useState<number>(1);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const navigate = useNavigate();
+export const ProductOptionsSection = ({ product, productOptions = [], formMethods }: Props) => {
+  const { control, watch, setValue } = formMethods;
 
+  const selectedOption = watch('selectedOption');
+  const quantity = watch('quantity');
   const optionsArray = Array.isArray(productOptions) ? productOptions : [];
   const selectedProductOption = optionsArray.find((option) => option.id === selectedOption);
   const maxQuantity = selectedProductOption?.giftOrderLimit || 100;
-
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
-    step: 1,
-    defaultValue: 1,
-    min: 1,
-    max: maxQuantity,
-    onChange: (_valueAsString: string, valueAsNumber: number) => setQuantity(valueAsNumber),
-  });
-
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
-
-  const handleGiftClick = () => {
-    const selectedProduct = {
-      product: {
-        ...product,
-        selectedOption: selectedProductOption || null,
-        quantity,
-      },
-    };
-    orderLocalStorage.set(selectedProduct);
-    if (authSessionStorage.get()) {
-      navigate('/order');
-    } else {
-      if (window.confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?')) {
-        navigate('/login');
-      }
-    }
-  };
 
   const totalPrice =
     product.price.sellingPrice * quantity +
@@ -74,17 +44,51 @@ export const ProductOptionsSection = ({ product, productOptions = [] }: Props) =
         <Text fontSize="md" as="b">
           {product.name}
         </Text>
-        <RadioGroup onChange={(value) => setSelectedOption(Number(value))}>
-          {optionsArray.map((option) => (
-            <Radio key={option.id} value={option.id.toString()}>
-              {option.name} (+{option.additionalPrice}원)
-            </Radio>
-          ))}
-        </RadioGroup>
+        <Controller
+          name="selectedOption"
+          control={control}
+          render={({ field }) => (
+            <RadioGroup
+              {...field}
+              onChange={(val) => setValue('selectedOption', Number(val))}
+              value={field.value?.toString() || ''}
+            >
+              {optionsArray.map((option) => (
+                <Radio key={option.id} value={option.id.toString()}>
+                  {option.name} (+{option.additionalPrice}원)
+                </Radio>
+              ))}
+            </RadioGroup>
+          )}
+        />
         <HStack mt={2}>
-          <IconButton aria-label="Add" icon={<MinusIcon />} {...dec} />
-          <Input {...input} width="100%" />
-          <IconButton aria-label="Add" icon={<AddIcon />} {...inc} />
+          <Controller
+            name="quantity"
+            control={control}
+            render={({ field }) => (
+              <>
+                <IconButton
+                  aria-label="Decrease quantity"
+                  icon={<MinusIcon />}
+                  onClick={() => field.onChange(Math.max(1, field.value - 1))}
+                />
+                <Input
+                  {...field}
+                  type="number"
+                  value={field.value}
+                  onChange={(e) =>
+                    field.onChange(Math.min(maxQuantity, Math.max(1, Number(e.target.value))))
+                  }
+                  width="100%"
+                />
+                <IconButton
+                  aria-label="Increase quantity"
+                  icon={<AddIcon />}
+                  onClick={() => field.onChange(Math.min(maxQuantity, field.value + 1))}
+                />
+              </>
+            )}
+          />
         </HStack>
       </Box>
       <Spacer />
@@ -104,17 +108,7 @@ export const ProductOptionsSection = ({ product, productOptions = [] }: Props) =
           {totalPrice}원
         </Text>
       </Box>
-      <Button
-        borderRadius="md"
-        bg="blackAlpha.900"
-        width="100%"
-        color="white"
-        p={2}
-        onClick={handleGiftClick}
-        mb={16}
-      >
-        나에게 선물하기
-      </Button>
+      <GiftButton product={product} productOptions={productOptions} />
     </VStack>
   );
 };
