@@ -24,8 +24,6 @@ const OrderPage: React.FC = () => {
         }
     });
 
-    const isReceiptRequested = watch("isReceiptRequested");
-
     const onSubmit = (data: FormData) => {
         const messageCheck = data.message.trim();
 
@@ -65,18 +63,10 @@ const OrderPage: React.FC = () => {
                         <GiftDetails productDetail={productDetail} quantity={quantity} />
                     </Box>
                     <Box w="30%">
-                        <Controller
-                            name="isReceiptRequested"
+                        <PaymentInfo
+                            price={price}
                             control={control}
-                            render={({ field }) => (
-                                <PaymentInfo
-                                    price={price}
-                                    isReceiptRequested={field.value}
-                                    setIsReceiptRequested={field.onChange}
-                                    receiptNumber={watch("receiptNumber")}
-                                    setReceiptNumber={(value) => field.onChange(value)}
-                                />
-                            )}
+                            watch={watch}
                         />
                         <Button type="submit" colorScheme="yellow" size="lg">{price}원 결제하기</Button>
                     </Box>
