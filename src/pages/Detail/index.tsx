@@ -1,7 +1,8 @@
 import { Box, Button, Image, Input, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { fetchProductDetails } from '@/api/instance';
@@ -15,7 +16,6 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const anthInfo = useAuth();
-  const [quantity, setQuantity] = useState<number>(1);
   const giftOrderLimit = 100;
 
   const {
@@ -34,7 +34,14 @@ const ProductDetail = () => {
     }
   }, [productError, navigate]);
 
-  const handleGiftClick = () => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<{ quantity: number }>({ defaultValues: { quantity: 1 } });
+
+  const onSubmit = (data: { quantity: number }) => {
     if (!anthInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
         navigate(`${RouterPath.login}?redirect=${encodeURIComponent(location.pathname)}`);
@@ -43,18 +50,19 @@ const ProductDetail = () => {
       navigate(RouterPath.payment, {
         state: {
           product,
-          quantity,
-          totalPrice: product.detail.price.sellingPrice * quantity,
+          quantity: data.quantity,
+          totalPrice: product.detail.price.sellingPrice * data.quantity,
         },
       });
     }
   };
+
   const handleQuantityChange = (value: number) => {
     if (value > 0 && value <= giftOrderLimit) {
-      setQuantity(value);
+      setValue('quantity', value);
     } else if (value > giftOrderLimit) {
       alert(`최대 주문 가능 수량은 ${giftOrderLimit}개입니다.`);
-      setQuantity(giftOrderLimit);
+      setValue('quantity', giftOrderLimit);
     }
   };
 
@@ -67,7 +75,7 @@ const ProductDetail = () => {
   }
 
   const totalPrice = product?.detail.price.sellingPrice
-    ? product.detail.price.sellingPrice * quantity
+    ? product.detail.price.sellingPrice * (errors.quantity ? 1 : 0)
     : 0;
 
   return (
@@ -85,25 +93,32 @@ const ProductDetail = () => {
               {product.detail.price.sellingPrice?.toLocaleString() ?? 0} 원
               <Text>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</Text>
             </Text>
-            <QuantityWrapper>
-              <Button onClick={() => handleQuantityChange(quantity - 1)}>-</Button>
-              <QuantityInput
-                type="number"
-                value={quantity}
-                min={1}
-                marginBottom={4}
-                onChange={(e) => handleQuantityChange(parseInt(e.target.value, 10))}
-                textAlign="center"
-                width="50px"
-              />
-              <Button onClick={() => handleQuantityChange(quantity + 1)}>+</Button>
-            </QuantityWrapper>
-            <Text fontSize="xl" fontWeight="bold" marginBottom={4}>
-              총 결제 금액: {totalPrice.toLocaleString()} 원
-            </Text>
-            <Button colorScheme="blue" onClick={handleGiftClick}>
-              나에게 선물하기
-            </Button>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <QuantityWrapper>
+                <Button onClick={() => handleQuantityChange(errors.quantity ? 1 : 0 - 1)}>-</Button>
+                <QuantityInput
+                  type="number"
+                  {...register('quantity', {
+                    min: { value: 1, message: '최소 1개 이상 입력해주세요.' },
+                    max: {
+                      value: giftOrderLimit,
+                      message: `최대 ${giftOrderLimit}개까지 가능합니다.`,
+                    },
+                  })}
+                  onChange={(e) => handleQuantityChange(parseInt(e.target.value, 10))}
+                  textAlign="center"
+                  width="50px"
+                />
+                <Button onClick={() => handleQuantityChange(errors.quantity ? 1 : 0 + 1)}>+</Button>
+              </QuantityWrapper>
+              {errors.quantity && <Text color="red.500">{errors.quantity.message}</Text>}
+              <Text fontSize="xl" fontWeight="bold" marginBottom={4}>
+                총 결제 금액: {totalPrice.toLocaleString()} 원
+              </Text>
+              <Button colorScheme="blue" type="submit">
+                나에게 선물하기
+              </Button>
+            </form>
           </Box>
         </>
       )}

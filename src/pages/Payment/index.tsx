@@ -96,7 +96,6 @@ const PaymentPage = () => {
               )}
 
               <Select placeholder="개인소득공제" marginBottom="20px">
-                <option value="personal">개인소득공제</option>
                 <option value="business">사업자 지출증빙</option>
               </Select>
 
