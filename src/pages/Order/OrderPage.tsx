@@ -3,7 +3,7 @@ import type { SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
-import { useOrderForm } from '@/api/hooks/useOrderFoam';
+import { useOrderValidation } from '@/api/hooks/useOrderValidation';
 import { GiftDetails } from '@/components/features/Order/GiftDetails';
 import { OrderForm } from '@/components/features/Order/OrderFoam';
 import { PaymentDetails } from '@/components/features/Order/PaymentDetails';
@@ -18,15 +18,15 @@ export const OrderPage = () => {
   const location = useLocation();
   const { imageURL, name, totalPrice, brandName } = location.state || {};
 
-  const {
-    message,
-    setMessage,
-    isReceiptChecked,
-    setIsReceiptChecked,
-    receiptNumber,
-    setReceiptNumber,
-    handleClick,
-  } = useOrderForm();
+  const methods = useForm<OrderFormData>({
+    defaultValues: {
+      message: '',
+      checkedReceipt: false,
+      receiptNumber: '',
+    },
+  });
+
+  const validateOrder = useOrderValidation();
 
   const onSubmit: SubmitHandler<OrderFormData> = (data) => {
     const errorMessage = validateOrder(data);
