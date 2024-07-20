@@ -5,8 +5,6 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useGetProductsDetail, useGetProductsOption } from '@/api';
 import Loading from '@/components/common/Loading';
 import { RouterPath } from '@/routes/path';
-import type { RegisterOption } from '@/utils/form';
-import { useCreateRegister } from '@/utils/form';
 import { clip } from '@/utils/numberControl/numberControl';
 import { authSessionStorage } from '@/utils/storage';
 
@@ -31,29 +29,9 @@ export const ProductsPage = () => {
   const location = useLocation();
 
   const maxCount = productsOptions?.options.giftOrderLimit;
-  const inputOptions: RegisterOption<Inputs>[] = [
-    {
-      name: 'count' as const,
-      option: {
-        valueAsNumber: true,
-        min: {
-          value: 1,
-          message: '1개 이상 선택해주세요.',
-        },
-        max: maxCount && {
-          value: maxCount,
-          message: `${maxCount}개 이하로 선택해주세요.`,
-        },
-      },
-    },
-  ];
 
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>({
     defaultValues: defaultInputs,
-  });
-  const getRegister = useCreateRegister<Inputs>({
-    register: register,
-    options: inputOptions,
   });
 
   const setCount = (value: number) => {
@@ -130,13 +108,23 @@ export const ProductsPage = () => {
                 </Button>
                 <Input
                   type="number"
-                  {...getRegister('count')}
+                  {...register('count', {
+                    valueAsNumber: true,
+                    min: {
+                      value: 1,
+                      message: '1개 이상 선택해주세요.',
+                    },
+                    max: maxCount && {
+                      value: maxCount,
+                      message: `${maxCount}개 이하로 선택해주세요.`,
+                    },
+                    onChange: handleInputChange,
+                  })}
                   mx="3"
                   w="100%"
                   h="36px"
                   textAlign="center"
                   onKeyDown={handleInputKeyDown}
-                  onChange={handleInputChange}
                 />
                 <Button onClick={() => changeCount(1)} w="36px" h="36px" boxSizing="border-box">
                   +
