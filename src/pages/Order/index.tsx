@@ -50,11 +50,11 @@ import {
       const taxRequest = watch('taxRequest');
       const totalPrice = product.price.sellingPrice * quantity;
 
-      const onSubmit = (_data: FormData) => {
+      const onSubmit = (data: FormData) => {
         if (!authInfo) {
           navigate('/login');
         } else {
-          console.log('결제 로직 실행');
+          console.log('결제 로직 실행', data);
         }
       };
 
@@ -134,7 +134,7 @@ import {
                         <Select
                           {...field}
                           placeholder="개인소득공제"
-                          onChange={(e) => field.onChange(e.target.value)}
+                          isDisabled={!taxRequest}
                         >
                           <option value="개인소득공제">개인소득공제</option>
                           <option value="사업자지출증빙">사업자지출증빙</option>
@@ -145,11 +145,15 @@ import {
                       name="taxNumber"
                       control={control}
                       rules={{
-                        required: taxRequest ? '현금영수증 번호를 입력해주세요.' : false,
-                        pattern: { value: /^\d+$/, message: '현금영수증 번호는 숫자만 입력해주세요.' },
+                        validate: (value) =>
+                          taxRequest ? (value ? (/^\d+$/.test(value) ? true : '현금영수증 번호는 숫자만 입력해주세요.') : '현금영수증 번호를 입력해주세요.') : true,
                       }}
                       render={({ field }) => (
-                        <Input {...field} placeholder="(-없이) 숫자만 입력해주세요." />
+                        <Input
+                          {...field}
+                          placeholder="(-없이) 숫자만 입력해주세요."
+                          isDisabled={!taxRequest}
+                        />
                       )}
                     />
                     {errors.taxNumber && <Text color="red.500">{errors.taxNumber.message}</Text>}
