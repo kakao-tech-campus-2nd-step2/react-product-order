@@ -22,8 +22,9 @@ export default function GoodsCount({ name, amount, setAmount, limit }: CountData
   return (
     <div>
       <Box
+        display="flex"
+        flexDirection="column"
         p="12px 14px 16px"
-        height="100px"
         width="318px"
         borderWidth="0.1px"
         borderColor="rgb(237, 237, 237)"
