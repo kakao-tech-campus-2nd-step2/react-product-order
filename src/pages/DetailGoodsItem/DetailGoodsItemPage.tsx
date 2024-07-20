@@ -1,27 +1,31 @@
 import { Box, Flex, HStack, Image, Spacer, Text, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { useAuthRedirectHandler } from '@/api/hooks/useAuthRedirectHandler';
 import { useGetDetailProduct } from '@/api/hooks/useGetDetailProduct';
+import { useQuantity } from '@/api/hooks/useQuantity';
 import { CTAButton } from '@/components/common/Button/CTAButton';
 import { Stepper } from '@/components/common/Stepper/stepper';
 import { ProductDetailSection } from '@/components/features/ProductDetail/ProductDetailSection';
 import { TotalPrice } from '@/components/features/ProductDetail/TotalPrice';
 import { getDynamicPath } from '@/routes/path';
 
+type FormData = {
+  quantity: number;
+};
+
 export const DetailGoodsItemPage = () => {
   const { productId = '0' } = useParams<{ productId: string }>();
   const { data, isLoading, isError } = useGetDetailProduct({ productId });
-  const [quantity, setQuantity] = useState(1);
+  const { register, handleSubmit, watch, setValue } = useForm({
+    defaultValues: {
+      quantity: 1,
+    },
+  });
 
-  const handleIncrement = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const handleDecrement = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  };
+  const detail = data?.detail;
+  const { quantity, handleIncrement, handleDecrement } = useQuantity({ watch, setValue });
 
   const totalPrice = quantity * (data?.price.sellingPrice || 0);
 
