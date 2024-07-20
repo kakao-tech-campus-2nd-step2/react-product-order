@@ -2,9 +2,9 @@ import { Box, Divider, VStack } from '@chakra-ui/react';
 import type { UseFormRegister } from 'react-hook-form';
 import { useFormContext } from 'react-hook-form';
 
-import { OrderCacheReceiptInput } from '@/components/features/Order/atoms/OrderCacheReceiptInput';
-import { OrderCashReceiptSelect } from '@/components/features/Order/atoms/OrderCacheReceiptSelect';
-import { OrderCacheCheckbox } from '@/components/features/Order/atoms/OrderChacheCheckbox';
+import { OrderCashCheckbox } from '@/components/features/Order/atoms/OrderCashCheckbox';
+import { OrderCashReceiptInput } from '@/components/features/Order/atoms/OrderCashReceiptInput';
+import { OrderCashReceiptSelect } from '@/components/features/Order/atoms/OrderCashReceiptSelect';
 import { useErrorToast } from '@/hooks/useErrorToast';
 import type { OrderFormData } from '@/hooks/useOrderValidation';
 
@@ -12,7 +12,7 @@ export interface IOrderRequestCashReceipt {
   register: UseFormRegister<OrderFormData>;
 }
 
-export const OrderRequestCacheReceipt = ({ register }: IOrderRequestCashReceipt) => {
+export const OrderRequestCashReceipt = ({ register }: IOrderRequestCashReceipt) => {
   useErrorToast('receipt.number');
   const { watch } = useFormContext<OrderFormData>();
   const isCheckboxChecked = watch('receipt.checkbox');
@@ -20,11 +20,11 @@ export const OrderRequestCacheReceipt = ({ register }: IOrderRequestCashReceipt)
   return (
     <Box width="100%" padding="16px">
       <VStack spacing="16px" align="start">
-        <OrderCacheCheckbox {...register('receipt.checkbox')} />
+        <OrderCashCheckbox {...register('receipt.checkbox')} />
         <Divider />
         <OrderCashReceiptSelect {...register('receipt.type')} />
         <Divider />
-        <OrderCacheReceiptInput
+        <OrderCashReceiptInput
           {...register('receipt.number', {
             required: isCheckboxChecked
               ? '현금영수증을 신청하셨다면 번호를 기입해 주셔야해요.'

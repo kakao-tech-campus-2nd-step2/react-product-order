@@ -41,7 +41,7 @@ const isFormDataInvalid = (data: OrderFormData) => {
 
   if (isCardMessageInvalid(message)) return;
 
-  if (isCacheReceiptInvalid(isChecked, receiptNumber)) return;
+  if (isCashReceiptInvalid(isChecked, receiptNumber)) return;
 
   return false;
 };
@@ -56,7 +56,7 @@ const isCardMessageInvalid = (message: string) => {
   return false;
 };
 
-const isCacheReceiptInvalid = (isChecked: boolean, receiptNumber: string) => {
+const isCashReceiptInvalid = (isChecked: boolean, receiptNumber: string) => {
   if (!isChecked) return false;
 
   if (!receiptNumber) {
