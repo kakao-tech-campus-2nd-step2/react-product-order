@@ -40,7 +40,9 @@ const getProductDetailPath = ({ productId }: ProductDetailRequestParams) => {
 };
 
 // API 함수 정의
-export const getProductDetail = async (params: ProductDetailRequestParams): Promise<ProductDetailData> => {
+export const getProductDetail = async (
+  params: ProductDetailRequestParams,
+): Promise<ProductDetailData> => {
   const response = await fetchInstance.get(getProductDetailPath(params));
   return response.data.detail;
 };

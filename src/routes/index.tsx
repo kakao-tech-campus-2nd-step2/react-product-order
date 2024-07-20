@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: RouterPath.order,
-        element: <ProductOrder />
+        element: <ProductOrder />,
       },
       {
         path: RouterPath.myAccount,
