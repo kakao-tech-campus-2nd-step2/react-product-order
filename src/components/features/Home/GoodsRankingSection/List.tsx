@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import { RankingGoodsItems } from '@/components/common/GoodsItem/Ranking';
@@ -13,8 +14,13 @@ type Props = {
 
 export const GoodsRankingList = ({ goodsList }: Props) => {
   const [hasMore, setHasMore] = useState(false);
+  const navigate = useNavigate();
 
   const currentGoodsList = hasMore ? goodsList : goodsList.slice(0, 6);
+
+  const handleItemClick = (productId: number) => {
+    navigate(`/product/${productId}`);
+  };
 
   if (goodsList.length === 0) return <EmptyView>보여줄 상품이 없어요!</EmptyView>;
 
@@ -36,6 +42,7 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
             title={name}
             amount={price.sellingPrice}
             subtitle={brandInfo.name}
+            onClick={() => handleItemClick(id)}
           />
         ))}
       </Grid>

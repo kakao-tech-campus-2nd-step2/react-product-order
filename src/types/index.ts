@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export type ThemeData = {
   id: number;
   key: string;
@@ -14,6 +16,8 @@ export type RankingFilterOption = {
 };
 
 export type GoodsData = {
+  giftOrderLimit: number;
+  description: ReactNode;
   id: number;
   name: string;
   imageURL: string;
@@ -30,5 +34,8 @@ export type GoodsData = {
     id: number;
     name: string;
     imageURL: string;
+    description?: string;
+    giftOrderLimit: number;
   };
+  count?: number;
 };

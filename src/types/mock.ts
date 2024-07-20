@@ -32,7 +32,10 @@ export const GoodsMockData: GoodsData = {
     name: 'BBQ',
     imageURL:
       'https://st.kakaocdn.net/product/gift/gift_brand/20220216170226_38ba26d8eedf450683200d6730757204.png',
+    giftOrderLimit: 0,
   },
+  giftOrderLimit: 0,
+  description: undefined,
 };
 
 export const GoodsMockList: GoodsData[] = Array.from({ length: 21 }, () => GoodsMockData);
