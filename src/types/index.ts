@@ -32,3 +32,81 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductOrderRequestBody = {
+  productId: number;
+  productOptionId: number;
+  productQuantity: number;
+  messageCardTemplateId: number;
+  messageCardTextMessage: string;
+  senderId: number;
+  receiverId: number;
+  hasCashReceipt: boolean;
+  cashReceiptType: 'PERSONAL' | 'BUSINESS';
+  cashReceiptNumber: string;
+};
+
+export type GoodDetailData = {
+  isAccessableProductPage: boolean;
+  review: {
+    averageRating: number;
+    totalReviewCount: number;
+  };
+  productDescription: {
+    images: string[];
+  };
+  productDetailInfo: {
+    announcements: {
+      displayOrder: number;
+      name: string;
+      value: string;
+    }[];
+    terms: {
+      displayOrder: number;
+      title: string;
+      description: string;
+    }[];
+  };
+};
+
+export type MessageCardTemplateData = {
+  id: number;
+  defaultTextMessage: string;
+  thumbURL: string;
+  imageURL: string;
+};
+
+export type MyAccountInfoData = {
+  id: number;
+  name: string;
+  birthday?: string;
+  profileImageURL: string;
+  point: number;
+};
+
+export type ThemesProductsResponseData = {
+  products: GoodsData[];
+  nextPageToken?: string;
+  pageInfo: {
+    totalResults: number;
+    resultsPerPage: number;
+  };
+};
+
+export type GetProductsByThemeResponse = ThemesProductsResponseData;
+
+export type GetProductDetailResponse = {
+  detail: GoodDetailData & GoodsData;
+};
+
+export type GetMessageCardTemplatesResponse = {
+  templates: MessageCardTemplateData[];
+};
+
+export type GetMyAccountInfoResponse = MyAccountInfoData;
+
+export type GetMyWishListResponse = ThemesProductsResponseData;
+
+export type ChargeMyPointsResponse = void;
+
+export type OrderProductResponse = void;
