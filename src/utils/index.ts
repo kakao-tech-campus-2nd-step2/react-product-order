@@ -48,6 +48,8 @@ export function isNumericString(value: string) {
   return /^\d+$/.test(value);
 }
 
-export function isEmptyString(value: string) {
+export function isEmptyString(value?: string | null) {
+  if (!value) return true;
+
   return value === '';
 }
