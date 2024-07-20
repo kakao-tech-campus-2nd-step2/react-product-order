@@ -16,7 +16,7 @@ export const OrderPage = () => {
     control,
     register,
     handleSubmit,
-    watch
+    watch,
   } = useForm<FormValues>({
     defaultValues: {
       message: '',
@@ -36,6 +36,10 @@ export const OrderPage = () => {
     }
     if (data.cashReceiptRequested && !data.cashReceiptNumber) {
       alert('현금영수증 번호를 입력해주세요.');
+      return;
+    }
+    if (data.cashReceiptRequested && data.cashReceiptNumber && !/^\d+$/.test(data.cashReceiptNumber) ) {
+      alert('현금영수증 번호는 숫자로만 입력해주세요.');
       return;
     }
     alert('주문이 완료되었습니다.');
@@ -83,7 +87,7 @@ export const OrderPage = () => {
                   <option value="personal">개인소득공제</option>
                   <option value="business">사업자증빙용</option>
                 </Select>
-                <Input {...register("cashReceiptNumber", { pattern: /^\d+$/ })} placeholder="(- 없이) 숫자만 입력해주세요." />
+                <Input {...register("cashReceiptNumber")} placeholder="(- 없이) 숫자만 입력해주세요." />
               </>
             )}
             <Text fontSize="2xl" fontWeight="semibold">최종 결제금액</Text>

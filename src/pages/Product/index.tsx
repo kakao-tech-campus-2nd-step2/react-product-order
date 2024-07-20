@@ -74,7 +74,10 @@ export const ProductPage: React.FC = () => {
   const handleGiftToSelf = () => {
     const authToken = authSessionStorage.get();
     if (!authToken) {
-      navigate(RouterPath.login);
+      const confirmLogin = window.confirm("로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?");
+    if (confirmLogin) {
+      navigate(RouterPath.login); 
+    }
       return;
     }
 
