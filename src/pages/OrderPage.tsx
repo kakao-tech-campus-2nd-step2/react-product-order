@@ -1,3 +1,6 @@
+import { useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import styled from '@emotion/styled';
 import {
   Box,
   Container,
@@ -9,10 +12,83 @@ import {
   Image,
   Flex,
 } from '@chakra-ui/react';
-
 import { Button } from '@/components/common/Button/index';
+import { useGetGoodsDetail } from '@/api/hooks/useGetGoodsDetail';
+import { placeOrder } from '@/api/hooks/useOrder';
+import { Spinner } from '@/components/common/Spinner';
+import { getDynamicPath } from '@/routes/path';
+import type { ProductOrderRequestBody } from '@/types';
 
 const OrderPage = () => {
+  const { productId } = useParams<{ productId: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const quantity = (location.state as { quantity: number }).quantity || 1;
+  if (!productId) {
+    return <TextView>유효하지 않은 상품 ID입니다.</TextView>;
+  }
+  const { data: productDetail, isLoading, isError } = useGetGoodsDetail(Number(productId));
+
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+  const receiptCheckboxRef = useRef<HTMLInputElement>(null);
+  const receiptTypeRef = useRef<HTMLSelectElement>(null);
+  const receiptNumberRef = useRef<HTMLInputElement>(null);
+
+  const handleOrderClick = async () => {
+    const message = messageRef.current?.value || '';
+
+    if (message.trim() === '') {
+      alert('메시지를 입력해주세요');
+      return;
+    }
+
+    if (receiptCheckboxRef.current?.checked && !receiptNumberRef.current?.value.trim()) {
+      alert('현금영수증 번호를 입력해주세요.');
+      return;
+    }
+
+    try {
+      const orderData: ProductOrderRequestBody = {
+        productId: Number(productId),
+        productOptionId: 0,
+        productQuantity: quantity,
+        messageCardTemplateId: 0,
+        messageCardTextMessage: message,
+        senderId: 0,
+        receiverId: 0,
+        hasCashReceipt: receiptCheckboxRef.current?.checked || false,
+        cashReceiptType: receiptTypeRef.current?.value as 'PERSONAL' | 'BUSINESS',
+        cashReceiptNumber: receiptNumberRef.current?.value || '',
+      };
+
+      await placeOrder(orderData);
+      alert('주문이 완료되었습니다.');
+      navigate(getDynamicPath.order(productId));
+    } catch (error) {
+      console.error('주문 실패:', error);
+      if (error instanceof Error) {
+        alert(`주문에 실패했습니다. 오류: ${error.message}`);
+      } else {
+        alert('주문에 실패했습니다. 알 수 없는 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <TextView>
+        <Spinner />
+      </TextView>
+    );
+  }
+
+  if (isError) {
+    return <TextView>에러가 발생했습니다.</TextView>;
+  }
+  if (!productDetail) return <TextView>상품 정보를 불러올 수 없습니다.</TextView>;
+
+  const totalAmount = productDetail.detail.price.sellingPrice * quantity;
+
   return (
     <Flex w="100vw">
       <Container w="70%">
@@ -21,12 +97,13 @@ const OrderPage = () => {
             나에게 주는 선물
           </Text>
           <Textarea
+            ref={messageRef}
             placeholder="선물과 함께 보낼 메시지를 적어보세요"
             p="8px 16px 8px"
             m="26px 60px 30px"
             backgroundColor="#EDF2F7"
             h="100px"
-          ></Textarea>
+          />
         </Flex>
         <Box backgroundColor="#EDEDED" h="8px" w="100%" />
         <Box p="16px">
@@ -41,15 +118,16 @@ const OrderPage = () => {
             mt="16px"
           >
             <Image
-              src="https://st.kakaocdn.net/product/gift/product/20240701091842_fff1dd1c0fc84e9fbf0fa61d1b4bd273.png"
+              src={productDetail.detail.imageURL}
               boxSize="86"
-            ></Image>
+              alt={productDetail.detail.name}
+            />
             <Box pl="8px">
               <Text fontSize="13px" color="#888">
-                브랜드명
+                {productDetail.detail.brandInfo.name}
               </Text>
               <Text fontSize="14px" lineHeight="18px" pt="3px">
-                상품이름
+                {productDetail.detail.name}
               </Text>
             </Box>
           </Box>
@@ -70,21 +148,28 @@ const OrderPage = () => {
           결제 정보
         </Text>
         <Box display="flex" flexDirection="column" p="16px">
-          <Checkbox mb="16px" fontSize="15px" fontWeight="bold">
+          <Checkbox ref={receiptCheckboxRef} mb="16px" fontSize="15px" fontWeight="bold">
             현금영수증 신청
           </Checkbox>
-          <Select p="0px 32px 1px 16px" w="100%" h="40px" border="1px solid rgb(237, 237, 237)">
-            <option value="personal">개인소득공제</option>
-            <option value="business">사업자증빙용</option>
+          <Select
+            ref={receiptTypeRef}
+            p="0px 32px 1px 16px"
+            w="100%"
+            h="40px"
+            border="1px solid rgb(237, 237, 237)"
+          >
+            <option value="PERSONAL">개인소득공제</option>
+            <option value="BUSINESS">사업자증빙용</option>
           </Select>
           <Input
+            ref={receiptNumberRef}
             placeholder="(-없이) 숫자만 입력해주세요."
             h="40px"
             mt="8px"
             p="0px 16px"
             border="1px solid rgb(237, 237, 237)"
             borderRadius="4px"
-          ></Input>
+          />
         </Box>
         <Flex
           justifyContent="space-between"
@@ -97,13 +182,22 @@ const OrderPage = () => {
             최종 결제금액
           </Text>
           <Text fontSize="16px" fontWeight="bold">
-            42000원
+            {totalAmount.toLocaleString()}원
           </Text>
         </Flex>
-        <Button>42000원 결제하기</Button>
+        <Button onClick={handleOrderClick}>{totalAmount.toLocaleString()}원 결제하기</Button>
       </Container>
     </Flex>
   );
 };
 
 export default OrderPage;
+
+const TextView = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px 60px;
+  font-size: 16px;
+`;
