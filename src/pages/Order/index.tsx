@@ -10,8 +10,6 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import type { FieldErrors } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
@@ -34,41 +32,39 @@ const defaultOrderInfo: OrderInfo = {
 
 export const OrderPage = () => {
   const location = useLocation();
-  const { register, handleSubmit, getValues } = useForm<OrderInfo>({
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm<OrderInfo>({
     defaultValues: defaultOrderInfo,
   });
-  const [needReceiptState, setNeedReceiptState] = useState(defaultOrderInfo.needReceipt);
 
   const orderInfoOptions: RegisterOption<OrderInfo>[] = [
     {
       name: 'message' as const,
       option: {
         maxLength: 100,
-        required: {
-          value: true,
-          message: '메세지를 입력해주세요.',
-        },
+        required: true,
       },
     },
     {
       name: 'needReceipt' as const,
+      option: {
+        required: true,
+      },
     },
     {
       name: 'receiptType' as const,
       option: {
-        required: {
-          value: needReceiptState,
-          message: '현금영수증 종류를 선택해주세요.',
-        },
+        required: true,
       },
     },
     {
       name: 'receiptNumber' as const,
       option: {
-        required: {
-          value: needReceiptState,
-          message: '현금영수증 번호를 입력해주세요.',
-        },
+        required: getValues('needReceipt'),
         pattern: {
           value: /^[0-9]+$/,
           message: '숫자만 입력 가능합니다.',
@@ -76,17 +72,12 @@ export const OrderPage = () => {
       },
     },
   ];
-
   const getRegister = useCreateRegister<OrderInfo>({
     register: register,
     options: orderInfoOptions,
   });
 
   const orderPrice = location.state.price.basicPrice * location.state.count;
-
-  const handleNeedReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNeedReceiptState(e.target.checked);
-  };
 
   const handleReceiptNumberKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const numberButNonNumber = ['e', 'E', '+', '-'];
@@ -96,21 +87,20 @@ export const OrderPage = () => {
   };
 
   const handleOrder = () => {
-    const needReceipt = getValues('needReceipt');
+    if (errors) {
+      alert(errors.message?.message);
+    } else {
+      const needReceipt = getValues('needReceipt');
 
-    const completedOrder: OrderInfo = {
-      message: getValues('message'),
-      needReceipt: needReceipt,
-      receiptType: getValues('receiptType'),
-      receiptNumber: getValues('receiptNumber'),
-    };
-    console.log(completedOrder);
-    alert('주문이 완료되었습니다.');
-  };
-
-  const handleError = (errors: FieldErrors<OrderInfo>) => {
-    const firstError = Object.values(errors)[0];
-    alert(firstError.message);
+      const completedOrder: OrderInfo = {
+        message: getValues('message'),
+        needReceipt: needReceipt,
+        receiptType: getValues('receiptType'),
+        receiptNumber: getValues('receiptNumber'),
+      };
+      console.log(completedOrder);
+      alert('주문이 완료되었습니다.');
+    }
   };
 
   return (
@@ -172,13 +162,7 @@ export const OrderPage = () => {
           </Text>
           <Divider opacity="1" borderColor="#eeeeee" />
           <Flex w="100%" flexDir="column" p="5" gap="2">
-            <Checkbox
-              size="lg"
-              mb="3"
-              colorScheme="yellow"
-              {...getRegister('needReceipt')}
-              onChange={handleNeedReceiptChange}
-            >
+            <Checkbox size="lg" mb="3" colorScheme="yellow" {...getRegister('needReceipt')}>
               <Text fontSize="md" fontWeight="700">
                 현금영수증 신청
               </Text>
@@ -201,7 +185,7 @@ export const OrderPage = () => {
           </Flex>
           <Divider opacity="1" borderColor="#eeeeee" />
           <Button
-            onClick={handleSubmit(handleOrder, handleError)}
+            onClick={handleSubmit(handleOrder)}
             mt="10"
             bg="#fee500"
             py="2"
