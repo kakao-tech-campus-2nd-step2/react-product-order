@@ -1,20 +1,18 @@
-import { Box, Checkbox, Input, Text, VStack } from '@chakra-ui/react';
-import { Control, Controller, UseFormWatch } from 'react-hook-form';
+import { Box, Checkbox, Input, Select, Text, VStack } from '@chakra-ui/react';
+import { Control, Controller} from 'react-hook-form';
 
 type FormData = {
-    message: string;
-    isReceiptRequested: boolean;
-    receiptNumber: string;
-  };
-  
+  message: string;
+  isReceiptRequested: boolean;
+  receiptNumber: string;
+};
+
 type Props = {
   price: number;
   control: Control<FormData>;
-  watch: UseFormWatch<FormData>;
 };
 
-const PaymentInfo = ({ price, control, watch }: Props) => {
-  const isReceiptRequested = watch('isReceiptRequested');
+const PaymentInfo = ({ price, control}: Props) => {
 
   return (
     <Box>
@@ -32,19 +30,22 @@ const PaymentInfo = ({ price, control, watch }: Props) => {
             </Checkbox>
           )}
         />
-        {isReceiptRequested && (
-          <Controller
-            name="receiptNumber"
-            control={control}
-            rules={{ pattern: /^\d+$/ }}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="(-없이) 숫자만 입력해주세요."
-              />
-            )}
-          />
-        )}
+          <>
+            <Select defaultValue="personal">
+              <option value="personal">개인소득공제</option>
+              <option value="business">사업자등록증</option>
+            </Select>
+            <Controller
+              name="receiptNumber"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="(-없이) 숫자만 입력해주세요."
+                />
+              )}
+            />
+          </>
       </VStack>
       <Text fontSize="xl" mt={4}>최종 결제금액: {price}원</Text>
     </Box>
