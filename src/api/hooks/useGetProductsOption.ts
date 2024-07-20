@@ -12,11 +12,9 @@ export type GoodsOptionsResponseData = {
   options: GoodsOptionData;
 };
 
-const getGoodsOptionsPath = (goodsId: string) => `/v1/products/${goodsId}/options`;
-
-export const getGoodsOptions = async (params: GoodsOptionRequestParams) => {
+export const getGoodsOptions = async (goodsId: string) => {
   const response = await fetchInstance.get<GoodsOptionsResponseData>(
-    getGoodsOptionsPath(params.productId),
+    `/v1/products/${goodsId}/options`,
   );
   return response.data;
 };
@@ -30,7 +28,7 @@ export const useGetGoodsOptions = ({ productId }: GoodsOptionRequestParams) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await getGoodsOptions({ productId });
+        const response = await getGoodsOptions(productId);
         setData(response.options);
       } catch (err) {
         setError(true);

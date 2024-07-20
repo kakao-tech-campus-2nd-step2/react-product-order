@@ -12,11 +12,9 @@ export type GoodsDetailResponseData = {
   detail: GoodsData;
 };
 
-const getGoodsDetailPath = (goodsId: string) => `/v1/products/${goodsId}/detail`;
-
-export const getGoodsDetail = async (params: GoodsDetailRequestParams) => {
+export const getGoodsDetail = async (goodsId: string) => {
   const response = await fetchInstance.get<GoodsDetailResponseData>(
-    getGoodsDetailPath(params.productId),
+    `/v1/products/${goodsId}/detail`,
   );
   return response.data;
 };
@@ -30,7 +28,7 @@ export const useGetGoodsDetail = ({ productId }: GoodsDetailRequestParams) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await getGoodsDetail({ productId });
+        const response = await getGoodsDetail(productId);
         setData(response.detail);
       } catch (err) {
         setError(true);
