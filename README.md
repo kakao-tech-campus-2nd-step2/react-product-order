@@ -54,5 +54,5 @@ label로 input 필드를 감싸거나 for 속성을 사용해 연결하면, labe
 ### 📄 요구 사항
 - [x] ThemeItem 스토리 수정 및 전체 스토리 수정 
 - [x] common/Layout/Container 컴포넌트 csstype 패키지 적용
-- [] `Code Spell Checker` extension을 통한 오타 수정
-- [] 현금영수증 체크시 select, input 태그 toggle
+- [x] `Code Spell Checker` extension을 통한 오타 수정
+- [x] 현금영수증 체크시 select, input 태그 toggle
