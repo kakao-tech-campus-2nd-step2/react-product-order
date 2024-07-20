@@ -13,6 +13,13 @@ import ThemeItem from './ThemeItem';
 const GRID_GAP = 0;
 const GRID_COLUMNS = 6;
 
+interface LocationState {
+  backgroundColor: string;
+  label: string;
+  title: string;
+  description: string;
+}
+
 export default function ThemeCategory() {
   const { data, error, isError, isLoading } = useQuery<ThemesResponse, AxiosError>({
     queryKey: ['theme'],
@@ -30,12 +37,14 @@ export default function ThemeCategory() {
               <Link
                 key={theme.id}
                 to={getDynamicPath(ROUTE_PATH.THEME, { themeKey: theme.key })}
-                state={{
-                  backgroundColor: theme.backgroundColor,
-                  label: theme.label,
-                  title: theme.title,
-                  description: theme.description,
-                }}
+                state={
+                  {
+                    backgroundColor: theme.backgroundColor,
+                    label: theme.label,
+                    title: theme.title,
+                    description: theme.description,
+                  } as LocationState
+                }
               >
                 <ThemeItem image={theme.imageURL} label={theme.label} />
               </Link>

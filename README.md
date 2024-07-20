@@ -57,4 +57,4 @@ label로 input 필드를 감싸거나 for 속성을 사용해 연결하면, labe
 - [x] `Code Spell Checker` extension을 통한 오타 수정
 - [x] 현금영수증 체크시 select, input 태그 toggle
 - [x] ReceiptForm 컴포넌트에서 form submit event로 처리
-- [] ThemeCategory 컴포넌트에서 LocationState 타입 단언
+- [x] ThemeCategory 컴포넌트에서 LocationState 타입 단언
