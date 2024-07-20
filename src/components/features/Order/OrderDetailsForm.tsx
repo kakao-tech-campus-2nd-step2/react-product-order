@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import type { GoodsData } from '@/types';
 
@@ -12,52 +14,37 @@ type Props = {
   quantity: number;
 };
 
+const schema = z.object({
+  message: z
+    .string()
+    .min(1, '메시지를 입력해주세요.')
+    .max(100, '메시지는 100자 이내로 입력해주세요.'),
+  hasCashReceipt: z.boolean(),
+  cashReceiptType: z.string().optional(),
+  cashReceiptNumber: z
+    .string()
+    .optional()
+    .refine((val) => (val ? /^\d*$/.test(val) : true), '현금영수증 번호는 숫자로만 입력해주세요.'),
+});
+
+type FormData = z.infer<typeof schema>;
+
 export const OrderDetailsForm = ({ productDetail, quantity }: Props) => {
-  const [formData, setFormData] = useState({
-    message: '',
-    hasCashReceipt: false,
-    cashReceiptType: '',
-    cashReceiptNumber: '',
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      message: '',
+      hasCashReceipt: false,
+      cashReceiptType: '',
+      cashReceiptNumber: '',
+    },
   });
-  const [error, setError] = useState('');
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => {
-    const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: checked ?? value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!formData.message) {
-      setError('메시지를 입력해주세요.');
-      return;
-    }
-
-    if (formData.message.length > 100) {
-      setError('메시지는 100자 이내로 입력해주세요.');
-      return;
-    }
-
-    if (formData.hasCashReceipt) {
-      if (!formData.cashReceiptNumber) {
-        setError('현금영수증 번호를 입력해주세요.');
-        return;
-      }
-
-      if (!/^\d+$/.test(formData.cashReceiptNumber)) {
-        setError('현금영수증 번호는 숫자로만 입력해주세요.');
-        return;
-      }
-    }
-
-    setError('');
+  const onSubmit = () => {
     alert('주문이 완료되었습니다.');
   };
 
@@ -65,20 +52,29 @@ export const OrderDetailsForm = ({ productDetail, quantity }: Props) => {
 
   return (
     <Container>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FormWrapper>
           <LeftSection>
-            <OrderDetailsMessageCard formData={formData} onChange={handleInputChange} />
+            <Controller
+              name="message"
+              control={control}
+              render={({ field }) => (
+                <OrderDetailsMessageCard
+                  formData={{ message: field.value }}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            {errors.message && <ErrorText>{errors.message.message}</ErrorText>}
             <SectionSpacer />
             <Subtitle>선물내역</Subtitle>
             <GoodsDetails productDetail={productDetail} count={quantity} />
           </LeftSection>
           <RightSection>
             <OrderDetailsInfo
-              formData={formData}
-              onChange={handleInputChange}
+              control={control}
               totalAmount={totalAmount}
-              error={error}
+              error={errors.cashReceiptNumber?.message || ''}
             />
           </RightSection>
         </FormWrapper>
@@ -123,6 +119,11 @@ const Subtitle = styled.h2`
 
 const SectionSpacer = styled.div`
   height: 100px;
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  margin-top: 10px;
 `;
 
 export default OrderDetailsForm;

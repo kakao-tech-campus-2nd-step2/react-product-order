@@ -1,5 +1,7 @@
 import { Divider } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import type { Control } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import { Button } from '@/components/common/Button';
 import { Spacing } from '@/components/common/layouts/Spacing';
@@ -7,26 +9,30 @@ import { Spacing } from '@/components/common/layouts/Spacing';
 import CashReceiptFields from './CashReceiptFields';
 
 type FormData = {
+  message: string;
   hasCashReceipt: boolean;
-  cashReceiptType: string;
-  cashReceiptNumber: string;
+  cashReceiptType?: string;
+  cashReceiptNumber?: string;
 };
 
 type Props = {
-  formData: FormData;
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => void;
+  control: Control<FormData>;
   totalAmount: number;
   error: string;
 };
 
-export const OrderDetailsInfo = ({ formData, onChange, totalAmount, error }: Props) => {
+export const OrderDetailsInfo = ({ control, totalAmount, error }: Props) => {
   return (
     <Wrapper>
       <Title>결제 정보</Title>
       <Divider color="#ededed" />
-      <CashReceiptFields formData={formData} onChange={onChange} />
+      <Controller
+        name="hasCashReceipt"
+        control={control}
+        render={({ field }) => (
+          <CashReceiptFields formData={{ hasCashReceipt: field.value }} onChange={field.onChange} />
+        )}
+      />
       <Divider color="#ededed" />
       <ItemWrapper>
         <LabelText>최종 결제금액</LabelText>

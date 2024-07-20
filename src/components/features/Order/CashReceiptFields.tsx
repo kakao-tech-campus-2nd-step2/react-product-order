@@ -5,8 +5,8 @@ import { Spacing } from '@/components/common/layouts/Spacing';
 
 type FormData = {
   hasCashReceipt: boolean;
-  cashReceiptType: string;
-  cashReceiptNumber: string;
+  cashReceiptType?: string;
+  cashReceiptNumber?: string;
 };
 
 type Props = {
@@ -30,17 +30,21 @@ export const CashReceiptFields = ({ formData, onChange }: Props) => {
       </Checkbox>
 
       <Spacing height={8} />
-      <Select name="cashReceiptType" value={formData.cashReceiptType} onChange={onChange}>
-        <option value="PERSONAL">개인소득공제</option>
-        <option value="BUSINESS">사업자증빙용</option>
-      </Select>
-      <Spacing height={8} />
-      <Input
-        name="cashReceiptNumber"
-        value={formData.cashReceiptNumber}
-        onChange={onChange}
-        placeholder="(-없이) 숫자만 입력해주세요."
-      />
+      {formData.hasCashReceipt && (
+        <>
+          <Select name="cashReceiptType" value={formData.cashReceiptType} onChange={onChange}>
+            <option value="PERSONAL">개인소득공제</option>
+            <option value="BUSINESS">사업자증빙용</option>
+          </Select>
+          <Spacing height={8} />
+          <Input
+            name="cashReceiptNumber"
+            value={formData.cashReceiptNumber}
+            onChange={onChange}
+            placeholder="(-없이) 숫자만 입력해주세요."
+          />
+        </>
+      )}
     </Wrapper>
   );
 };
