@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
@@ -6,6 +7,7 @@ import { Container } from '@/components/common/layouts/Container';
 import { Grid } from '@/components/common/layouts/Grid';
 import { Spinner } from '@/components/common/Spinner';
 import { VisibilityLoader } from '@/components/common/VisibilityLoader';
+import { getDynamicPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
 
 type Props = {
@@ -41,6 +43,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
           gap={16}
         >
           {flattenGoodsList.map(({ id, imageURL, name, price, brandInfo }) => (
+            <Link to={getDynamicPath.product(id.toString())} key={id.toString()}>
             <DefaultGoodsItems
               key={id}
               imageSrc={imageURL}
@@ -48,6 +51,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
               amount={price.sellingPrice}
               subtitle={brandInfo.name}
             />
+            </Link>
           ))}
         </Grid>
         {hasNextPage && (
