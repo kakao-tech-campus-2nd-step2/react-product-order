@@ -1,8 +1,8 @@
-import { Box, Textarea, useToast } from '@chakra-ui/react';
-import { memo, useEffect } from 'react';
+import { Box, Textarea } from '@chakra-ui/react';
+import { memo } from 'react';
 import type { UseFormRegister } from 'react-hook-form';
-import { useFormContext } from 'react-hook-form';
 
+import { useErrorToast } from '@/hooks/useErrorToast';
 import type { OrderFormData } from '@/hooks/useOrderValidation';
 import { orderLetterPlaceHolder } from '@/pages/Order';
 
@@ -11,20 +11,7 @@ export interface IOrderLetter {
 }
 
 export const OrderLetter = memo(({ register }: IOrderLetter) => {
-  const { formState } = useFormContext<OrderFormData>();
-  const toast = useToast();
-
-  useEffect(() => {
-    if (formState.errors.message) {
-      toast({
-        title: formState.errors.message.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'bottom',
-      });
-    }
-  }, [formState.errors.message, toast]);
+  useErrorToast('message');
 
   return (
     <Box width="100%" padding="26px 30px 30px">

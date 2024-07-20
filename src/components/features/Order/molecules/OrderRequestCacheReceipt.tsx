@@ -1,11 +1,11 @@
-import { Box, Divider, useToast, VStack } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { Box, Divider, VStack } from '@chakra-ui/react';
 import type { UseFormRegister } from 'react-hook-form';
 import { useFormContext } from 'react-hook-form';
 
 import { OrderCacheReceiptInput } from '@/components/features/Order/atoms/OrderCacheReceiptInput';
 import { OrderCashReceiptSelect } from '@/components/features/Order/atoms/OrderCacheReceiptSelect';
 import { OrderCacheCheckbox } from '@/components/features/Order/atoms/OrderChacheCheckbox';
+import { useErrorToast } from '@/hooks/useErrorToast';
 import type { OrderFormData } from '@/hooks/useOrderValidation';
 
 export interface IOrderRequestCashReceipt {
@@ -13,20 +13,9 @@ export interface IOrderRequestCashReceipt {
 }
 
 export const OrderRequestCacheReceipt = ({ register }: IOrderRequestCashReceipt) => {
-  const { watch, formState } = useFormContext<OrderFormData>();
-  const toast = useToast();
+  useErrorToast('receipt.number');
+  const { watch } = useFormContext<OrderFormData>();
   const isCheckboxChecked = watch('receipt.checkbox');
-
-  useEffect(() => {
-    if (formState.errors.receipt?.number) {
-      toast({
-        title: formState.errors.receipt.number.message,
-        status: 'error',
-        duration: 2500,
-        isClosable: true,
-      });
-    }
-  }, [formState.errors.receipt?.number, toast]);
 
   return (
     <Box width="100%" padding="16px">
