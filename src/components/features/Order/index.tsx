@@ -1,28 +1,23 @@
 import { Button, Checkbox, Input, Select } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 interface Props {
   price: number;
-  cardMessage: string;
 }
 
-export const Order = ({ price, cardMessage }: Props) => {
-  const [cashReceiptNumber, setCashReceiptNumber] = useState<string>('');
-  const [isCashReceiptChecked, setIsCashReceiptChecked] = useState<boolean>(false);
+interface FormValues {
+  cardMessage: string;
+  cashReceiptNumber: string;
+  cashReceiptType: string;
+  isCashReceiptChecked: boolean;
+}
 
-  const handleCashReceiptCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsCashReceiptChecked(e.target.checked);
-  };
+export const Order = ({ price }: Props) => {
+  const { handleSubmit, control, watch } = useFormContext<FormValues>();
+  const cardMessage = watch('cardMessage');
 
-  const handleCashReceiptNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCashReceiptNumber(value);
-  };
-
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: FormValues) => {
     if (cardMessage.length === 0) {
       alert('카드 메시지를 입력해주세요.');
       return;
@@ -31,36 +26,62 @@ export const Order = ({ price, cardMessage }: Props) => {
       alert('카드 메시지는 100자 이내로 입력해주세요.');
       return;
     }
-    if (isCashReceiptChecked && cashReceiptNumber === '') {
+    if (data.isCashReceiptChecked && data.cashReceiptNumber === '') {
       alert('현금영수증 번호를 입력해주세요.');
       return;
     }
-    if (isCashReceiptChecked && !/^[0-9]*$/.test(cashReceiptNumber)) {
+    if (data.isCashReceiptChecked && !/^[0-9]*$/.test(data.cashReceiptNumber)) {
       alert('현금영수증 번호는 숫자로만 입력해주세요.');
       return;
     }
     alert('주문이 완료되었습니다.');
+    console.log(data);
   };
 
   return (
     <Wrapper>
       <OrderInfoTitle>결제 정보</OrderInfoTitle>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <CashReceiptOption>
-          <Checkbox size="lg" colorScheme="yellow" onChange={handleCashReceiptCheckboxChange}>
-            <CashReceiptTitle>현금영수증 신청</CashReceiptTitle>
-          </Checkbox>
+          <Controller
+            name="isCashReceiptChecked"
+            control={control}
+            defaultValue={false}
+            render={({ field }) => (
+              <Checkbox
+                size="lg"
+                colorScheme="yellow"
+                isChecked={field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+              >
+                <CashReceiptTitle>현금영수증 신청</CashReceiptTitle>
+              </Checkbox>
+            )}
+          />
+
           <div style={{ padding: '5px' }} />
-          <Select>
-            <option value="개인소득공제">개인소득공제</option>
-            <option value="사업자증빙용">사업자증빙용</option>
-          </Select>
+
+          <Controller
+            name="cashReceiptType"
+            control={control}
+            defaultValue="개인소득공제"
+            render={({ field }) => (
+              <Select {...field}>
+                <option value="개인소득공제">개인소득공제</option>
+                <option value="사업자증빙용">사업자증빙용</option>
+              </Select>
+            )}
+          />
+
           <div style={{ padding: '5px' }} />
-          <Input
-            type="text"
-            placeholder="(-없이) 숫자만 입력해주세요."
-            onChange={handleCashReceiptNumberChange}
-            value={cashReceiptNumber}
+
+          <Controller
+            name="cashReceiptNumber"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Input type="text" placeholder="(-없이) 숫자만 입력해주세요." {...field} />
+            )}
           />
         </CashReceiptOption>
 
