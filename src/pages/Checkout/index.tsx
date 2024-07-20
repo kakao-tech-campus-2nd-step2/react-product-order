@@ -22,6 +22,7 @@ const CheckoutPage: React.FC = () => {
     receiptType: 'personal',
     receiptNumber: '',
   });
+  const [cardMessage, setCardMessage] = useState('');
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -29,31 +30,55 @@ const CheckoutPage: React.FC = () => {
     if (state && state.product) {
       setProduct(state.product);
       setIsLoading(false);
-    } else {
-      const fetchProductDetail = async () => {
-        try {
-          const response = await axios.get(`https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`);
-          setProduct(response.data.detail);
-          setIsLoading(false);
-        } catch (error) {
-          toast({
-            title: 'Error',
-            description: 'Product not found. Redirecting to home page.',
-            status: 'error',
-            duration: 2000,
-            isClosable: true,
-          });
-          navigate('/');
-        }
-      };
-      fetchProductDetail();
+      return;
     }
+
+    const fetchProductDetail = async () => {
+      try {
+        const response = await axios.get(`https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`);
+        setProduct(response.data.detail);
+        setIsLoading(false);
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Product not found. Redirecting to home page.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+        navigate('/');
+      }
+    };
+
+    fetchProductDetail();
   }, [productId, state, navigate, toast]);
 
   const handleSubmit = () => {
     const authToken = authSessionStorage.get();
     if (!authToken) {
       navigate('/login', { state: { from: `/checkout/${productId}` } });
+      return;
+    }
+
+    if (cardMessage.trim() === '') {
+      toast({
+        title: 'Error',
+        description: '카드 메시지를 입력해주세요.',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (cardMessage.length > 100) {
+      toast({
+        title: 'Error',
+        description: '카드 메시지는 100자 이내로 입력해주세요.',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -67,7 +92,9 @@ const CheckoutPage: React.FC = () => {
           isClosable: true,
         });
         return;
-      } else if (!/^\d+$/.test(receiptInfo.receiptNumber)) {
+      }
+
+      if (!/^\d+$/.test(receiptInfo.receiptNumber)) {
         toast({
           title: 'Error',
           description: '현금 영수증 번호는 숫자만 입력해야 합니다.',
@@ -106,7 +133,15 @@ const CheckoutPage: React.FC = () => {
               나에게 주는 선물
             </Text>
             <Box width="100%" padding="30px 60px">
-              <Input type="text" placeholder="선물과 함께 보낼 메시지를 적어보세요" mt="4" bgColor="#EDF2F7" height="100px" />
+              <Input
+                type="text"
+                placeholder="선물과 함께 보낼 메시지를 적어보세요"
+                mt="4"
+                bgColor="#EDF2F7"
+                height="100px"
+                value={cardMessage}
+                onChange={(e) => setCardMessage(e.target.value)}
+              />
             </Box>
           </Flex>
           <Flex flexDirection="column" padding="16px">
