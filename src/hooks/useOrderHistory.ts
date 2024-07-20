@@ -12,7 +12,7 @@ function useOrderHistory() {
     if (!orderHistory) {
       navigate(Paths.MAIN_PAGE);
     }
-  }, [navigate]);
+  }, [navigate, orderHistory]);
 
   return { orderHistory };
 }
