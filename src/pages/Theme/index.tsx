@@ -1,24 +1,13 @@
-import { Navigate, useParams } from 'react-router-dom';
+import React from 'react';
+import Layout from '@components/features/Layout';
+import GoodsItemList from '@components/features/Theme/GoodsItemList';
+import ThemeHeader from '@components/features/Theme/ThemeHeader';
 
-import { ThemeGoodsSection } from '@/components/features/Theme/ThemeGoodsSection';
-import { ThemeHeroSection } from '@/components/features/Theme/ThemeHeroSection';
-import { useCurrentTheme } from '@/hooks/useCurrentTheme';
-import { RouterPath } from '@/routes/path';
-
-export const ThemePage = () => {
-  const { themeKey = '' } = useParams<{ themeKey: string }>();
-  const { isRender, currentTheme } = useCurrentTheme({ themeKey });
-
-  if (!isRender) return null;
-
-  if (!currentTheme) {
-    return <Navigate to={RouterPath.notFound} />;
-  }
-
+export default function Theme() {
   return (
-    <>
-      <ThemeHeroSection themeKey={themeKey} />
-      <ThemeGoodsSection themeKey={themeKey} />
-    </>
+    <Layout>
+      <ThemeHeader />
+      <GoodsItemList />
+    </Layout>
   );
-};
+}
