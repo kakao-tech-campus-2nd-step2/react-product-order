@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { useAuth } from './hooks/useAuth';
@@ -20,30 +21,33 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
 };
 
 const App = () => {
+  const methods = useForm();
   return (
     <>
       <ResetStyles />
-      <AuthProvider>
-        <OrderHistoryProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<MainLayout />}>
-              <Route index path="/" element={<MainPage />} />
-              <Route
-                path="/my-account"
-                element={
-                  <ProtectedRoute>
-                    <MyAccountPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/theme/:themeKey" element={<ThemePage />} />;
-              <Route path="/products/:productId" element={<ProductDetailPage />} />;
-              <Route path="/order" element={<OrderPage />} />;
-            </Route>
-          </Routes>
-        </OrderHistoryProvider>
-      </AuthProvider>
+      <FormProvider {...methods}>
+        <AuthProvider>
+          <OrderHistoryProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/" element={<MainLayout />}>
+                <Route index path="/" element={<MainPage />} />
+                <Route
+                  path="/my-account"
+                  element={
+                    <ProtectedRoute>
+                      <MyAccountPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/theme/:themeKey" element={<ThemePage />} />;
+                <Route path="/products/:productId" element={<ProductDetailPage />} />;
+                <Route path="/order" element={<OrderPage />} />;
+              </Route>
+            </Routes>
+          </OrderHistoryProvider>
+        </AuthProvider>
+      </FormProvider>
     </>
   );
 };

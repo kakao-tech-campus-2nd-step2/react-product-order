@@ -1,25 +1,28 @@
 import styled from '@emotion/styled';
-import { useRef } from 'react';
 
 import { Container } from '@/components/common/Layout/Container';
 import { GiftMessageSection } from '@/components/Order/GiftMessageSection';
 import { PaymentSection } from '@/components/Order/PaymentSection';
 import { useOrderHistory } from '@/hooks/useOrderHistory';
 
+export interface FormValues {
+  cashReceipt: boolean;
+  receiptType: string;
+  number: string;
+  message: string;
+}
+
 export default function OrderPage() {
   const { orderHistoryToken } = useOrderHistory();
-
-  const inputRef = useRef<HTMLInputElement>(null);
-
   return (
     <OrderPageWrapper>
       <Container maxWidth="1280px">
         <Inner>
           <Left>
-            <GiftMessageSection orderHistory={orderHistoryToken} inputRef={inputRef} />
+            <GiftMessageSection orderHistory={orderHistoryToken} />
           </Left>
           <Right>
-            <PaymentSection orderHistory={orderHistoryToken} inputRef={inputRef} />
+            <PaymentSection orderHistory={orderHistoryToken} />
           </Right>
         </Inner>
       </Container>
