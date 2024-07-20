@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useCallback } from 'react';
 
 interface ProductOptionData {
   productId: number;
@@ -29,8 +30,9 @@ export const getProductOption = async (productId: string) => {
 };
 
 export const useGetProductOption = (productId: string) => {
+  const fetchProductOption = useCallback(() => getProductOption(productId), [productId]);
   return useQuery({
     queryKey: ['productOption', productId],
-    queryFn: () => getProductOption(productId),
+    queryFn: fetchProductOption,
   });
 };
