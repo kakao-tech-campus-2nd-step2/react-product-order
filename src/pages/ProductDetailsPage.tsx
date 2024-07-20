@@ -15,7 +15,7 @@ function ProductDetailsPage() {
         <Container elementSize="full-width" maxWidth="1280px">
           <ErrorBoundary>
             <Suspense fallback={<LoadingSpinnerFullWidth />}>
-              <ProductDetailDisplaySection productId={productId} />
+              <ProductDetailDisplaySection productId={parseInt(productId, 10)} />
             </Suspense>
           </ErrorBoundary>
         </Container>
