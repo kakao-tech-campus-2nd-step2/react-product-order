@@ -28,8 +28,40 @@ interface ProductDetaiResponseData {
   };
 }
 
+interface ProductOption {
+  key: string;
+  value: string;
+  level: number;
+  options: ProductOption[];
+  id: number;
+  usable: boolean;
+  price: number;
+  stockQuantity: number;
+  unlimitedStockQuantity: boolean;
+}
+
+interface ProductOptionResponseData {
+  options: {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    hasOption: boolean;
+    giftOrderLimit: number;
+    names: string[];
+    options: ProductOption[];
+  };
+}
+
 export const getProductDetail = async (productId: string) => {
   const response = await fetchInstance.get<ProductDetaiResponseData>(API.PRODUCT.DETAIL(productId));
+
+  return response.data;
+};
+
+export const getProductOption = async (productId: string) => {
+  const response = await fetchInstance.get<ProductOptionResponseData>(
+    API.PRODUCT.OPTION(productId),
+  );
 
   return response.data;
 };
