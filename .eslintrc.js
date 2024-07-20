@@ -49,6 +49,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-use-before-define': ['off'],
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   ignorePatterns: ['**/build/**/*', '.eslintrc.js', 'craco.config.js'],
   settings: {
