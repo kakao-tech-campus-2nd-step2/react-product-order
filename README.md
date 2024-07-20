@@ -19,14 +19,21 @@ npm run start
 - 질문 2. input type의 종류와 각각 어떤 특징을 가지고 있는지 설명해 주세요.
     
     
-    인풋 태그의 타입에는 text, password, email, number, tel, url, search, date, month, week, time,
-    color, file, checkbox, radio, hidden과 같은 종류가 있습니다.
-    이때, 입력 받는 값에 따라 크게 text, time, color, file, hidden로 나눌 수 있습니다.
-    color는 색상 선택기가 표시되고, file은 첨부파일 버튼, hidden은 그냥 값 보관 용으로 사용할 수 있습니다.
+    인풋 태그의 타입에는 text, password, email, number, tel, url, search, date, 
+    month, week, time, color, file, checkbox, radio, hidden과 같은 종류가 있습니다.
+    인풋 태그는 크게 string, number, time, color, file, hidden로 나눌 수 있습니다.
+
+    인풋 태그의 타입을 통해 허용하는 값의 범위를 설정할 수 있습니다.
+    string은 진짜 text, password, email, tel, url, search와 같이 단순 캐릭터를 입력받습니다.
+    number는 숫자를 입력 받는데 min, max 속성을 통해 범위를 지정할 수 있습니다.
+    time은 시간을 선택할 수 있는 창을 통해 시간을 입력 받습니다.
+    color는 색상 선택기를 통해 색상을 입력받고, file은 첨부파일 버튼을 통해 파일을 입력 받습니다.
+    hidden은 그냥 값 보관 용으로 사용할 수 있습니다.
 
 - 질문 3. label tag는 어떤 역할을 하며 label로 input field를 감싸면 어떻게 동작하는지 설명해 주세요.
 
 
     라벨 태그는 하나의 인풋 태그에 대한 설명을 덧붙이는 역할을 하는데 이는 접근성 측면에서 중요합니다.
-    라벨 태그는 인풋 태그와 연경되어 라벨 태그를 클릭하면, 인풋 태그가 포커스 되는 방식으로도 사용할 수 있고,
+    라벨 태그로 인풋 태그를 감싸면, 라벨 태그의 for 속성을 사용하지 않아도 내부 인풋태그와 연결됩니다.
+    라벨 태그는 인풋 태그와 연결되어 라벨 태그를 클릭하면, 인풋 태그가 포커스 되는 방식으로도 사용할 수 있고,
     화면 리더기를 사용하는 사용자에게 어떠한 인풋 필드에 대한 설명을 전달하는데 사용됩니다.
