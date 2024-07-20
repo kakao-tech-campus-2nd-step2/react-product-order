@@ -16,7 +16,7 @@ interface FormValues {
 
 export const Order = ({ price }: Props) => {
   const { handleSubmit, control, watch } = useFormContext<FormValues>();
-  const cardMessage = watch('cardMessage');
+  const cardMessage = watch('cardMessage') || '';
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     if (cardMessage.length === 0) {

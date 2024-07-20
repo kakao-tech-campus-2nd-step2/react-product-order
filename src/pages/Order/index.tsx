@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
@@ -20,17 +19,10 @@ export const OrderPage = () => {
   const location = useLocation();
   const { productId, count } = location.state || {};
   const { data, isLoading } = useGetGoodsDetail({ productId: productId });
-  const [loading, setLoading] = useState(true);
 
   const methods = useForm<FormValues>();
 
-  useEffect(() => {
-    if (!isLoading) {
-      setLoading(false);
-    }
-  }, [isLoading]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <TextView>
         <Spinner />
