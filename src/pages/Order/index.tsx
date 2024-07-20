@@ -51,9 +51,6 @@ export const OrderPage: React.FC = () => {
   const { state } = useLocation();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState('');
-  const [receiptRequested, setReceiptRequested] = useState(false);
-  const [receiptNumber, setReceiptNumber] = useState('');
 
   const {
     handleSubmit,
@@ -104,10 +101,6 @@ export const OrderPage: React.FC = () => {
       return;
     }
     alert('결제가 완료되었습니다.');
-  };
-
-  const handleReceiptRequestChange = () => {
-    setReceiptRequested(!receiptRequested);
   };
 
   return (
