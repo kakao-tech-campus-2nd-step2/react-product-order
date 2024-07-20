@@ -1,3 +1,4 @@
+import type { UseQueryOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 
 import type { GoodsData } from '@/types';
@@ -19,12 +20,16 @@ export const getGoodsDetail = async (goodsId: string) => {
   return response.data;
 };
 
-export const useGetGoodsDetail = ({ productId }: GoodsDetailRequestParams) => {
+export const useGetGoodsDetail = (
+  { productId }: GoodsDetailRequestParams,
+  options?: UseQueryOptions<GoodsData, Error>,
+) => {
   return useQuery<GoodsData, Error>({
     queryKey: ['goodsDetail', productId],
     queryFn: async () => {
       const response = await getGoodsDetail(productId);
       return response.detail;
     },
+    ...options,
   });
 };
