@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { RouterPath } from '@/routes';
 import { breakpoints } from '@/styles/variants';
 
 type Props = {
@@ -9,6 +11,10 @@ type Props = {
 };
 
 export const Aside = ({ name, price }: Props) => {
+  const navigate = useNavigate();
+
+  const authToken = sessionStorage.getItem('authToken');
+
   const [quantity, setQuantity] = useState<number>(1);
   const [totalAmount, setTotalAmount] = useState<number>(price);
 
@@ -31,6 +37,16 @@ export const Aside = ({ name, price }: Props) => {
 
   const handleIncrementQuantity = () => handleQuantityChange(quantity + 1);
 
+  const handlePaymentClick = () => {
+    if (!authToken) {
+      const userConfirm = confirm(
+        '로그인이 필요한 메뉴입니다. \n로그인 페이지로 이동하시겠습니까?',
+      );
+
+      if (userConfirm) navigate(RouterPath.login);
+    } else {alert('확인'); // payment로 이동};
+  };
+
   return (
     <StyledAside>
       <Container>
@@ -47,7 +63,7 @@ export const Aside = ({ name, price }: Props) => {
             총 결제 금액
             <span style={{ fontSize: '20px', letterSpacing: '-0.02em' }}>{totalAmount}원</span>
           </TotalAmount>
-          <PaymentButton></PaymentButton>
+          <PaymentButton onClick={handlePaymentClick}>나에게 선물하기</PaymentButton>
         </PaymentContainer>
       </Container>
     </StyledAside>
