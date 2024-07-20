@@ -15,9 +15,22 @@ import {
 import { useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import type { ProductDetail } from '@/api/hooks/useProductDetail';
+
+export interface OrderLocationState {
+  productDetail: ProductDetail;
+  quantity: number;
+  price: number;
+}
+
 export const Order = () => {
   const location = useLocation();
-  const { productDetail, quantity, price } = location.state || {};
+  // location.state가 정의되지 않은 경우 기본값을 설정합니다.
+  const { productDetail, quantity, price } = (location.state || {
+    productDetail: null,
+    quantity: 0,
+    price: 0,
+  }) as OrderLocationState;
 
   // ref 사용하여 폼 필드 접근
   const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -123,15 +136,19 @@ export const Order = () => {
             </Text>
             <Box p={4} borderWidth="1px" borderRadius="lg" mb={8}>
               <HStack>
-                <Image boxSize="100px" src={productDetail.imageURL} alt="싸이버거 세트" />
-                <VStack align="start">
-                  <Text fontSize="md" fontWeight="bold">
-                    {productDetail?.brandInfo.name}
-                  </Text>
-                  <Text>
-                    {productDetail?.name} X {quantity}개
-                  </Text>
-                </VStack>
+                {productDetail && (
+                  <>
+                    <Image boxSize="100px" src={productDetail?.imageURL} alt={productDetail?.name} />
+                    <VStack align="start">
+                      <Text fontSize="md" fontWeight="bold">
+                        {productDetail?.brandInfo.name}
+                      </Text>
+                      <Text>
+                        {productDetail?.name} X {quantity}개
+                      </Text>
+                    </VStack>
+                  </>
+                )}
               </HStack>
             </Box>
           </Box>

@@ -3,6 +3,7 @@ import { Box, Button, Flex, IconButton, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import type { OrderLocationState } from '@/pages/Order';
 import { useAuth } from '@/provider/Auth';
 import { RouterPath } from '@/routes/path';
 
@@ -43,7 +44,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
       navigate(RouterPath.login);
     } else {
       // 로그인 되어 있는 경우 상품 주문페이지로 이동
-      navigate(RouterPath.order, { state: { productDetail: detail, quantity, price } });
+      const state: OrderLocationState = { productDetail: detail, quantity, price }
+      navigate(RouterPath.order, { state });
     }
   };
 

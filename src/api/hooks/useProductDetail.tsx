@@ -8,7 +8,7 @@ interface Price {
   sellingPrice: number;
 }
 
-interface ProductDetail {
+export interface ProductDetail {
   brandInfo: {
     id: number;
     name: string;
