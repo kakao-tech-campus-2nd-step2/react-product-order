@@ -1,95 +1,68 @@
-import type { FormEvent, RefObject } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import type { IOrderItemInfo } from '@/hooks/useProductPreReceipt';
 
+export interface OrderFormData {
+  message: string;
+  receipt: {
+    checkbox: boolean;
+    number: string;
+    type: string;
+  };
+}
+
 export const useOrderValidation = (orderListAndPrice: IOrderItemInfo[]) => {
-  const [message, setMessage] = useState('');
-  const [warning, setWarning] = useState('');
-
-  const rawCacheReceiptRefs = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLSelectElement>(null),
-    useRef<HTMLInputElement>(null),
-  ];
-
-  const cacheReceiptRefs = useMemo(() => rawCacheReceiptRefs, []);
-
-  const onSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (isAnyRefInvalid(cacheReceiptRefs)) return;
-
-      const [checkboxCurrent, typeCurrent, numberCurrent] = extractCurrents(cacheReceiptRefs);
-
-      if (isCardMessageInvalid(message, setWarning)) return;
-
-      if (isCacheReceiptInvalid(checkboxCurrent, numberCurrent, setWarning)) return;
-
-      //TODO: post 요청
-      console.log(
-        message,
-        orderListAndPrice,
-        checkboxCurrent.checked,
-        typeCurrent.value,
-        numberCurrent.value,
-      );
-
-      alert('주문이 완료되었습니다.');
+  const methods = useForm<OrderFormData>({
+    defaultValues: {
+      message: '',
+      receipt: {
+        checkbox: false,
+        number: '',
+      },
     },
-    [orderListAndPrice, message],
-  );
+  });
 
-  useEffect(() => {
-    if (warning) {
-      const timer = setTimeout(() => {
-        setWarning('');
-      }, 3000);
-      return () => clearTimeout(timer);
+  const onSubmit: SubmitHandler<OrderFormData> = (data) => {
+    if (isFormDataInvalid(data)) {
+      return;
     }
-  }, [warning]);
 
-  return { setMessage, onSubmit, cacheReceiptRefs, warning };
+    alert('주문이 완료되었습니다.');
+    console.log(orderListAndPrice);
+  };
+
+  return { onSubmit, ...methods };
 };
 
-const extractCurrents = (
-  cacheReceiptRefs: (RefObject<HTMLInputElement> | RefObject<HTMLSelectElement>)[],
-) =>
-  cacheReceiptRefs.map((ref) => ref.current) as [
-    HTMLInputElement,
-    HTMLSelectElement,
-    HTMLInputElement,
-  ];
+const isFormDataInvalid = (data: OrderFormData) => {
+  const { message, receipt } = data;
+  const { checkbox: isChecked, number: receiptNumber } = receipt;
 
-const isAnyRefInvalid = (
-  cacheReceiptRefs: (RefObject<HTMLInputElement> | RefObject<HTMLSelectElement>)[],
-) => !cacheReceiptRefs.every((ref) => ref.current !== null);
+  if (isCardMessageInvalid(message)) return;
 
-const isCardMessageInvalid = (message: string, setWarning: (warning: string) => void) => {
+  if (isCacheReceiptInvalid(isChecked, receiptNumber)) return;
+
+  return false;
+};
+
+const isCardMessageInvalid = (message: string) => {
   if (message.length === 0) {
-    setWarning('카드 메세지를 입력해 주세요.');
     return true;
   }
   if (message.length > 100) {
-    setWarning('카드 메세지를 100글자 이내로 입력해 주세요.');
     return true;
   }
   return false;
 };
 
-const isCacheReceiptInvalid = (
-  checkboxCurrent: HTMLInputElement,
-  numberCurrent: HTMLInputElement,
-  setWarning: (warning: string) => void,
-) => {
-  if (!checkboxCurrent.checked) return false;
+const isCacheReceiptInvalid = (isChecked: boolean, receiptNumber: string) => {
+  if (!isChecked) return false;
 
-  if (!numberCurrent.value) {
-    setWarning('현금영수증 번호를 입력해 주세요.');
+  if (!receiptNumber) {
     return true;
   }
-  if (!/^\d+$/.test(numberCurrent.value)) {
-    setWarning('현금영수증 번호는 숫자만 입력해 주세요.');
+  if (!/^\d+$/.test(receiptNumber)) {
     return true;
   }
 
