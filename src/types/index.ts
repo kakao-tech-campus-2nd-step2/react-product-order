@@ -32,3 +32,24 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type GoodsOption = {
+  key: string;
+  value: string;
+  level: number;
+  options: GoodsOption[];
+  id: number;
+  usable: boolean;
+  price: number;
+  unlimitedStockQuantity: boolean;
+};
+
+export type GoodsOptionData = {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  hasOption: boolean;
+  giftOrderLimit: number;
+  names: string[];
+  options: GoodsOption[];
+};
