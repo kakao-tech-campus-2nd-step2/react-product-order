@@ -9,9 +9,10 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Paths from '@constants/Paths';
+import { orderHistoryStorage } from '@utils/storage';
 import { ProductDetailData } from '@/dto';
 import { LoginContext } from '@/providers/LoginContextProvider';
-import { ProductOrderPageState } from '@/types';
+import { OrderHistoryData } from '@/types';
 
 interface ProductCounterAreaProps {
   productDetails: ProductDetailData;
@@ -43,11 +44,14 @@ function ProductCounterForm({ productDetails }: ProductCounterAreaProps) {
       return;
     }
 
-    const state: ProductOrderPageState = {
-      productDetails,
-      count,
+    const productHistoryData: OrderHistoryData = {
+      productId: productDetails.id,
+      productQuantity: count,
     };
-    navigate(Paths.PRODUCT_ORDER, { state });
+
+    orderHistoryStorage.set(productHistoryData);
+
+    navigate(Paths.PRODUCT_ORDER);
   }, [productDetails, count, navigate, loginStatus]);
 
   const handleInputChange = useCallback(
