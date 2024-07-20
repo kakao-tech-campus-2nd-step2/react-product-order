@@ -23,7 +23,6 @@ interface FormValues {
   receiptType?: string;
 }
 
-
 export const Order = () => {
   const location = useLocation();
   const { productDetail, quantity, price } = location.state || {};
@@ -35,9 +34,7 @@ export const Order = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
-  
-  const receiptRequested = watch('receiptRequested')
-
+  const receiptRequested = watch('receiptRequested');
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     if (data.message && !data.receiptRequested) {
@@ -105,7 +102,10 @@ export const Order = () => {
                     placeholder="(- 없이) 숫자만 입력해주세요."
                     {...register('receiptNumber', {
                       required: receiptRequested ? '현금영수증 번호를 입력해주세요.' : false,
-                      pattern: { value: /^\d+$/, message: '현금영수증 번호는 숫자만 입력해주세요.' }
+                      pattern: {
+                        value: /^\d+$/,
+                        message: '현금영수증 번호는 숫자만 입력해주세요.',
+                      },
                     })}
                   />
                   {errors.receiptNumber && (
