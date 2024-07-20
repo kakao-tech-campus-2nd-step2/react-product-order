@@ -12,7 +12,8 @@ export const useErrorToast = (
   const toast = useToast();
 
   useEffect(() => {
-    const errorField = getFieldError(formState.errors, fieldName);
+    const errorField = getErrorField(formState.errors, fieldName);
+
     if (errorField?.message) {
       toast({
         title: errorField.message,
@@ -25,7 +26,7 @@ export const useErrorToast = (
   }, [formState, fieldName, toast]);
 };
 
-const getFieldError = (
+const getErrorField = (
   errors: FieldErrors<OrderFormData>,
   fieldName: keyof OrderFormData | `receipt.${keyof OrderFormData['receipt']}`,
 ): FieldError | undefined => {
