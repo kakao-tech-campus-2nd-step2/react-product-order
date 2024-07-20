@@ -30,10 +30,34 @@ import {
       const [taxRequest, setTaxRequest] = useState(false);
       const [taxType, setTaxType] = useState('');
       const [taxNumber, setTaxNumber] = useState('');
+      const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
       const totalPrice = product.price.sellingPrice * quantity;
 
       const handlePayment = () => {
+        const newErrors: { [key: string]: string } = {};
+
+        // 메시지 유효성 검사
+        if (!message) {
+          newErrors.message = '메시지를 입력해주세요.';
+        } else if (message.length > 100) {
+          newErrors.message = '메시지는 100자 이내로 입력해주세요.';
+        }
+
+        // 현금영수증 번호 유효성 검사
+        if (taxRequest) {
+          if (!taxNumber) {
+            newErrors.taxNumber = '현금영수증 번호를 입력해주세요.';
+          } else if (!/^\d+$/.test(taxNumber)) {
+            newErrors.taxNumber = '현금영수증 번호는 숫자만 입력해주세요.';
+          }
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+          return;
+        }
+
         if (!authInfo) {
           navigate('/login');
         } else {
@@ -61,6 +85,7 @@ import {
                   marginBottom={5}
                   backgroundColor="#f0f2f5"
                 />
+                {errors.message && <Text color="red.500">{errors.message}</Text>}
                 <Heading as="h3" size="md" marginBottom={5}>
                   선물내역
                 </Heading>
@@ -91,6 +116,7 @@ import {
                     value={taxNumber}
                     onChange={(e) => setTaxNumber(e.target.value)}
                   />
+                  {errors.taxNumber && <Text color="red.500">{errors.taxNumber}</Text>}
                   <HStack justifyContent="space-between" width="100%">
                     <Text fontSize="lg">최종 결제금액</Text>
                     <Text fontSize="lg" fontWeight="bold">
