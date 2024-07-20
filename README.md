@@ -49,3 +49,10 @@ range 타입은 범위 슬라이더 입력으로, 숫자 범위를 슬라이더�
 ### 질문 3. label tag는 어떤 역할을 하며 label로 input field를 감싸면 어떻게 동작하는지 설명해 주세요.
 label 태그는 폼 요소와 연결되어 사용자 접근성이 향상됩니다.
 label로 input 필드를 감싸거나 for 속성을 사용해 연결하면, label을 클릭했을 때 해당 input이 포커스되도록 동작합니다.
+
+## 🛠️ 코드 리뷰 반영
+### 📄 요구 사항
+- [] ThemeItem 스토리 수정 및 전체 스토리 수정 
+- [] common/Layout/Container 컴포넌트 csstype 패키지 적용
+- [] `Code Spell Checker` extension을 통한 오타 수정
+- [] 현금영수증 체크시 select, input 태그 toggle
