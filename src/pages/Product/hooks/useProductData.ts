@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { getProductsDetail, getProductsOptions } from '@apis/products';
 import { ProductDetailResponse, ProductOptionResponse } from '@internalTypes/responseTypes';
 import { AxiosError } from 'axios';
