@@ -22,5 +22,13 @@
 
 ### 3단계 - React Hook Form를 사용하여 기존의 form을 리팩터링 해요.
 
-- [ ] 기존에 만든 form / input을 react-hook-form으로 변경
-- [ ] validate 또한 react-hook-form 기능을 적극적으로 활용
+- [X] 기존에 만든 form / input을 react-hook-form으로 변경
+- [X] validate 또한 react-hook-form 기능을 적극적으로 활용
+
+### 4단계 - 질문의 답변을 README에 작성
+- 질문 1. 제어 컴포넌트와 비제어 컴포넌트의 차이가 무엇이고 제어 컴포넌트로 Form을 만들어야 하는 경우가 있다면 어떤 경우인지 예시와 함께 설명해주세요.
+> 제어 컴포넌는 React의 state로 입력값을 관리하며, 사용자 입력이 React state에 의해 결정되는 반면, 비제어 컴포넌트는 DOM 자체에 입력값을 저장합니다. 예를 들어, 폼 데이터를 제출 전에 유효성 검사를 수행하거나 입력값을 변형해야 하는 경우 제어 컴포넌트로 만드는 것이 적합합니다.
+- 질문 2. input type의 종류와 각각 어떤 특징을 가지고 있는지 설명해 주세요.
+>  input 타입에는 text, password, email, number, url, checkbox, radio, file, 등이 있고 각각은 텍스트 입력, 비밀번호 입력, 이메일 형식 입력, 숫자 입력, 웹 주소 입력, 체크박스 토글, 라디오 버튼 선택, 파일 선택 등의 사용자 인터페이스를 제공합니다.
+- 질문 3. label tag는 어떤 역할을 하며 label로 input field를 감싸면 어떻게 동작하는지 설명해 주세요.
+> label 태그는 입력 폼 요소에 레이블을 제공하여 접근성을 높이며, label로 input 필드를 감싸면 사용자가 레이블을 클릭할 때 연결된 input 필드에 자동으로 포커스가 맞춰지고, 체크박스나 라디오 버튼의 경우에는 선택이 토글됩니다.
