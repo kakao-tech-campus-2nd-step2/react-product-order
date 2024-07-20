@@ -11,27 +11,17 @@ import {
   Text,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RouterPath } from '../../routes/path';
 import { authSessionStorage } from '@/utils/storage';
 import { useGetProductOption } from '@/api/hooks/useGetProductOption';
-
-interface PriceData {
-  basicPrice: number;
-}
-
-interface ProductDetailData {
-  id: string;
-  name: string;
-  price: PriceData;
-  imageURL: string;
-}
+import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
 
 export const DetailPage = () => {
-  const [productDetail, setProductDetail] = useState<ProductDetailData | null>(null);
   const { productId } = useParams();
-  const { data: productOption } = useGetProductOption(productId ?? '');
+  const { data: productDetail } = useGetProductDetail(productId ?? '');
+  const { data: productOption, isLoading: isOptionLoading } = useGetProductOption(productId ?? '');
   const [isLoading, setIsLoading] = useState(true);
   const [productCount, setProductCount] = useState(1);
   const navigate = useNavigate();
@@ -39,7 +29,6 @@ export const DetailPage = () => {
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
-        console.log('ID:', productId);
         const res = await axios.get(
           `https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`,
         );
@@ -47,14 +36,18 @@ export const DetailPage = () => {
           navigate(RouterPath.notFound);
           return;
         }
-        setProductDetail(res.data.detail);
-        setIsLoading(false);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchProductDetail();
   }, [productId, navigate]);
+
+  useEffect(() => {
+    setIsLoading(isOptionLoading);
+  }, [isOptionLoading]);
 
   const handleProductCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProductCount(parseInt(e.target.value));
@@ -78,7 +71,7 @@ export const DetailPage = () => {
     }
   };
 
-  if (isLoading || !productDetail) {
+  if (isLoading || !productDetail || !productOption) {
     return <Box>Loading...</Box>;
   }
 
@@ -86,7 +79,10 @@ export const DetailPage = () => {
   const basicPrice = price?.basicPrice ?? 0;
   const totalPrice = basicPrice * productCount;
   const priceString = `${basicPrice.toLocaleString()}원`;
-  const giftOrderLimit = productOption?.giftOrderLimit || 0;
+  const giftOrderLimit = useMemo(
+    () => productOption?.giftOrderLimit || 0,
+    [productOption?.giftOrderLimit],
+  );
 
   return (
     <Flex justify="space-between" align="center" direction="row" p={8}>
