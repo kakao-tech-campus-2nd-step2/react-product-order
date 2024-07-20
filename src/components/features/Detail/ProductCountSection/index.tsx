@@ -13,6 +13,7 @@ const DEFAULT_COUNT = 1;
 interface ProductCountSectionProps {
   productId: string;
 }
+
 const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
   const { register, setValue, getValues, watch } = useForm({
     defaultValues: { count: DEFAULT_COUNT },
@@ -71,6 +72,7 @@ const ProductCountSection = ({ productId }: ProductCountSectionProps) => {
     if (prevCount <= 1) return;
     setValue('count', prevCount - 1);
   };
+
   const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCount = +e.target.value;
     if (newCount > giftOrderLimit) {

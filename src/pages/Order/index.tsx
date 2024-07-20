@@ -7,6 +7,8 @@ import { Container } from '@/components/common/layouts/Container';
 import OrderProductInfo from '@/components/features/Order/OrderProductInfo';
 import OrderReseipSection from '@/components/features/Order/OrderReseipsection';
 import { useAuth } from '@/provider/Auth';
+import type { Either } from '@/utils/either';
+import { left, right } from '@/utils/either';
 import { orderLocalStorage } from '@/utils/storage';
 
 type ReceiptType = 'PERSONAL' | 'BUSINESS';
@@ -21,7 +23,7 @@ export interface OrderFormValues {
 const OrderPage = () => {
   const storedOrderItem = orderLocalStorage.get();
 
-  const { register, handleSubmit, setFocus } = useForm<OrderFormValues>({
+  const { register, handleSubmit } = useForm<OrderFormValues>({
     defaultValues: {
       messageCardTextMessage: '',
       hasCashReceipt: false,
@@ -44,53 +46,53 @@ const OrderPage = () => {
   }
   const { count, productId } = storedOrderItem;
 
+  const validateMessageCard = (data: OrderFormValues): Either<string, OrderFormValues> => {
+    if (!data.messageCardTextMessage) {
+      return left('메시지를 입력해주세요.');
+    }
+    if (data.messageCardTextMessage.length > 100) {
+      return left('메시지는 100자 이내로 입력해주세요.');
+    }
+    return right(data);
+  };
+
+  const validateCashReceipt = (data: OrderFormValues): Either<string, OrderFormValues> => {
+    if (data.hasCashReceipt && !data.cashReceiptNumber) {
+      return left('현금영수증 번호를 입력해주세요.');
+    }
+    if (data.cashReceiptNumber && !data.cashReceiptNumber.match(/^\d+$/)) {
+      return left('현금영수증 번호는 숫자만 입력해주세요.');
+    }
+    return right(data);
+  };
+
+  const createOrderRequestBody = (data: OrderFormValues) => ({
+    productId,
+    productOptionId: 1,
+    productQuantity: count,
+    messageCardTemplateId: 1,
+    messageCardTextMessage: data.messageCardTextMessage,
+    senderId: 1,
+    receiverId: 1,
+    hasCashReceipt: data.hasCashReceipt,
+    cashReceiptType: data.cashReceiptType,
+    cashReceiptNumber: data.cashReceiptNumber,
+  });
+
   const handleOrder = (data: OrderFormValues) => {
-    const { messageCardTextMessage, hasCashReceipt, cashReceiptNumber, cashReceiptType } = data;
+    const result = validateMessageCard(data) //
+      .chain(validateCashReceipt)
+      .map(createOrderRequestBody);
 
-    if (!messageCardTextMessage) {
-      alert('메시지를 입력해주세요.');
-      setFocus('messageCardTextMessage');
-      return;
+    if (result.isLeft()) {
+      alert(result.value);
+    } else {
+      mutate(result.value);
+      if (isSuccess) {
+        alert('주문이 완료되었습니다.');
+        orderLocalStorage.remove();
+      }
     }
-
-    if (messageCardTextMessage.length > 100) {
-      alert('메시지는 100자 이내로 입력해주세요.');
-      setFocus('messageCardTextMessage');
-      return;
-    }
-
-    if (hasCashReceipt && !cashReceiptNumber) {
-      alert('현금영수증 번호를 입력해주세요.');
-      setFocus('cashReceiptNumber');
-      return;
-    }
-
-    if (!cashReceiptNumber.match(/^\d+$/)) {
-      alert('현금영수증 번호는 숫자만 입력해주세요.');
-      setFocus('cashReceiptNumber');
-      return;
-    }
-
-    const orderRequestBody = {
-      productId,
-      productOptionId: 1,
-      productQuantity: count,
-      messageCardTemplateId: 1,
-      messageCardTextMessage,
-      senderId: 1,
-      receiverId: 1,
-      hasCashReceipt,
-      cashReceiptType,
-      cashReceiptNumber,
-    };
-
-    mutate(orderRequestBody);
-
-    if (isSuccess) {
-      alert('주문이 완료되었습니다.');
-    }
-
-    orderLocalStorage.remove();
   };
 
   return (
