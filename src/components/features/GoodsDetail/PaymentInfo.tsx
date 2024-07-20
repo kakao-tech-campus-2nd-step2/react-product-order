@@ -1,6 +1,7 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
-import { IconButton, Input, useNumberInput, VStack } from '@chakra-ui/react';
+import { IconButton, Input, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '@/provider/Auth';
@@ -17,15 +18,13 @@ const PaymentInfo = ({ label, price, giftOrderLimit }: PaymentInfoProps) => {
   const authInfo = useAuth();
   const { productId: currentProductId } = useParams();
 
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
-    min: 1,
-    max: giftOrderLimit,
-    defaultValue: 1,
+  const { handleSubmit, control, watch } = useForm({
+    defaultValues: {
+      count: 1,
+    },
   });
 
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
+  const watchCount = watch('count');
 
   const handleLogin = () => {
     navigate(getDynamicPath.login());
@@ -40,7 +39,7 @@ const PaymentInfo = ({ label, price, giftOrderLimit }: PaymentInfoProps) => {
     });
   };
 
-  const handleGiftBtnClick = () => {
+  const handleGiftBtnClick = handleSubmit(({ count }) => {
     if (!authInfo) {
       const userConfirmed = window.confirm(
         '로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?',
@@ -49,25 +48,59 @@ const PaymentInfo = ({ label, price, giftOrderLimit }: PaymentInfoProps) => {
         handleLogin();
       }
     } else {
-      const count = input.value;
       handleOrder(currentProductId || '', count);
     }
-  };
+  });
 
   return (
     <>
       <VStack maxW="320px" padding="10px" borderRadius="3" borderColor="gray.200" borderWidth="1px">
         <StyledLabel>{label}</StyledLabel>
         <NumberInputWrapper>
-          <IconButton aria-label="Decrease value" {...dec} icon={<MinusIcon />} />
-          <Input type="number" {...input} />
-          <IconButton aria-label="Increase value" {...inc} icon={<AddIcon />} />
+          <Controller
+            name="count"
+            control={control}
+            rules={{ min: 1, max: giftOrderLimit }}
+            render={({ field }) => (
+              <>
+                <IconButton
+                  isDisabled={watchCount <= 1}
+                  aria-label="Decrease value"
+                  icon={<MinusIcon />}
+                  onClick={() => field.onChange(Math.max(1, field.value - 1))}
+                />
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    field.onChange(value);
+                  }}
+                  onBlur={() => {
+                    const value = Number(field.value);
+                    if (value > giftOrderLimit) {
+                      field.onChange(giftOrderLimit);
+                    }
+                    if (value < 1) {
+                      field.onChange(1);
+                    }
+                  }}
+                />
+                <IconButton
+                  aria-label="Increase value"
+                  icon={<AddIcon />}
+                  onClick={() => field.onChange(Math.min(giftOrderLimit, field.value + 1))}
+                  isDisabled={watchCount >= giftOrderLimit}
+                />
+              </>
+            )}
+          />
         </NumberInputWrapper>
       </VStack>
       <Wrapper>
         <TotalPrice>
           <div>총 결제 금액</div>
-          <div>{price * input.value}원</div>
+          <div>{price * watchCount}원</div>
         </TotalPrice>
       </Wrapper>
       <GiftForMeButton onClick={handleGiftBtnClick}>나에게 선물하기</GiftForMeButton>
