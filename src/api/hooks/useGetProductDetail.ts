@@ -1,4 +1,4 @@
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { UseQueryOptions,UseQueryResult  } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 
 import type { GoodsData } from '@/types';
@@ -48,9 +48,13 @@ export const getProductDetail = async (
 };
 
 // Custom hook 정의
-export const useGetProductDetail = (productId: number): UseQueryResult<ProductDetailData> => {
+export const useGetProductDetail = (
+  productId: number,
+  options?: UseQueryOptions<ProductDetailData>,
+): UseQueryResult<ProductDetailData> => {
   return useQuery({
     queryKey: ['productDetail', productId],
     queryFn: () => getProductDetail({ productId }),
+    ...options, //useQuery의 옵션들을 포함
   });
 };
