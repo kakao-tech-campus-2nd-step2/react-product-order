@@ -43,10 +43,12 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
               {goodsList.map(({ id, imageURL, name, price, brandInfo }) => (
                 <DefaultGoodsItems
                   key={id}
+                  productKey={id}
                   imageSrc={imageURL}
                   title={name}
                   amount={price.sellingPrice}
                   subtitle={brandInfo.name}
+                  // onClick={() => handleItemClick(id)}
                 />
               ))}
             </Grid>

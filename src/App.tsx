@@ -1,12 +1,13 @@
+import { AuthProvider } from '@/auth/AuthProvider';
+import { RequireAuth } from '@/auth/RequireAuth';
 import { Layout } from '@/components/features/Layout';
 import { Home } from '@/pages/Home';
-import { Theme } from '@/pages/Theme';
-import { AuthProvider } from '@/auth/AuthProvider';
 import { Login } from '@/pages/Login';
 import { MyAccount } from '@/pages/MyAccount';
+import { Product } from '@/pages/Product';
+import { Theme } from '@/pages/Theme';
 import { RouterPath } from '@/routes';
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { RequireAuth } from '@/auth/RequireAuth';
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
           </RequireAuth>
         ),
       },
+      { path: RouterPath.product, element: <Product /> },
       {
         path: RouterPath.notFound,
         element: <Navigate to={RouterPath.home} />,

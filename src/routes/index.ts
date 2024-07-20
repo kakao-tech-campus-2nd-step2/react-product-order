@@ -4,6 +4,7 @@ export const RouterPath = {
   theme: '/theme/:themeKey',
   login: '/login',
   myAccount: '/my-account',
+  product: '/products/:productKey',
   notFound: '*',
 };
 
