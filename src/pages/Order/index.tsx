@@ -12,7 +12,7 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import type { ProductDetail } from '@/api/hooks/useProductDetail';
@@ -31,12 +31,6 @@ export const Order = () => {
     quantity: 0,
     price: 0,
   }) as OrderLocationState;
-
-  // ref 사용하여 폼 필드 접근
-  const messageRef = useRef<HTMLTextAreaElement>(null);
-  const receiptRequestedRef = useRef<HTMLInputElement>(null);
-  const receiptTypeRef = useRef<HTMLSelectElement>(null);
-  const receiptNumberRef = useRef<HTMLInputElement>(null);
 
   // 상태로 관리할 필요가 없는 경우
   const [formState, setFormState] = useState({
@@ -97,10 +91,10 @@ export const Order = () => {
   const handleSubmit = () => {
     if (validateForm()) {
       const orderData = {
-        message: messageRef.current?.value || '',
-        receiptRequested: receiptRequestedRef.current?.checked || false,
-        receiptType: receiptTypeRef.current?.value || '',
-        receiptNumber: receiptNumberRef.current?.value || '',
+        message: formState.message,
+        receiptRequested: formState.receiptRequested,
+        receiptType: formState.receiptType,
+        receiptNumber: formState.receiptNumber,
         productDetail,
         quantity,
         price,
@@ -125,7 +119,6 @@ export const Order = () => {
               size="lg"
               mb={8}
               height={100}
-              ref={messageRef}
               name="message"
               value={formState.message}
               onChange={handleInputChange}
@@ -159,7 +152,6 @@ export const Order = () => {
             <VStack align="start" mb={4}>
               <Checkbox
                 mt={5}
-                ref={receiptRequestedRef}
                 name="receiptRequested"
                 isChecked={formState.receiptRequested}
                 onChange={handleInputChange}
@@ -167,20 +159,20 @@ export const Order = () => {
                 현금영수증 신청
               </Checkbox>
               <Select
-                ref={receiptTypeRef}
                 name="receiptType"
                 value={formState.receiptType}
                 onChange={handleInputChange}
+                isDisabled={!formState.receiptRequested}
               >
                 <option value="개인소득공제">개인소득공제</option>
                 <option value="사업자증빙용">사업지증빙용</option>
               </Select>
               <Input
                 placeholder="(-없이) 숫자만 입력해주세요."
-                ref={receiptNumberRef}
                 name="receiptNumber"
                 value={formState.receiptNumber}
                 onChange={handleInputChange}
+                isDisabled={!formState.receiptRequested}
               />
             </VStack>
 
