@@ -5,9 +5,20 @@ import { useFormContext } from 'react-hook-form';
 
 import type { OrderFormData } from '@/hooks/useOrderValidation';
 
-export const useErrorToast = (
-  fieldName: keyof OrderFormData | `receipt.${keyof OrderFormData['receipt']}`,
-) => {
+/**
+ * interface OrderFormData {
+ *   message: string;
+ *   receipt: {
+ *     checkbox: boolean;
+ *     number: string;
+ *     type: string;
+ *   };
+ * }
+ */
+type OrderFormFieldReceipt = OrderFormData['receipt'];
+type OrderFormFields = keyof OrderFormData | `receipt.${keyof OrderFormFieldReceipt}`;
+
+export const useErrorToast = (fieldName: OrderFormFields) => {
   const { formState } = useFormContext<OrderFormData>();
   const toast = useToast();
 
@@ -28,12 +39,12 @@ export const useErrorToast = (
 
 const getErrorField = (
   errors: FieldErrors<OrderFormData>,
-  fieldName: keyof OrderFormData | `receipt.${keyof OrderFormData['receipt']}`,
+  fieldName: OrderFormFields,
 ): FieldError | undefined => {
   if (fieldName.startsWith('receipt.')) {
-    const receiptErrors = errors.receipt as FieldErrors<OrderFormData['receipt']>;
+    const receiptErrors = errors.receipt as FieldErrors<OrderFormFieldReceipt>;
 
-    return receiptErrors?.[fieldName.split('.')[1] as keyof OrderFormData['receipt']] as FieldError;
+    return receiptErrors?.[fieldName.split('.')[1] as keyof OrderFormFieldReceipt] as FieldError;
   }
 
   return errors[fieldName as keyof OrderFormData] as FieldError;
