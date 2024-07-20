@@ -1,7 +1,8 @@
-import type { GoodsData } from '@/types';
+import type { GoodsData, RankingFilterOption } from '@/types';
 
 import { fetchInstance } from '../instance';
 import API from '../path';
+import { RankingProductsResponseData } from '../hooks/useGetRankingProducts';
 
 interface ProductDetaiResponseData {
   detail: GoodsData & {
@@ -63,5 +64,12 @@ export const getProductOption = async (productId: string) => {
     API.PRODUCT.OPTION(productId),
   );
 
+  return response.data;
+};
+
+export const getRankingProducts = async (filterOption: RankingFilterOption) => {
+  const response = await fetchInstance.get<RankingProductsResponseData>(
+    API.PRODUCT.RANKING(filterOption),
+  );
   return response.data;
 };

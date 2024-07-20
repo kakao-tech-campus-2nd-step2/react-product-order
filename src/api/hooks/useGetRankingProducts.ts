@@ -2,20 +2,10 @@ import { useEffect, useState } from 'react';
 
 import type { GoodsData, RankingFilterOption } from '@/types';
 
-import { fetchInstance } from '../instance';
+import { getRankingProducts } from '../apis/product';
 
 export type RankingProductsResponseData = {
   products: GoodsData[];
-};
-
-const getRankingProductsPath = ({ targetType, rankType }: RankingFilterOption) =>
-  `/v1/ranking/products?targetType=${targetType}&rankType=${rankType}`;
-
-export const getRankingProducts = async (filterOption: RankingFilterOption) => {
-  const response = await fetchInstance.get<RankingProductsResponseData>(
-    getRankingProductsPath(filterOption),
-  );
-  return response.data;
 };
 
 export const useGetRankingProducts = (filterOptions: RankingFilterOption) => {
