@@ -6,6 +6,7 @@ import { Button } from '@/components/common/Button';
 import { UnderlineTextField } from '@/components/common/Form/Input/UnderlineTextField';
 import { Image } from '@/components/common/Image';
 import AuthContext from '@/context/AuthContext';
+import { authSessionStorage } from '@/lib/storage';
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -15,9 +16,9 @@ export default function Login() {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        sessionStorage.setItem('authToken', username);
+        authSessionStorage.set(username);
         setIsAuthenticated(true);
-        navigate('/');
+        navigate(-1);
     };
 
     return (

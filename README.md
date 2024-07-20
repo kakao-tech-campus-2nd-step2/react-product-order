@@ -13,10 +13,33 @@
 
 ## 요구사항
 
+### 1단계
+
+- [x] Chakra UI 라이브러리 추가 + 테스트용 numberInput 컴포넌트 구현
+- 상품 상세 페이지 UI
+  - [x] 상품 상세 정보 섹션
+  - [ ] 상품 옵션 섹션
+  - [x] 개수 input + 가격 뷰
+  - [x] 라우팅 버튼
+- 상품 결제하기 페이지 UI
+  - [x] 메세지 입력 섹션
+  - [x] 선물 내역 섹션
+  - 결제 정보 섹션
+    - [x] 현금영수증
+    - [x] 최종 결재
+    - [x] 결재버튼
+- [x] 상품 상세 데이터 fetch `/api/v1/products/{productId}/detail`, `/api/v1/products/{productId}/options`
+- [x] 상품 결제 기능 구현 `/api/v1/order` (React의 form, ref, state만 사용)
+- 추가 구현해야할 기능
+  - [x] localStorge 재사용성 높이기 (객체화)
+  - [x] 로그인 후 이전페이지로 라우팅
+  - [x] 상품이 없는 경우 메인으로 연결
+  - [x] 주문페이지에서 로그인이 되어있지 않은 경우 로그인 요청
+
 ## 🎸
 
 ### 과제 수행 일지
 
 - [0단계](https://www.notion.so/Day-17-36603129a52f4fa59bb99e0009819343?pvs=4#4db2c1d20c5d4b0a8f4722bdd044eb95)
-
-### 궁금한 점
+- [1단계: 초기 세팅 및 상품상세페이지 UI 구현](https://www.notion.so/Day-17-36603129a52f4fa59bb99e0009819343?pvs=4#4726de35512d466a96f6df72649bb9a2)
+- [1단계: 주문페이지 UI 구현 및 api 요청](https://www.notion.so/Day-18-a9bd5597c5ca48dab55074606256190a?pvs=4#479b338777ca406594622b3abbc87b4f)
