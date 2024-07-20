@@ -28,7 +28,7 @@ export const OrderPage = () => {
       const additionalPrice = selectedOption?.additionalPrice || 0;
       setTotalPrice((price.sellingPrice + additionalPrice) * quantity);
     }
-  }, []);
+  }, [orderLocalStorage, setSelectedProduct, setTotalPrice]);
 
   const handleOrder: SubmitHandler<FormValues> = (_data) => {
     alert('주문이 완료되었습니다.');
