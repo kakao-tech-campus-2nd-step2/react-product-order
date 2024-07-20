@@ -21,10 +21,10 @@ interface ProductOptionData {
   }[];
 }
 
+const BASE_URL = 'https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/';
+
 export const getProductOption = async (productId: string) => {
-  const res = await axios.get<ProductOptionData>(
-    `https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`,
-  );
+  const res = await axios.get<ProductOptionData>(`${BASE_URL}${productId}/detail`);
   return res.data;
 };
 
