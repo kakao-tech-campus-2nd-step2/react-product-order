@@ -4,7 +4,7 @@ import { Layout } from '@/components/features/Layout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
-import PaymentPage from '@/pages/Payment';
+import PaymentPageWrapper from '@/pages/Payment/PaymentPageWrapper';
 import ProductDetailPage from '@/pages/ProductDetail';
 import { ThemePage } from '@/pages/Theme';
 
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: RouterPath.order,
-            element: <PaymentPage />,
+            element: <PaymentPageWrapper />,
           },
         ],
       },

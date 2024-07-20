@@ -61,7 +61,6 @@ export type ProductOptionData = {
   value: string;
   level: number;
   options: [];
-  id: number;
   usable: boolean;
   price: number;
   stockQuantity: number;

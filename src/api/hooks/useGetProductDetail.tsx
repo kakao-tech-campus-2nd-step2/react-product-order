@@ -1,49 +1,37 @@
-import { useEffect, useState } from 'react';
+
+import { AxiosError } from 'axios';
+import { useQuery } from 'react-query';
 
 import type { ProductDetailData } from '@/types';
+import createErrorMessage from '@/utils/createErrorMessage';
 
 import { fetchInstance } from '../instance';
 
 export type ProductDetailResponse = {
-  detail: ProductDetailData;
+	detail: ProductDetailData;
 };
 
-const getProductDetailPath = (productId: string) =>
-	`/v1/products/${productId}/detail`;
-  
-  export const getProductDetail = async (productId: string) => {
-	const response = await fetchInstance.get<ProductDetailResponse>(
-	  getProductDetailPath(productId),
-	);
-	return response.data;
-  };
+
+const fetchProductDetail = async (productId: string) => {
+	try {
+		const response = await fetchInstance.get<ProductDetailResponse>(
+			`/v1/products/${productId}/detail`,
+		);
+		return response.data;
+	} catch (err) {
+		const error = err as AxiosError;
+		const errorMessage = error instanceof AxiosError ? createErrorMessage(error.response) : 'An unknown error occurred';
+		console.error(errorMessage);
+		throw new Error(errorMessage);
+	}
+};
+
 
 export const useGetProductDetail = (productId: string) => {
-	const [data, setData] = useState<ProductDetailResponse | undefined>();
-	const [isLoading, setLoading] = useState(true);
-	const [isError, setError] = useState(false);
+	const query = useQuery<ProductDetailResponse, Error>(
+		['productDetail', productId],
+		() => fetchProductDetail(productId),
+	);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				setLoading(true);
-				setError(false);
-				const response = await getProductDetail(productId);
-
-				setData(response);
-				setLoading(false);
-			} catch {
-				setError(true);
-				setData(undefined);
-			}
-		};
-
-		fetchData();
-	}, [productId]);
-
-	return {
-		data,
-		isLoading,
-		isError,
-	};
+	return [query.data, { loading: query.isLoading, errorMessage: query.error?.message }] as const;
 };

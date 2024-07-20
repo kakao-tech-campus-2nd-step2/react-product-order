@@ -1,10 +1,16 @@
-import { useEffect, useState } from 'react';
+import { AxiosError } from 'axios';
+import { useQuery } from 'react-query';
 
 import type { ProductOptionData } from '@/types';
+import createErrorMessage from '@/utils/createErrorMessage';
 
 import { fetchInstance } from '../instance';
 
 export type ProductOptionsResponse = {
+  options: ProductData;
+};
+
+export type ProductData = {
   productId: number;
   productName: string;
   productPrice: number;
@@ -12,43 +18,28 @@ export type ProductOptionsResponse = {
   giftOrderLimit: number;
   names: string[];
   options: ProductOptionData[];
-};
-  
+}
 
-const getProductOptionsPath = (productId: string) => `/v1/products/${productId}/options`;
-
-export const getProductOptions = async (productId: string) => {
-  const response = await fetchInstance.get<ProductOptionsResponse>(getProductOptionsPath(productId));
-  return response.data;
-};
-
-export const useGetProductOptions = (productId: string) => {
-  const [data, setData] = useState<ProductOptionsResponse | undefined>();
-  const [isLoading, setLoading] = useState(true);
-  const [isError, setError] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(false);
-        const response = await getProductOptions(productId);
-        setData(response);
-        setLoading(false);
-      } catch (error) {
-        setError(true);
-        setData(undefined);
-      }
-    };
-
-    fetchData();
-  }, [productId]);
-
-  return {
-    data,
-    isLoading,
-    isError,
-  };
+const fetchProductOption = async (productId: string) => {
+	try {
+		const response = await fetchInstance.get<ProductOptionsResponse>(
+			`/v1/products/${productId}/options`,
+		);
+		return response.data;
+	} catch (err) {
+		const error = err as AxiosError;
+		const errorMessage = error instanceof AxiosError ? createErrorMessage(error.response) : 'An unknown error occurred';
+		console.error(errorMessage);
+		throw new Error(errorMessage);
+	}
 };
 
-export default useGetProductOptions;
+
+export const useGetProductOption = (productId: string) => {
+  const query = useQuery<ProductOptionsResponse, Error>(
+    ['productOption', productId],
+    () => fetchProductOption(productId),
+  );
+
+  return { optionData: query.data, optionLoading: query.isLoading, optionErrorMessage: query.error?.message };
+};
