@@ -8,7 +8,7 @@ interface Props {
   cardMessage: string;
 }
 
-export const OrderInfo = ({ price, cardMessage }: Props) => {
+export const Order = ({ price, cardMessage }: Props) => {
   const [cashReceiptNumber, setCashReceiptNumber] = useState<string>('');
   const [isCashReceiptChecked, setIsCashReceiptChecked] = useState<boolean>(false);
 

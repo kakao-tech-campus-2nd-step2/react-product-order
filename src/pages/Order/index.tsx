@@ -6,7 +6,7 @@ import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
 import { Spinner } from '@/components/common/Spinner';
 import { GiftMessage } from '@/components/features/Order/GiftMessage';
 import { GiftSummary } from '@/components/features/Order/GiftSummary';
-import { OrderInfo } from '@/components/features/Order/OrderInfo';
+import { Order } from '@/components/features/Order/index';
 
 export const OrderPage = () => {
   const location = useLocation();
@@ -39,7 +39,7 @@ export const OrderPage = () => {
           <GiftSummary imageURL={data.imageURL} brandName={data.brandInfo.name} name={data.name} />
         )}
       </GiftWrapper>
-      {data && <OrderInfo price={data.price.basicPrice * count} cardMessage={cardMessage} />}
+      {data && <Order price={data.price.basicPrice * count} cardMessage={cardMessage} />}
     </Wrapper>
   );
 };
