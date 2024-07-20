@@ -28,3 +28,32 @@ export interface ProductWithPageData {
     totalResults: number;
   };
 }
+export interface ProductDetailResponse {
+  detail: {
+    id: number;
+    name: string;
+    imageURL: string;
+    wish: {
+      isWished: boolean;
+      wishCount: number;
+    };
+    price: {
+      basicPrice: number;
+      discountRate: number;
+      sellingPrice: number;
+    };
+    brandInfo: {
+      id: number;
+      name: string;
+      imageURL: string;
+    };
+    isAccessableProductPage: boolean;
+    review: {
+      averageRating: number;
+      totalReviewCount: number;
+    };
+    productDescription: {
+      displayImage: string;
+    };
+  };
+}

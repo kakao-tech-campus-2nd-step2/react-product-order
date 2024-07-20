@@ -18,7 +18,7 @@
     "sourceMap": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "jsxImportSource": "@emotion/react",
+    "types": ["@emotion/react/types/css-prop"],
     "incremental": true,
     "baseUrl": ".",
     "paths": {
