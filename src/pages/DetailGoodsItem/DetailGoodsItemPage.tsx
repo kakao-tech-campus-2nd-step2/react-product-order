@@ -54,7 +54,7 @@ export const DetailGoodsItemPage = () => {
 
           <ProductDetailSection name={data?.name} sellingPrice={data?.price.sellingPrice} />
 
-          <VStack>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Box width="318px" border="1px" borderColor="gray.200">
               <VStack py="12px" px="8px">
                 <Text fontWeight="bold">{data?.name}</Text>
@@ -69,14 +69,14 @@ export const DetailGoodsItemPage = () => {
 
             <TotalPrice totalPrice={totalPrice} />
 
-            <Spacer />
-            <CTAButton
-              text="나에게 선물하기"
-              textColor="white"
-              background="black"
-              onClick={handleClick}
-            />
-          </VStack>
+              <Spacer />
+              <CTAButton
+                text="나에게 선물하기"
+                textColor="white"
+                background="black"
+                type="submit"
+              />
+            </VStack>
         </HStack>
       )}
     </Flex>
