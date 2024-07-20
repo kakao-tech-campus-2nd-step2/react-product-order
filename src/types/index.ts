@@ -54,5 +54,10 @@ export type goodsDetailData = {
 };
 
 export type productInfoProps = {
-  productInfo: goodsDetailData;
+  productInfo?: goodsDetailData;
 };
+
+export type giftMessageProps = {
+  message: string;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
+}
