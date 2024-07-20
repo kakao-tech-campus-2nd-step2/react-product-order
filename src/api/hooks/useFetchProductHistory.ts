@@ -17,12 +17,13 @@ export const getGoodsDetail = async (params: GoodsDetailRequestParams) => {
   const response = await fetchInstance.get<GoodsDetailResponseData>(
     getGoodsDetailPath(params.productId),
   );
-  return response.data.detail;
+  return response.data;
 };
 
 export const useFetchProductHistory = (productId: string) => {
   return useSuspenseQuery({
     queryKey: [getGoodsDetailPath(productId)],
     queryFn: () => getGoodsDetail({ productId }),
+    select: (data) => data.detail,
   });
 };
