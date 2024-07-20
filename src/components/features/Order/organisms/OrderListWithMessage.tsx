@@ -1,16 +1,14 @@
 import { Box, Text } from '@chakra-ui/react';
 import { memo } from 'react';
 
-import type { Products } from '@/api/products/types';
 import { Spacing } from '@/components/common/layouts/Spacing';
+import type { IOrderLetter } from '@/components/features/Order/atoms/OrderLetter';
 import { OrderLetter } from '@/components/features/Order/atoms/OrderLetter';
 import { OrderSubTitle } from '@/components/features/Order/atoms/OrderSubTitle';
+import type { IOrderList } from '@/components/features/Order/molecules/OrderList';
 import { OrderList } from '@/components/features/Order/molecules/OrderList';
 
-export interface IOrderListInAView {
-  setMessage: (message: string) => void;
-  orderList: Products.PaymentThumbnail[];
-}
+export interface IOrderListInAView extends IOrderLetter, IOrderList {}
 
 export const OrderListWithMessage = memo(({ setMessage, orderList }: IOrderListInAView) => (
   <Box

@@ -5,12 +5,20 @@ import type { Products } from '@/api/products/types';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
 
+export interface IOrderItemInfo extends Products.PaymentThumbnail {
+  cnt: string;
+}
+
 export const useProductPreReceipt = (
   productName: string,
   currentProductInfo: Products.PaymentThumbnail,
 ) => {
+  const cntParam = new URLSearchParams(window.location.search).get('cnt') ?? '1';
   const [cntMap, setCntMap] = useState(
-    new Map().set(productName, { ...currentProductInfo, cnt: '1' }),
+    new Map<string, IOrderItemInfo>().set(productName, {
+      ...currentProductInfo,
+      cnt: cntParam,
+    }),
   );
   const authInfo = useAuth();
   const navigate = useNavigate();
@@ -34,7 +42,8 @@ export const useProductPreReceipt = (
     if (!authInfo) {
       const answer = confirm('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?');
       if (answer) {
-        navigate(getDynamicPath.login());
+        const prevCnt = cntMap.get(productName)?.cnt ?? '1';
+        navigate(`${getDynamicPath.login()}?cnt=${prevCnt}`);
       }
       return;
     }
@@ -43,5 +52,5 @@ export const useProductPreReceipt = (
     });
   }, [authInfo, cntMap, productName]);
 
-  return { totalPriceMemo, setProductCnt, onClick };
+  return { totalPriceMemo, setProductCnt, onClick, initCnt: parseInt(cntParam) };
 };
