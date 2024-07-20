@@ -44,7 +44,7 @@ export const Aside = ({ name, price }: Props) => {
       );
 
       if (userConfirm) navigate(RouterPath.login);
-    } else {alert('확인'); // payment로 이동};
+    } else alert('확인'); // payment로 이동
   };
 
   return (
