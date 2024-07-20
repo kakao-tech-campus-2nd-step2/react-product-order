@@ -1,6 +1,7 @@
 import { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import FetchStatus from '@constants/FetchStatus';
 import { OrderRequestBody } from '@types/request';
+import { FormErrorMessages } from '@constants/ErrorMessage';
 import { ProductDetailData, ThemeData } from '@/dto';
 import { CashReceiptOptions } from '@/constants';
 
@@ -72,13 +73,9 @@ export interface FixedSize {
   height: string,
 }
 
-interface OrderFormErrorStatus {
-  hasCardMessageError: boolean;
-  cardMessageErrorCaption: string;
-  hasReceiptError: boolean;
-  receiptErrorCaption: string;
-  isMessageModified: boolean;
-  isReceiptNumberModified: boolean;
+export interface OrderFormStatus {
+  isDirty: boolean;
+  errorMessage?: FormErrorMessages[string] | boolean;
 }
 
 export type OrderFormData =
