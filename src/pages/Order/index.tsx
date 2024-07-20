@@ -28,7 +28,10 @@ export const OrderPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const { state } = useLocation();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState('');
+  const [receiptRequested, setReceiptRequested] = useState(false);
+  const [receiptNumber, setReceiptNumber] = useState('');
 
   useEffect(() => {
     const fetchProductOrder = async () => {
@@ -37,7 +40,7 @@ export const OrderPage = () => {
           `https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${orderId}/detail`,
         );
         setProductDetail(res.data.detail);
-        setIsLoading(false);
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -46,10 +49,42 @@ export const OrderPage = () => {
   }, [orderId]);
 
   const handleSubmit = () => {
-    alert('결제가 완료되었습니다.');
+    const validateMessage = () => {
+      if (!message.trim()) {
+        alert('메시지를 입력해주세요.');
+        return false;
+      }
+      if (message.length > 100) {
+        alert('메시지를 100자 이내로 입력해주세요.');
+        return false;
+      }
+      return true;
+    };
+
+    const validateReceiptNumber = () => {
+      if (receiptRequested) {
+        if (!receiptNumber.trim()) {
+          alert('현금 영수증 번호를 입력해주세요.');
+          return false;
+        }
+        if (isNaN(Number(receiptNumber))) {
+          alert('현금 영수증 번호를 숫자만 입력해주세요.');
+          return false;
+        }
+      }
+      return true;
+    };
+
+    if (validateMessage() && validateReceiptNumber()) {
+      alert('결제가 완료되었습니다.');
+    }
   };
 
-  if (isLoading || !productDetail) {
+  const validateReceiptRequestChange = () => {
+    setReceiptRequested(!receiptRequested);
+  };
+
+  if (loading || !productDetail) {
     return <Box>Loading...</Box>;
   }
 
@@ -68,6 +103,8 @@ export const OrderPage = () => {
               mt={4}
               bgColor="#EDF2F7"
               height="100px"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
           </Box>
         </Flex>
@@ -103,7 +140,7 @@ export const OrderPage = () => {
           mb={4}
         >
           <FormControl display="flex" alignItems="center">
-            <Checkbox mr={4} />
+            <Checkbox mr={4} onChange={validateReceiptRequestChange} isChecked={receiptRequested} />
             <FormLabel mb={0}>현금 영수증 신청</FormLabel>
           </FormControl>
 
@@ -114,7 +151,13 @@ export const OrderPage = () => {
             </Select>
           </FormControl>
           <FormControl mt={4}>
-            <Input id="receiptNumber" type="text" placeholder="(-없이) 숫자만 입력해주세요." />
+            <Input
+              id="receiptNumber"
+              type="text"
+              placeholder="(-없이) 숫자만 입력해주세요."
+              value={receiptNumber}
+              onChange={(e) => setReceiptNumber(e.target.value)}
+            />
           </FormControl>
         </Flex>
         <Divider my={4} borderColor="gray.300" />
