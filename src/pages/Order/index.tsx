@@ -35,11 +35,8 @@ type OrderMessageContextType = {
   receiptNumber: string;
   setReciptNumber: (receiptNumber: string) => void;
 };
-// type OrderReciptContextType = {
-// };
 
 const OrderMessageContext = createContext<OrderMessageContextType | undefined>(undefined);
-// const OrderReciptContext = createContext<OrderReciptContextType | undefined>(undefined);;
 
 export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [message, setMessage] = useState<string>('');
