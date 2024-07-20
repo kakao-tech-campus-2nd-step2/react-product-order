@@ -21,7 +21,7 @@ export const Product = () => {
 
   return (
     <StyledProduct>
-      <Container>
+      <Container maxWidth="100%" flexDirection="row" alignItems="center">
         <ProductContainer>
           <Main
             name={productDetail.name}
