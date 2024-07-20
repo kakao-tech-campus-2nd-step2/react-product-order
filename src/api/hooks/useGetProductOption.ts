@@ -7,7 +7,8 @@ import { fetchInstance } from '../instance';
 export type OptionData = {
   id: number;
   name: string;
-  subOptions?: OptionData[];
+  additionalPrice: number;
+  giftOrderLimit: number;
 };
 
 // Request parameter type 정의
@@ -21,13 +22,13 @@ const getProductOptionsPath = ({ productId }: ProductOptionsRequestParams) => {
 };
 
 // API 함수 정의
-export const getProductOptions = async (params: ProductOptionsRequestParams): Promise<OptionData[]> => {
+export const getProductOptions = async (params: ProductOptionsRequestParams): Promise<OptionData> => {
   const response = await fetchInstance.get(getProductOptionsPath(params));
-  return response.data;
+  return response.data.options;
 };
 
 // Custom hook 정의
-export const useGetProductOptions = (productId:  number): UseQueryResult<OptionData[]> => {
+export const useGetProductOptions = (productId:  number): UseQueryResult<OptionData> => {
   return useQuery({
     queryKey: ['productOptions', productId],
     queryFn: () => getProductOptions({ productId }),
