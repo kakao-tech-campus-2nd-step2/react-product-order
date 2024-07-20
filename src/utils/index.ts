@@ -44,7 +44,9 @@ export function throttle(fn: (...args: any) => any, delay: number) {
   return closure;
 }
 
-export function isNumericString(value: string) {
+export function isNumericString(value?: string | null) {
+  if (!value) return false;
+
   return /^\d+$/.test(value);
 }
 
