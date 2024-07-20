@@ -43,7 +43,10 @@ export const Aside = ({ name, price }: Props) => {
         '로그인이 필요한 메뉴입니다. \n로그인 페이지로 이동하시겠습니까?',
       );
 
-      if (userConfirm) navigate(RouterPath.login);
+      if (userConfirm) {
+        const currentPath = window.location.pathname + window.location.search;
+        navigate(`${RouterPath.login}?redirect=${encodeURIComponent(currentPath)}`);
+      }
     } else alert('확인'); // payment로 이동
   };
 
