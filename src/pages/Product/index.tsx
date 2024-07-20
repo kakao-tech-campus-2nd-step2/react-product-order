@@ -1,4 +1,5 @@
-import { Box, Button, Flex, Image, Text, VStack } from '@chakra-ui/react';
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { Box, Button, Flex, IconButton,Image, Text, VStack } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -33,7 +34,7 @@ const fetchProductDetails = async (productId: string) => {
 export const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
-  const { register, handleSubmit, watch } = useForm<{ quantity: number }>({
+  const { register, handleSubmit, setValue, watch } = useForm<{ quantity: number }>({
     defaultValues: {
       quantity: 1
     }
@@ -62,6 +63,13 @@ export const ProductPage: React.FC = () => {
         setLoading(false);
       });
   }, [productId]);
+
+  const handleQuantityChange = (increment: boolean) => {
+    const newQuantity = increment ? quantity + 1 : quantity - 1;
+    if (newQuantity >= 1 && newQuantity <= (productDetail?.giftOrderLimit || 1)) {
+      setValue('quantity', newQuantity);
+    }
+  };
 
   const handleGiftToSelf = () => {
     const authToken = authSessionStorage.get();
@@ -112,11 +120,15 @@ export const ProductPage: React.FC = () => {
         <Text fontSize="2xl">{productDetail.price.basicPrice}원</Text>
         <Text>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</Text>
         <form onSubmit={handleSubmit(handleGiftToSelf)}>
-          <input type="number" {...register('quantity', { 
-            valueAsNumber: true, 
-            min: 1, 
-            max: productDetail.giftOrderLimit || 1
-          })} />
+          <Flex align="center">
+            <IconButton icon={<MinusIcon />} onClick={() => handleQuantityChange(false)} aria-label={''} />
+            <input type="number" readOnly {...register('quantity', { 
+              valueAsNumber: true, 
+              min: 1, 
+              max: productDetail.giftOrderLimit || 1
+            })} />
+            <IconButton icon={<AddIcon />} onClick={() => handleQuantityChange(true)} aria-label={''} />
+          </Flex>
           <Flex width="full" justify="space-between" align="center">
             <Text fontSize="2xl" fontWeight="semibold">총 결제금액</Text>
             <Text fontSize="2xl">{(productDetail.price.basicPrice * quantity).toLocaleString()}원</Text>
