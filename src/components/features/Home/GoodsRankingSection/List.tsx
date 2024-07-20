@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { Link } from 'react-router-dom'; //상품 항목을 클릭하면 상세페이지로 이동하도록 link 사용
 
 import { Button } from '@/components/common/Button';
 import { RankingGoodsItems } from '@/components/common/GoodsItem/Ranking';
 import { Grid } from '@/components/common/layouts/Grid';
+import { getDynamicPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
 import type { GoodsData } from '@/types';
 
@@ -29,14 +31,16 @@ export const GoodsRankingList = ({ goodsList }: Props) => {
         gap={16}
       >
         {currentGoodsList.map(({ id, imageURL, name, price, brandInfo }, index) => (
-          <RankingGoodsItems
-            key={id}
-            rankingIndex={index + 1}
-            imageSrc={imageURL}
-            title={name}
-            amount={price.sellingPrice}
-            subtitle={brandInfo.name}
-          />
+          <Link to={getDynamicPath.ProductDetail(id.toString())} key={id}>
+            <RankingGoodsItems
+              key={id}
+              rankingIndex={index + 1}
+              imageSrc={imageURL}
+              title={name}
+              amount={price.sellingPrice}
+              subtitle={brandInfo.name}
+            />
+          </Link>
         ))}
       </Grid>
       {goodsList.length > 6 && (
