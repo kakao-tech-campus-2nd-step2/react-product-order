@@ -5,12 +5,12 @@ import { Button } from '@/components/common/Button';
 import { OrderSubTitle } from '@/components/features/Order/atoms/OrderSubTitle';
 import type { IOrderPrice } from '@/components/features/Order/molecules/OrderPrice';
 import { OrderPrice } from '@/components/features/Order/molecules/OrderPrice';
-import type { IOrderRequestCashReceipt } from '@/components/features/Order/molecules/OrderRequestCashReceipt';
-import { OrderRequestCashReceipt } from '@/components/features/Order/molecules/OrderRequestCashReceipt';
+import type { IOrderRequestCashReceipt } from '@/components/features/Order/molecules/OrderRequestCacheReceipt';
+import { OrderRequestCacheReceipt } from '@/components/features/Order/molecules/OrderRequestCacheReceipt';
 
 export interface IOrderReceipt extends IOrderPrice, IOrderRequestCashReceipt {}
 
-export const OrderReceipt = memo(({ totalPrice, cacheReceiptRefs }: IOrderReceipt) => (
+export const OrderReceipt = memo(({ totalPrice, register }: IOrderReceipt) => (
   <Box
     width="100%"
     height="100%"
@@ -21,7 +21,7 @@ export const OrderReceipt = memo(({ totalPrice, cacheReceiptRefs }: IOrderReceip
     <VStack spacing="24px">
       <OrderSubTitle subtitle="결제 정보" textAlign="left" />
       <Divider borderColor="#ededed" />
-      <OrderRequestCashReceipt cacheReceiptRefs={cacheReceiptRefs} />
+      <OrderRequestCacheReceipt register={register} />
       <Divider borderColor="#ededed" />
       <OrderPrice totalPrice={totalPrice} />
       <Divider borderColor="#ededed" />
