@@ -1,6 +1,8 @@
 import { Box, Text, Textarea } from '@chakra-ui/react';
 
-export default function GiftMessage() {
+import type { giftMessageProps } from '@/types';
+
+export default function GiftMessage({ message, setMessage }: giftMessageProps) {
   return (
     <Box
       display="flex"
@@ -15,6 +17,8 @@ export default function GiftMessage() {
         나에게 주는 선물
       </Text>
       <Textarea
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
         p="12px 30px 16px"
         bgColor="rgb(226, 232, 240)"
         width="780px"

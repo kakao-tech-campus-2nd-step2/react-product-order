@@ -8,10 +8,37 @@ import {
   Select,
   Text,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 
-import type { productInfoProps } from '@/types';
+import type { giftMessageProps, productInfoProps } from '@/types';
 
-export default function PaymentInfo({ productInfo }: productInfoProps) {
+export default function PaymentInfo({ productInfo, message }: productInfoProps & giftMessageProps) {
+  const [receiptNumber, setReceiptNumber] = useState<string>('');
+  const [isReceiptChecked, setIsReceiptChecked] = useState<boolean>(false);
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    let errorMessage = '';
+
+    if (message.trim() === '') {
+      errorMessage = '메시지를 입력해 주세요.';
+      console.log(message, errorMessage);
+    } else if (message.trim().length > 100) {
+      errorMessage = '100자 이내로 입력해 주세요.';
+      console.log(message, errorMessage);
+    } else if (isReceiptChecked && !receiptNumber.trim()) {
+      errorMessage = '현금 영수증 번호를 입력해 주세요.';
+    } else if (isReceiptChecked && !/^\d+$/.test(receiptNumber)) {
+      errorMessage = '현금 영수증 번호는 숫자만 입력해주세요.';
+    }
+
+    if (errorMessage != '') {
+      alert(errorMessage);
+    } else {
+      alert('주문이 완료되었습니다.');
+    }
+  };
+
   return (
     <Box
       display="flex"
@@ -41,7 +68,11 @@ export default function PaymentInfo({ productInfo }: productInfoProps) {
       >
         <FormControl mb={2}>
           <Box display="flex" alignItems="center">
-            <Checkbox mr={2} />
+            <Checkbox
+              mr={2}
+              isChecked={isReceiptChecked}
+              onChange={() => setIsReceiptChecked(!isReceiptChecked)}
+            />
             <FormLabel mb="0" fontSize="15px" fontWeight={700}>
               현금영수증 신청
             </FormLabel>
@@ -55,6 +86,8 @@ export default function PaymentInfo({ productInfo }: productInfoProps) {
           width="294px"
           height="40px"
           placeholder="(-없이) 숫자만 입력해주세요."
+          value={receiptNumber}
+          onChange={(e) => setReceiptNumber(e.target.value)}
           mb={2}
           p="0 16px"
         />
@@ -71,11 +104,12 @@ export default function PaymentInfo({ productInfo }: productInfoProps) {
           최종 결제금액
         </Text>
         <Text fontSize="18px" fontWeight={700} mb={2}>
-          {productInfo.price * (productInfo.amount ?? 1)}
+          {(productInfo?.price ?? 0) * (productInfo?.amount ?? 1)}
         </Text>
       </Box>
       <Box height="32px"></Box>
       <Button
+        onClick={handleSubmit}
         display="flex"
         bgColor="rgb(254, 229, 0)"
         borderRadius="4px"
@@ -83,7 +117,7 @@ export default function PaymentInfo({ productInfo }: productInfoProps) {
         height="60px"
         width="326px"
       >
-        {productInfo.price * (productInfo.amount ?? 1)}원 결제하기
+        {(productInfo?.price ?? 0) * (productInfo?.amount ?? 1)}원 결제하기
       </Button>
     </Box>
   );
