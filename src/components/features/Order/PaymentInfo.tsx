@@ -32,3 +32,4 @@ const PaymentInfo = ({ price, isReceiptRequested, setIsReceiptRequested,receiptN
 };
 
 export default PaymentInfo;
+
