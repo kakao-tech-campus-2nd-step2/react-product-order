@@ -1,10 +1,10 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, IconButton,Image, Text, VStack } from '@chakra-ui/react';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import api from '@/api/instance/api';
 import { getDynamicPath, RouterPath } from '@/routes/path'
 import { authSessionStorage } from '@/utils/storage';
 
@@ -20,8 +20,8 @@ interface ProductDetail {
 
 const fetchProductDetails = async (productId: string) => {
   try {
-    const response = await axios.get(`https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/detail`);
-    const optionsResponse = await axios.get(`https://kakao-tech-campus-mock-server.vercel.app/api/v1/products/${productId}/options`);
+    const response = await api.get(`/products/${productId}/detail`);
+    const optionsResponse = await api.get(`/products/${productId}/options`);
     return {
       detail: response.data.detail,
       options: optionsResponse.data.options
