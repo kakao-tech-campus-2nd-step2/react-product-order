@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, Grid, GridItem, HStack, Image, Input, Select, Text, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import type { SubmitHandler} from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
