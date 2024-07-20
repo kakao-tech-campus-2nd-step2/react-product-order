@@ -3,16 +3,10 @@ import styled from '@emotion/styled';
 import { GiftHistory } from './GiftHistory';
 import { MessageCard } from './MessageCard';
 
-export const GiftMessageSection = ({
-  orderHistory,
-  inputRef,
-}: {
-  orderHistory: { id: number; count: number };
-  inputRef: React.RefObject<HTMLInputElement>;
-}) => {
+export const GiftMessageSection = ({ orderHistory }: { orderHistory: { id: number; count: number } }) => {
   return (
     <GiftMessageSectionWrapper>
-      <MessageCard ref={inputRef} />
+      <MessageCard />
       <CustomDivider></CustomDivider>
       <GiftHistory orderHistory={orderHistory} />
     </GiftMessageSectionWrapper>

@@ -1,23 +1,26 @@
-import { Input } from '@chakra-ui/react';
+import { Textarea } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { forwardRef } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-export const MessageCard = forwardRef<HTMLInputElement>((_, ref) => {
+import type { FormValues } from '@/pages/OrderPage';
+
+export const MessageCard = () => {
+  const { register } = useFormContext<FormValues>();
   return (
     <MessageCardWrapper>
       <Title>나에게 주는 선물</Title>
       <MessageCardForm>
-        <Input
+        <Textarea
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
           height="100"
           variant="filled"
           colorScheme="gray"
-          ref={ref}
+          {...register('message')}
         />
       </MessageCardForm>
     </MessageCardWrapper>
   );
-});
+};
 const MessageCardWrapper = styled.div`
   width: 100%;
   padding: 30px 12px 30px 30px;
