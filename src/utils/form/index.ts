@@ -1,11 +1,11 @@
 import type { FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form';
 
-type RegisterOption<T extends FieldValues> = {
+export type RegisterOption<T extends FieldValues> = {
   name: Path<T>;
   option: RegisterOptions<T>;
 };
 
-type UseCreateRegisterProps<T extends FieldValues> = {
+export type UseCreateRegisterProps<T extends FieldValues> = {
   register: UseFormRegister<T>;
   options: RegisterOption<T>[];
 };

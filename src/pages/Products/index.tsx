@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useGetProductsDetail, useGetProductsOption } from '@/api';
 import Loading from '@/components/common/Loading';
 import { RouterPath } from '@/routes/path';
+import type { RegisterOption } from '@/utils/form';
 import { useCreateRegister } from '@/utils/form';
 import { clip } from '@/utils/numberControl/numberControl';
 import { authSessionStorage } from '@/utils/storage';
@@ -30,7 +31,7 @@ export const ProductsPage = () => {
   const location = useLocation();
 
   const maxCount = productsOptions?.options.giftOrderLimit;
-  const inputOptions = [
+  const inputOptions: RegisterOption<Inputs>[] = [
     {
       name: 'count' as const,
       option: {
