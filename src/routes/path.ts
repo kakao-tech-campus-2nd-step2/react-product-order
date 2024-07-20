@@ -2,6 +2,8 @@ export const RouterPath = {
   root: '/',
   home: '/',
   theme: '/theme/:themeKey',
+  productDetail: '/product/:productId',
+  payment: '/payment',
   myAccount: '/my-account',
   login: '/login',
   notFound: '*',
