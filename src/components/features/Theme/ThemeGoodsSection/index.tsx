@@ -2,6 +2,9 @@ import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { Link } from 'react-router-dom';
 
 import { useGetThemesProducts } from '@/api';
 import type { ProductData } from '@/api/type';
@@ -62,6 +65,31 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
   return (
     <Wrapper>
       <Container>
+        <Loading isLoading={isLoading} error={isError}>
+          <ListMapper<ProductData>
+            items={products}
+            ItemComponent={({ item }) => (
+              <Link to={`/products/${item.id}`}>
+                <DefaultGoodsItems
+                  key={item.id}
+                  imageSrc={item.imageURL}
+                  title={item.name}
+                  amount={item.price.sellingPrice}
+                  subtitle={item.brandInfo.name}
+                />
+              </Link>
+            )}
+            Wrapper={Grid}
+            wrapperProps={{
+              columns: {
+                initial: 2,
+                md: 4,
+              },
+              gap: 16,
+            }}
+          />
+          <div ref={ref} />
+        </Loading>
         <Loading isLoading={isLoading} error={isError}>
           <ListMapper<ProductData>
             items={products}
