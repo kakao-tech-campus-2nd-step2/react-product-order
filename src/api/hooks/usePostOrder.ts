@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { fetchInstance } from '../instance';
 
-interface OrderRequestBody {
+export interface OrderRequestBody {
   productId: string;
   productOptionId: number;
   productQuantity: number;

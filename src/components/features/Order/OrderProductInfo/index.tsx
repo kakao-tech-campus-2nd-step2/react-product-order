@@ -1,12 +1,14 @@
 import { Box, Flex, FormControl, FormLabel, HStack, Image, Input, Text } from '@chakra-ui/react';
+import type { UseFormRegister } from 'react-hook-form';
 
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+import type { OrderFormValues } from '@/pages/Order';
 
 interface OrderProductInfoProps {
   productId: string;
-  messageCardTextMessageRef: React.RefObject<HTMLInputElement>;
+  register: UseFormRegister<OrderFormValues>;
 }
-const OrderProductInfo = ({ productId, messageCardTextMessageRef }: OrderProductInfoProps) => {
+const OrderProductInfo = ({ productId, register }: OrderProductInfoProps) => {
   const { data, isPending, error } = useGetProductDetail(productId);
 
   if (isPending) {
@@ -25,9 +27,9 @@ const OrderProductInfo = ({ productId, messageCardTextMessageRef }: OrderProduct
         <FormControl>
           <FormLabel>나에게 주는 선물</FormLabel>
           <Input
-            type="email"
+            type="text"
             placeholder="선물과 함께 보낼 메시지를 적어보세요"
-            ref={messageCardTextMessageRef}
+            {...register('messageCardTextMessage')}
           />
         </FormControl>
         <Box width={'100%'} bg="white">
