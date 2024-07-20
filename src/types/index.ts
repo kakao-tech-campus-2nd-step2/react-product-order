@@ -32,3 +32,5 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+
