@@ -43,29 +43,27 @@ export default function PaymentInfo({ productInfo, message }: productInfoProps &
     <Box
       display="flex"
       flexDirection="column"
-      justifyContent="start"
+      justifyContent="flex-start"
+      alignContent="center"
       width="360px"
       height="904px"
+      p="16px"
       borderLeftColor="rgb(226, 232, 240)"
       borderColor="rgb(226, 232, 240)"
       borderLeftWidth="1px"
       borderRightWidth="1px"
     >
-      <Text
-        p="24px 0 20px"
-        fontSize="16px"
-        borderBottom="1px"
-        borderBottomColor="rgb(226, 232, 240)"
-      >
-        결제 정보
-      </Text>
       <Box
-        p="16px"
-        borderBottom="1px"
-        width="326px"
-        height="163px"
+        height="68px"
+        p="24px 0 20px"
+        borderBottom="0.1px"
         borderBottomColor="rgb(226, 232, 240)"
       >
+        <Text fontSize="18px" fontWeight={700}>
+          결제 정보
+        </Text>
+      </Box>
+      <Box p="16px" borderBottom="0.1px" height="163px" borderBottomColor="rgb(226, 232, 240)">
         <FormControl mb={2}>
           <Box display="flex" alignItems="center">
             <Checkbox
@@ -78,12 +76,11 @@ export default function PaymentInfo({ productInfo, message }: productInfoProps &
             </FormLabel>
           </Box>
         </FormControl>
-        <Select width="294px" height="40px" placeholder="개인소득공제" mb={2} p="0 32px 0 16px">
+        <Select height="40px" mb={2}>
           <option value="personal">개인소득공제</option>
           <option value="business">사업자 지출증빙</option>
         </Select>
         <Input
-          width="294px"
           height="40px"
           placeholder="(-없이) 숫자만 입력해주세요."
           value={receiptNumber}
@@ -97,7 +94,7 @@ export default function PaymentInfo({ productInfo, message }: productInfoProps &
         justifyContent="space-around"
         alignItems="center"
         p="16px"
-        borderBottom="1px"
+        borderBottom="0.1px"
         borderBottomColor="rgb(226, 232, 240)"
       >
         <Text fontSize="15px" fontWeight={700} mb={2}>
@@ -115,7 +112,6 @@ export default function PaymentInfo({ productInfo, message }: productInfoProps &
         borderRadius="4px"
         fontSize="16px"
         height="60px"
-        width="326px"
       >
         {(productInfo?.price ?? 0) * (productInfo?.amount ?? 1)}원 결제하기
       </Button>
