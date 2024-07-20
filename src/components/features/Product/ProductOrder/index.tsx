@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
+import { useForm } from 'react-hook-form';
 import { ROUTE_PATH } from '@routes/path';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@context/auth/useAuth';
@@ -11,15 +12,24 @@ interface ProductOrderProps {
   giftOrderLimit?: number;
 }
 
+export interface QuantityValues {
+  count: number;
+}
+
 export default function ProductOrder({ name, giftOrderLimit }: ProductOrderProps) {
-  const [count, setCount] = useState<number>(0);
+  const { watch, setValue } = useForm<QuantityValues>({
+    defaultValues: {
+      count: 1,
+    },
+  });
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
 
   const handleOrderClick = () => {
+    const data = { count: watch('count') };
     if (productId) {
-      const orderHistory = { id: Number(productId), count };
+      const orderHistory = { id: Number(productId), count: data.count };
       sessionStorage.setItem('orderHistory', JSON.stringify(orderHistory));
       const targetPath = isAuthenticated ? ROUTE_PATH.ORDER : ROUTE_PATH.LOGIN;
       navigate(targetPath);
@@ -28,10 +38,10 @@ export default function ProductOrder({ name, giftOrderLimit }: ProductOrderProps
 
   return (
     <ProductOrderContainer>
-      <QuantitySelectorConatiner>
+      <QuantitySelectorContainer>
         <Title>{name}</Title>
-        <QuantitySelector giftOrderLimit={giftOrderLimit} onSetCount={setCount} count={count} />
-      </QuantitySelectorConatiner>
+        <QuantitySelector giftOrderLimit={giftOrderLimit} setValue={setValue} />
+      </QuantitySelectorContainer>
       <div>
         <TotalAmount>
           <dl>
@@ -54,7 +64,7 @@ const ProductOrderContainer = styled.aside`
   max-width: 360px;
 `;
 
-const QuantitySelectorConatiner = styled.div`
+const QuantitySelectorContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

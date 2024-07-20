@@ -19,5 +19,5 @@
   - [x] 현금 영수증 입력은 숫자만 입력하도록 안내
 
 ## 👓 3단계 - React Hook Form를 사용하여 기존의 form을 리팩터링 해요.
-- [] 기존에 만든 form / input을 react-hook-form으로 변경
+- [x] 기존에 만든 form / input을 react-hook-form으로 변경
 - [] validate 또한 react-hook-form 기능을 활용 (이 과정에서 zod를 사용해도 좋음.)

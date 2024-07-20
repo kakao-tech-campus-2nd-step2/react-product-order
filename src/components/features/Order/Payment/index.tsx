@@ -1,26 +1,16 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useFormContext } from 'react-hook-form';
 import { Button } from '@components/common';
 import ReceiptForm from './ReceiptForm';
 import { validatePayment } from './validation';
 
-interface PaymentProps {
-  message: string;
-  hasCashRecipt: boolean;
-  cashReciptType: string;
-  cashReciptNumber: string;
-  onInputChange: (name: string, value: any) => void;
-}
+export default function Payment() {
+  const { watch } = useFormContext();
+  const { message, hasCashReceipt, cashReceiptNumber } = watch();
 
-export default function Payment({
-  message,
-  hasCashRecipt,
-  cashReciptType,
-  cashReciptNumber,
-  onInputChange,
-}: PaymentProps) {
-  const handleClick = () => {
-    const errorMessage = validatePayment(message, hasCashRecipt, cashReciptNumber);
+  const handleOrderClick = () => {
+    const errorMessage = validatePayment(message, hasCashReceipt, cashReceiptNumber);
     if (errorMessage) return alert(errorMessage);
     return alert('주문이 완료되었습니다.');
   };
@@ -28,19 +18,14 @@ export default function Payment({
   return (
     <PaymentContainer>
       <Title>결제정보</Title>
-      <ReceiptForm
-        hasCashRecipt={hasCashRecipt}
-        cashReciptType={cashReciptType}
-        cashReciptNumber={cashReciptNumber}
-        onInputChange={onInputChange}
-      />
+      <ReceiptForm />
       <TotalAmount>
         <dl>
           <dt>최종 결제금액</dt>
           <dd>49900원</dd>
         </dl>
       </TotalAmount>
-      <Button theme="kakao" onClick={handleClick}>
+      <Button theme="kakao" onClick={handleOrderClick}>
         49900원 결제하기
       </Button>
     </PaymentContainer>
