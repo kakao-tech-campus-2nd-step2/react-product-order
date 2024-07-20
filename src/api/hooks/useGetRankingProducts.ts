@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import type { GoodsData, RankingFilterOption } from '@/types';
+import type { RankingFilterOption } from '@/types';
 
+import type { RankingProductsResponseData } from '../apis/product';
 import { getRankingProducts } from '../apis/product';
-
-export type RankingProductsResponseData = {
-  products: GoodsData[];
-};
 
 export const useGetRankingProducts = (filterOptions: RankingFilterOption) => {
   const [data, setData] = useState<RankingProductsResponseData | undefined>();

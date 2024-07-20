@@ -2,7 +2,6 @@ import type { GoodsData, RankingFilterOption } from '@/types';
 
 import { fetchInstance } from '../instance';
 import API from '../path';
-import { RankingProductsResponseData } from '../hooks/useGetRankingProducts';
 
 interface ProductDetaiResponseData {
   detail: GoodsData & {
@@ -52,6 +51,10 @@ interface ProductOptionResponseData {
     options: ProductOption[];
   };
 }
+
+export type RankingProductsResponseData = {
+  products: GoodsData[];
+};
 
 export const getProductDetail = async (productId: string) => {
   const response = await fetchInstance.get<ProductDetaiResponseData>(API.PRODUCT.DETAIL(productId));
