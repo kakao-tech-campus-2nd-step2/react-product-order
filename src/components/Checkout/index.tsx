@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Input, Button, Text, Checkbox, Box, Textarea, HStack, Select, Image, Divider, Flex, Center } from '@chakra-ui/react';
 import { fetchInstance } from '@/api/instance';
+import { ProductDetail } from '@/types';
+
 
 const CheckoutPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -9,7 +11,7 @@ const CheckoutPage = () => {
   const [message, setMessage] = useState('');
   const [receipt, setReceipt] = useState('');
   const [receiptEnabled, setReceiptEnabled] = useState(false);
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<ProductDetail | null>(null);
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
