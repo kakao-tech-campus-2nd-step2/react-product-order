@@ -3,24 +3,24 @@ import type { GoodsData, ThemeData } from '@/types';
 import { fetchInstance } from '../instance';
 import API from '../path';
 
-export type ThemeResponseData = {
+export interface ThemeResponseData {
   themes: ThemeData[];
-};
+}
 
-export type ThemeProductsRequestParams = {
+export interface ThemeProductsRequestParams {
   themeKey: string;
   pageToken?: string;
   maxResults?: number;
-};
+}
 
-export type ThemesProductsResponseData = {
+export interface ThemesProductsResponseData {
   products: GoodsData[];
   nextPageToken?: string;
   pageInfo: {
     totalResults: number;
     resultsPerPage: number;
   };
-};
+}
 
 export const getThemes = async () => {
   const response = await fetchInstance.get<ThemeResponseData>(API.THEME.GET_THEME);

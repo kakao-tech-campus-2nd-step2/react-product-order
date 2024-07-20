@@ -52,9 +52,9 @@ interface ProductOptionResponseData {
   };
 }
 
-export type RankingProductsResponseData = {
+export interface RankingProductsResponseData {
   products: GoodsData[];
-};
+}
 
 export const getProductDetail = async (productId: string) => {
   const response = await fetchInstance.get<ProductDetaiResponseData>(API.PRODUCT.DETAIL(productId));
