@@ -19,9 +19,14 @@ const THEME = {
   },
 } as const;
 
+const ORDER = {
+  POST_ORDER: '/v1/themes',
+} as const;
+
 const API = {
   PRODUCT,
   THEME,
+  ORDER,
 } as const;
 
 export default API;
