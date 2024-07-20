@@ -1,5 +1,6 @@
 import { Button, Checkbox, Input, Select } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import type { SubmitHandler } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
 
 interface Props {
@@ -17,7 +18,7 @@ export const Order = ({ price }: Props) => {
   const { handleSubmit, control, watch } = useFormContext<FormValues>();
   const cardMessage = watch('cardMessage');
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
     if (cardMessage.length === 0) {
       alert('카드 메시지를 입력해주세요.');
       return;
