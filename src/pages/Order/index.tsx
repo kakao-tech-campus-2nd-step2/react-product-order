@@ -4,9 +4,9 @@ import { useLocation } from 'react-router-dom';
 
 import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
 import { Spinner } from '@/components/common/Spinner';
+import { Order } from '@/components/features/Order/';
 import { GiftMessage } from '@/components/features/Order/GiftMessage';
 import { GiftSummary } from '@/components/features/Order/GiftSummary';
-import { Order } from '@/components/features/Order/index';
 
 export const OrderPage = () => {
   const location = useLocation();
