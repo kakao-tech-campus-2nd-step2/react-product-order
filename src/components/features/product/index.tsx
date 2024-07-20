@@ -1,10 +1,9 @@
-// src/components/ProductContents.tsx
 import { Box, Button, Flex, HStack, Image, Input,Spacer, Text} from '@chakra-ui/react';
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
 
-import { useGetProduct } from '@/api/hooks/useGetProductDetails'; // useGetProduct 훅이 정의된 경로를 정확히 입력하세요
+import { useGetProduct } from '@/api/hooks/useGetProductDetails';
 import { useAuth } from '@/provider/Auth';
 import { getDynamicPath, RouterPath } from '@/routes/path';
 import type { GoodsData } from '@/types';
@@ -34,7 +33,6 @@ const ProductContents: React.FC<ProductPageProps> = ({ productId }) => {
         navigate(getDynamicPath.login(currentPath));
       }
     } else {
-      console.log('로그인됨!');
       navigate(RouterPath.order, {
         state: {
           productDetail: data.detail,
@@ -114,7 +112,7 @@ const ProductContents: React.FC<ProductPageProps> = ({ productId }) => {
                   borderRadius="5px"
                   color="white"
                   width="100%"
-                  style={{ padding: '20px !important' }}
+                  style={{ padding: '20px' }}
                   onClick={handleFormeClick}
                 >
                 나에게 선물하기

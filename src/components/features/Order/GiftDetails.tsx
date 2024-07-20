@@ -15,7 +15,7 @@ const GiftDetails: React.FC<Props> = ({ productDetail, quantity }) => (
       <Image 
         boxSize="100px" 
         objectFit="cover" 
-        src={productDetail.imageURL} // 실제 제품 이미지 URL을 넣으세요
+        src={productDetail.imageURL}
         alt={productDetail?.name}
       />
       <VStack align="start">

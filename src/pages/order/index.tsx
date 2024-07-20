@@ -1,5 +1,5 @@
 import { Box, Button, ChakraProvider, HStack } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import GiftDetails from '@/components/features/Order/GiftDetails';
@@ -10,26 +10,24 @@ const OrderPage: React.FC = () => {
     const location = useLocation();
     const { productDetail, quantity, price } = location.state || {};
 
-    const messageRef = useRef<HTMLTextAreaElement>(null);
-    const receiptRequestedRef = useRef<HTMLInputElement>(null);
-    const receiptNumberRef = useRef<HTMLInputElement>(null);
+    const [message, setMessage] = useState("");
+    const [isReceiptRequested, setIsReceiptRequested] = useState(false);
+    const [receiptNumber, setReceiptNumber] = useState("");
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const message = messageRef.current?.value || '';
-        const receiptRequested = receiptRequestedRef.current?.checked || false;
-        const receiptNumber = receiptNumberRef.current?.value || '';
+        const messageCheck = message.trim();
 
-        if (message === '') {
+        if (messageCheck === '') {
             alert("메시지를 입력해주세요");
             return;
-        } else if (message.length > 100) {
+        } else if (messageCheck.length > 100) {
             alert("메시지는 100자 이내로 입력해주세요.");
             return;
         }
 
-        if (receiptRequested) {
+        if (isReceiptRequested) {
             if (!receiptNumber) {
                 alert("현금영수증 번호를 입력해주세요.");
                 return;
@@ -48,14 +46,16 @@ const OrderPage: React.FC = () => {
             <form onSubmit={handleSubmit}>
                 <HStack spacing={4} align="stretch" w="100%" mr="50px" ml="50px">
                     <Box w="70%">
-                        <MessageArea ref={messageRef} />
+                        <MessageArea message = {message} setMessage = {setMessage} />
                         <GiftDetails productDetail={productDetail} quantity={quantity} />
                     </Box>
                     <Box w="30%">
                         <PaymentInfo
                             price={price}
-                            receiptRequestedRef={receiptRequestedRef}
-                            receiptNumberRef={receiptNumberRef}
+                            isReceiptRequested = {isReceiptRequested}
+                            setIsReceiptRequested={setIsReceiptRequested}
+                            receiptNumber={receiptNumber}
+                            setReceiptNumber={setReceiptNumber}
                         />
                         <Button type="submit" colorScheme="yellow" size="lg">{price}원 결제하기</Button>
                     </Box>
