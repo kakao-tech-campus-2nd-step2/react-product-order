@@ -10,7 +10,9 @@ const IMAGE_SIZE = 86;
 
 export default function Gift() {
   const data = sessionStorage.getItem('orderHistory');
-  const { id: productId, count } = data ? JSON.parse(data) : null;
+  const parsedData = data ? JSON.parse(data) : null;
+  const productId = parsedData?.id;
+  const count = parsedData?.count;
 
   const { data: productDetailData } = useQuery<ProductDetailResponse, AxiosError>({
     queryKey: ['productDetail', productId],

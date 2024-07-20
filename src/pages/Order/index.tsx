@@ -6,7 +6,7 @@ import OrderMessage from '@components/features/Order/OrderMessage';
 import Payment from '@components/features/Order/Payment';
 import { useForm, FormProvider } from 'react-hook-form';
 
-interface OrderDataFormValues {
+export interface OrderDataFormValues {
   message: string;
   hasCashReceipt: boolean;
   cashReceiptType: string;
