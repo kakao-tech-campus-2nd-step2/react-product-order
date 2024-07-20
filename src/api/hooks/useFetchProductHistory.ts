@@ -22,7 +22,7 @@ export const getGoodsDetail = async (params: GoodsDetailRequestParams) => {
 
 export const useFetchProductHistory = (productId: string) => {
   return useSuspenseQuery({
-    queryKey: [getGoodsDetailPath(productId)],
+    queryKey: ['product-history', { productId }],
     queryFn: () => getGoodsDetail({ productId }),
     select: (data) => data.detail,
   });
