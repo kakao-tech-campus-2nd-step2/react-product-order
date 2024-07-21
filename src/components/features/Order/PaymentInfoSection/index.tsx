@@ -16,9 +16,13 @@ type PaymentInfoProps = {
 };
 
 export const PaymentInfoSection = ({ price }: PaymentInfoProps) => {
-  const { register, formState: { errors }, watch } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+    watch,
+  } = useFormContext();
   const isCashReceipt = watch('isCashReceipt');
-  
+
   return (
     <Box
       w="100%"
@@ -56,12 +60,12 @@ export const PaymentInfoSection = ({ price }: PaymentInfoProps) => {
         </Select>
         <Box w="100%" h="8px" />
         <Input
-          {...register("cashReceiptNumber", {
-            required: isCashReceipt && "현금영수증 번호를 입력해주세요.",
+          {...register('cashReceiptNumber', {
+            required: isCashReceipt && '현금영수증 번호를 입력해주세요.',
             pattern: {
               value: /^\d*$/,
-              message: "현금영수증 번호는 숫자로만 입력해주세요.",
-            }
+              message: '현금영수증 번호는 숫자로만 입력해주세요.',
+            },
           })}
           name="cashReceiptNumber"
           placeholder="(-없이) 숫자만 입력해주세요."

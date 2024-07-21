@@ -61,33 +61,31 @@ export const OrderPage = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(handlePaymentClick)}>
-      <Box w="100%">
-      <Flex w="100%" justifyContent="center" alignItems="center">
-        <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
-          <Flex w="100%" position="relative">
-            <Box as="main" w="100%" maxW="900px">
-              <Box borderLeft="1px solid rgb(229, 229, 229)" h="calc(-54px + 100vh)">
-                <MessageSection />
-                <Box w="100%" backgroundColor="rgb(237, 237, 237)" h="8px" />
-                <GiftInfoSection data={data} quantity={quantity} />
-              </Box>
-            </Box>
-            <Box
-              as="aside"
-              position="sticky"
-              top="54px"
-              w="100%"
-              maxW="360px"
-              h="calc(-54px + 100vh)"
-            >
-              <PaymentInfoSection
-                price={data.price.sellingPrice * quantity}
-              />
-            </Box>
+        <Box w="100%">
+          <Flex w="100%" justifyContent="center" alignItems="center">
+            <Flex w="100%" maxW={breakpoints.lg} flexDirection="column">
+              <Flex w="100%" position="relative">
+                <Box as="main" w="100%" maxW="900px">
+                  <Box borderLeft="1px solid rgb(229, 229, 229)" h="calc(-54px + 100vh)">
+                    <MessageSection />
+                    <Box w="100%" backgroundColor="rgb(237, 237, 237)" h="8px" />
+                    <GiftInfoSection data={data} quantity={quantity} />
+                  </Box>
+                </Box>
+                <Box
+                  as="aside"
+                  position="sticky"
+                  top="54px"
+                  w="100%"
+                  maxW="360px"
+                  h="calc(-54px + 100vh)"
+                >
+                  <PaymentInfoSection price={data.price.sellingPrice * quantity} />
+                </Box>
+              </Flex>
+            </Flex>
           </Flex>
-        </Flex>
-      </Flex>
-    </Box>
+        </Box>
       </form>
     </FormProvider>
   );

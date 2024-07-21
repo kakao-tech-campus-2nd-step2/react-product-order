@@ -2,7 +2,10 @@ import { Box, Flex, Text, Textarea } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 
 export const MessageSection = () => {
-  const { register, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <Box as="section" w="100%" padding="44px 0px 32px">
@@ -20,9 +23,9 @@ export const MessageSection = () => {
       <Box w="100%" padding="14px 30px">
         <Box w="100%" padding="12px 30px 16px">
           <Textarea
-            {...register("cardMessage", {
-              required: "메시지를 입력해주세요.",
-              maxLength: { value: 100, message: "메시지는 100자 이내로 입력해주세요."}
+            {...register('cardMessage', {
+              required: '메시지를 입력해주세요.',
+              maxLength: { value: 100, message: '메시지는 100자 이내로 입력해주세요.' },
             })}
             placeholder="선물과 함께 보낼 메시지를 적어보세요"
             w="100%"
