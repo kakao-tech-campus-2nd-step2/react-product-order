@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import type { GoodsData, RankingFilterOption } from '@/types';
+import type { GoodsData, RankingFilterOption } from "@/types";
 
-import { fetchInstance } from '../instance';
+import { fetchInstance } from "../instance";
 
 export type RankingProductsResponseData = {
   products: GoodsData[];

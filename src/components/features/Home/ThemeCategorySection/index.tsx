@@ -1,13 +1,13 @@
-import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
-import { useGetThemes } from '@/api/hooks/useGetThemes';
-import { Container } from '@/components/common/layouts/Container';
-import { Grid } from '@/components/common/layouts/Grid';
-import { getDynamicPath } from '@/routes/path';
-import { breakpoints } from '@/styles/variants';
+import { useGetThemes } from "@/api/hooks/useGetThemes";
+import { Container } from "@/components/common/layouts/Container";
+import { Grid } from "@/components/common/layouts/Grid";
+import { getDynamicPath } from "@/routes/path";
+import { breakpoints } from "@/styles/variants";
 
-import { ThemeCategoryItem } from './ThemeCategoryItem';
+import { ThemeCategoryItem } from "./ThemeCategoryItem";
 
 export const ThemeCategorySection = () => {
   const { data, isLoading, isError } = useGetThemes();
