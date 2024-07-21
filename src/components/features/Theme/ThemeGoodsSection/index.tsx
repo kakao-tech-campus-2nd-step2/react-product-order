@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
@@ -41,13 +42,15 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
           gap={16}
         >
           {flattenGoodsList.map(({ id, imageURL, name, price, brandInfo }) => (
-            <DefaultGoodsItems
-              key={id}
-              imageSrc={imageURL}
-              title={name}
-              amount={price.sellingPrice}
-              subtitle={brandInfo.name}
-            />
+            <Link key={id} to={`/products/${id}`}>
+              <DefaultGoodsItems
+                key={id}
+                imageSrc={imageURL}
+                title={name}
+                amount={price.sellingPrice}
+                subtitle={brandInfo.name}
+              />
+            </Link>
           ))}
         </Grid>
         {hasNextPage && (
