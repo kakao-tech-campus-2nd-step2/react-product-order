@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import type { UseQueryOptions } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import type { GoodsOptionData } from '@/types';
 
@@ -12,35 +13,20 @@ export type GoodsOptionsResponseData = {
   options: GoodsOptionData;
 };
 
-const getGoodsOptionsPath = (goodsId: string) => `/v1/products/${goodsId}/options`;
-
-export const getGoodsOptions = async (params: GoodsOptionRequestParams) => {
+const getGoodsOptions = async (goodsId: string) => {
   const response = await fetchInstance.get<GoodsOptionsResponseData>(
-    getGoodsOptionsPath(params.productId),
+    `/v1/products/${goodsId}/options`,
   );
-  return response.data;
+  return response.data.options;
 };
 
-export const useGetGoodsOptions = ({ productId }: GoodsOptionRequestParams) => {
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [data, setData] = useState<GoodsOptionData | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getGoodsOptions({ productId });
-        setData(response.options);
-      } catch (err) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [productId]);
-
-  return { isLoading, error, data };
+export const useGetGoodsOptions = (
+  { productId }: GoodsOptionRequestParams,
+  options?: UseQueryOptions<GoodsOptionData, Error>,
+) => {
+  return useQuery<GoodsOptionData, Error>({
+    queryKey: ['goodsOptions', productId],
+    queryFn: () => getGoodsOptions(productId),
+    ...options,
+  });
 };

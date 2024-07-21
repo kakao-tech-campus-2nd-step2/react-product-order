@@ -1,28 +1,28 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { useGetGoodsDetail } from '@/api/hooks/useGetProductsDetail';
 import { Spinner } from '@/components/common/Spinner';
+import { Order } from '@/components/features/Order/';
 import { GiftMessage } from '@/components/features/Order/GiftMessage';
 import { GiftSummary } from '@/components/features/Order/GiftSummary';
-import { OrderInfo } from '@/components/features/Order/OrderInfo';
+
+interface FormValues {
+  cardMessage: string;
+  cashReceiptNumber: string;
+  cashReceiptType: string;
+  isCashReceiptChecked: boolean;
+}
 
 export const OrderPage = () => {
   const location = useLocation();
   const { productId, count } = location.state || {};
   const { data, isLoading } = useGetGoodsDetail({ productId: productId });
-  const [loading, setLoading] = useState(true);
 
-  const [cardMessage, setCardMessage] = useState<string>('');
+  const methods = useForm<FormValues>();
 
-  useEffect(() => {
-    if (!isLoading) {
-      setLoading(false);
-    }
-  }, [isLoading]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <TextView>
         <Spinner />
@@ -31,16 +31,22 @@ export const OrderPage = () => {
   }
 
   return (
-    <Wrapper>
-      <GiftWrapper>
-        <GiftMessage cardMessage={cardMessage} setCardMessage={setCardMessage} />
-        <Hr />
-        {data && (
-          <GiftSummary imageURL={data.imageURL} brandName={data.brandInfo.name} name={data.name} />
-        )}
-      </GiftWrapper>
-      {data && <OrderInfo price={data.price.basicPrice * count} cardMessage={cardMessage} />}
-    </Wrapper>
+    <FormProvider {...methods}>
+      <Wrapper>
+        <GiftWrapper>
+          <GiftMessage />
+          <Hr />
+          {data && (
+            <GiftSummary
+              imageURL={data.imageURL}
+              brandName={data.brandInfo.name}
+              name={data.name}
+            />
+          )}
+        </GiftWrapper>
+        {data && <Order price={data.price.basicPrice * count} />}
+      </Wrapper>
+    </FormProvider>
   );
 };
 
