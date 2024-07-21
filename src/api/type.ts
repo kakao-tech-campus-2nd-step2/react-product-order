@@ -78,6 +78,18 @@ export type PageInfo = {
   resultsPerPage: number;
 };
 
+export type ProductsOptionData = {
+  key: string;
+  value: string;
+  level: number;
+  options: [];
+  id: number;
+  usable: boolean;
+  price: number;
+  stockQuantity: number;
+  unlimitedStockQuantity: boolean;
+};
+
 // RequestBody Types
 export type ProductOrderRequestBody = {
   productId: number;
@@ -120,4 +132,16 @@ export type GetThemesProductsResponseBody = {
 
 export type GetProductsDetailResponseBody = {
   detail: ProductDetailData;
+};
+
+export type GetProductsOptionResponseBody = {
+  options: {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    hasOption: boolean;
+    giftOrderLimit: number;
+    names: string[];
+    options: ProductsOptionData[];
+  };
 };

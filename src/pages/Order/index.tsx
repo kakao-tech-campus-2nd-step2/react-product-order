@@ -34,6 +34,11 @@ export const OrderPage = () => {
   const orderPrice = location.state.price.basicPrice * location.state.count;
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length > 100) {
+      alert('100자 이내로 작성해주세요');
+      return;
+    }
     setOrderInfo({ ...orderInfo, message: e.target.value });
   };
 
@@ -45,12 +50,34 @@ export const OrderPage = () => {
     setOrderInfo({ ...orderInfo, receiptType: e.target.value as OrderInfo['receiptType'] });
   };
 
+  const handleReceiptNumberKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const numberButNonNumber = ['e', 'E', '+', '-'];
+    if (numberButNonNumber.includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+
   const handleReceiptNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrderInfo({ ...orderInfo, receiptNumber: e.target.value });
   };
 
+  const validate = () => {
+    if (!orderInfo.message) {
+      alert('메세지를 입력해주세요');
+      return false;
+    } else if (orderInfo.needReceipt && !orderInfo.receiptNumber) {
+      alert('현금영수증 번호를 입력해주세요');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = () => {
-    console.log(orderInfo);
+    if (validate()) {
+      alert('결제가 완료되었습니다');
+      console.log(orderInfo);
+      setOrderInfo(defaultOrderInfo);
+    }
   };
 
   return (
@@ -76,6 +103,7 @@ export const OrderPage = () => {
               bg="#EDF2F6"
               border="none"
               resize="none"
+              maxLength={100}
               _focus={{ bg: 'white' }}
               placeholder="선물과 함께 보낼 메세지를 적어보세요"
               value={orderInfo.message}
@@ -128,7 +156,9 @@ export const OrderPage = () => {
               <option>사업자증빙용</option>
             </Select>
             <Input
+              type="number"
               value={orderInfo.receiptNumber}
+              onKeyDown={handleReceiptNumberKeyDown}
               onChange={handleReceiptNumberChange}
               pattern="[0-9]*"
               placeholder="(-없이) 숫자만 입력해주세요"
