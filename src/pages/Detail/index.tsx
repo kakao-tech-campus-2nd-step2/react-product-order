@@ -17,14 +17,19 @@ import { RouterPath } from '../../routes/path';
 import { authSessionStorage } from '@/utils/storage';
 import { useGetProductOption } from '@/api/hooks/useGetProductOption';
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+import { useForm } from 'react-hook-form';
 
 export const DetailPage = () => {
   const { productId } = useParams();
   const { data: productDetail } = useGetProductDetail(productId ?? '');
   const { data: productOption, isLoading: isOptionLoading } = useGetProductOption(productId ?? '');
   const [isLoading, setIsLoading] = useState(true);
-  const [productCount, setProductCount] = useState(1);
   const navigate = useNavigate();
+  const { register, handleSubmit, watch, setValue } = useForm({
+    defaultValues: {
+      productCount: 1,
+    },
+  });
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -49,17 +54,19 @@ export const DetailPage = () => {
     setIsLoading(isOptionLoading);
   }, [isOptionLoading]);
 
-  const handleProductCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProductCount(parseInt(e.target.value));
+  const handleProductCountChange = (value: number) => {
+    setValue('productCount', value);
   };
 
-  const handleSubmit = () => {
+  const onSubmit = () => {
     const authToken = authSessionStorage.get();
 
     if (!authToken) {
       navigate(RouterPath.login);
       return;
     }
+
+    const productCount = watch('productCount');
 
     if (productId) {
       const totalPrice = productDetail!.price.basicPrice * productCount;
@@ -77,7 +84,7 @@ export const DetailPage = () => {
 
   const { name, imageURL, price } = productDetail;
   const basicPrice = price?.basicPrice ?? 0;
-  const totalPrice = basicPrice * productCount;
+  const totalPrice = basicPrice * watch('productCount');
   const priceString = `${basicPrice.toLocaleString()}원`;
   const giftOrderLimit = useMemo(
     () => productOption?.giftOrderLimit || 0,
@@ -117,16 +124,17 @@ export const DetailPage = () => {
               aria-label="-"
               icon={<MinusIcon />}
               onClick={() => {
-                if (productCount > 0) {
-                  setProductCount(productCount - 1);
+                const currentCount = watch('productCount');
+                if (currentCount > 1) {
+                  handleProductCountChange(currentCount - 1);
                 }
               }}
-              disabled={productCount <= 1}
+              disabled={watch('productCount') <= 1}
             />
             <Input
               type="number"
-              value={productCount}
-              onChange={handleProductCountChange}
+              {...register('productCount', { min: 1 })}
+              onChange={(e) => handleProductCountChange(parseInt(e.target.value))}
               w={60}
               ml={4}
               mr={4}
@@ -135,8 +143,9 @@ export const DetailPage = () => {
               aria-label="+"
               icon={<AddIcon />}
               onClick={() => {
-                if (productCount < giftOrderLimit) {
-                  setProductCount(productCount + 1);
+                const currentCount = watch('productCount');
+                if (currentCount < giftOrderLimit) {
+                  handleProductCountChange(currentCount + 1);
                 } else {
                   alert(`최대 주문 가능 수량은 ${giftOrderLimit}개 입니다.`);
                 }
@@ -149,7 +158,7 @@ export const DetailPage = () => {
           <Text fontWeight="bold">{totalPrice.toLocaleString()}원</Text>
         </Flex>
         <Flex w="full" p={4} justify="space-between">
-          <Button backgroundColor="black" color="white" onClick={handleSubmit}>
+          <Button backgroundColor="black" color="white" onClick={handleSubmit(onSubmit)}>
             나에게 선물하기
           </Button>
         </Flex>
