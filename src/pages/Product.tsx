@@ -42,7 +42,7 @@ const StyledProduct = styled.div`
 const ProductContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
   position: relative;
 `;
