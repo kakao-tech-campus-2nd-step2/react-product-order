@@ -32,3 +32,16 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type DetailData = {
+  detail: {
+    name: string;
+    imageURL: string;
+    price: {    // 이렇게 말고는 해결 방법을 못찾겠습니다,,,
+      sellingPrice: number;
+    };
+    brandInfo: {
+      name: string;
+    }
+  };
+};

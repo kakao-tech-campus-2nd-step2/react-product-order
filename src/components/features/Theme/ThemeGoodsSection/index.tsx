@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
@@ -6,6 +7,7 @@ import { Container } from '@/components/common/layouts/Container';
 import { Grid } from '@/components/common/layouts/Grid';
 import { Spinner } from '@/components/common/Spinner';
 import { VisibilityLoader } from '@/components/common/VisibilityLoader';
+import { getDynamicPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
 
 type Props = {
@@ -13,6 +15,7 @@ type Props = {
 };
 
 export const ThemeGoodsSection = ({ themeKey }: Props) => {
+  // const navigate = useNavigate();
   const { data, isError, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useGetThemesProducts({
       themeKey,
@@ -30,6 +33,11 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
 
   const flattenGoodsList = data.pages.map((page) => page?.products ?? []).flat();
 
+  // const handleOnClick = () => {
+  //   console.log(productId)
+  //   navigate(`/api/v1/products/${productId}/detail`)
+  // }
+
   return (
     <Wrapper>
       <Container>
@@ -41,13 +49,15 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
           gap={16}
         >
           {flattenGoodsList.map(({ id, imageURL, name, price, brandInfo }) => (
-            <DefaultGoodsItems
-              key={id}
-              imageSrc={imageURL}
-              title={name}
-              amount={price.sellingPrice}
-              subtitle={brandInfo.name}
-            />
+            <Link key={id} to={getDynamicPath.products(id)} >
+              <DefaultGoodsItems
+                key={id}
+                imageSrc={imageURL}
+                title={name}
+                amount={price.sellingPrice}
+                subtitle={brandInfo.name}
+              />
+            </Link>
           ))}
         </Grid>
         {hasNextPage && (
