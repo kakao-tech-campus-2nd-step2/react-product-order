@@ -14,6 +14,7 @@ import {
 import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 interface ProductDetail {
   id: number;
@@ -24,14 +25,27 @@ interface ProductDetail {
   };
 }
 
+interface FormInputs {
+  message: string;
+  receiptNumber: string;
+  receiptRequested: boolean;
+}
+
 export const OrderPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const { state } = useLocation();
   const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState('');
-  const [receiptRequested, setReceiptRequested] = useState(false);
-  const [receiptNumber, setReceiptNumber] = useState('');
+
+  const { register, handleSubmit, watch } = useForm<FormInputs>({
+    defaultValues: {
+      message: '',
+      receiptNumber: '',
+      receiptRequested: false,
+    },
+  });
+
+  const receiptRequested = watch('receiptRequested');
 
   useEffect(() => {
     const fetchProductOrder = async () => {
@@ -48,40 +62,29 @@ export const OrderPage = () => {
     fetchProductOrder();
   }, [orderId]);
 
-  const handleSubmit = () => {
-    const validateMessage = () => {
-      if (!message.trim()) {
-        alert('메시지를 입력해주세요.');
-        return false;
-      }
-      if (message.length > 100) {
-        alert('메시지를 100자 이내로 입력해주세요.');
-        return false;
-      }
-      return true;
-    };
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+    const { message, receiptNumber } = data;
 
-    const validateReceiptNumber = () => {
-      if (receiptRequested) {
-        if (!receiptNumber.trim()) {
-          alert('현금 영수증 번호를 입력해주세요.');
-          return false;
-        }
-        if (isNaN(Number(receiptNumber))) {
-          alert('현금 영수증 번호를 숫자만 입력해주세요.');
-          return false;
-        }
-      }
-      return true;
-    };
-
-    if (validateMessage() && validateReceiptNumber()) {
-      alert('결제가 완료되었습니다.');
+    if (!message.trim()) {
+      alert('메시지를 입력해주세요.');
+      return;
     }
-  };
+    if (message.length > 100) {
+      alert('메시지를 100자 이내로 입력해주세요.');
+      return;
+    }
+    if (receiptRequested) {
+      if (!receiptNumber.trim()) {
+        alert('현금 영수증 번호를 입력해주세요.');
+        return;
+      }
+      if (isNaN(Number(receiptNumber))) {
+        alert('현금 영수증 번호를 숫자만 입력해주세요.');
+        return;
+      }
+    }
 
-  const validateReceiptRequestChange = () => {
-    setReceiptRequested(!receiptRequested);
+    alert('결제가 완료되었습니다.');
   };
 
   if (loading || !productDetail) {
@@ -103,8 +106,7 @@ export const OrderPage = () => {
               mt={4}
               bgColor="#EDF2F7"
               height="100px"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              {...register('message')}
             />
           </Box>
         </Flex>
@@ -140,7 +142,7 @@ export const OrderPage = () => {
           mb={4}
         >
           <FormControl display="flex" alignItems="center">
-            <Checkbox mr={4} onChange={validateReceiptRequestChange} isChecked={receiptRequested} />
+            <Checkbox mr={4} {...register('receiptRequested')} />
             <FormLabel mb={0}>현금 영수증 신청</FormLabel>
           </FormControl>
 
@@ -155,8 +157,7 @@ export const OrderPage = () => {
               id="receiptNumber"
               type="text"
               placeholder="(-없이) 숫자만 입력해주세요."
-              value={receiptNumber}
-              onChange={(e) => setReceiptNumber(e.target.value)}
+              {...register('receiptNumber')}
             />
           </FormControl>
         </Flex>
@@ -173,7 +174,7 @@ export const OrderPage = () => {
         <Button
           bgColor="#FEE500"
           mt={4}
-          onClick={handleSubmit}
+          onClick={handleSubmit(onSubmit)}
           width="100%"
           height="60px"
           boxSizing="border-box"
