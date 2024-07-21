@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import styled from '@emotion/styled';
 import {
   Box,
   Container,
@@ -18,6 +17,8 @@ import { placeOrder } from '@/api/hooks/useOrder';
 import { Spinner } from '@/components/common/Spinner';
 import { getDynamicPath } from '@/routes/path';
 import type { ProductOrderRequestBody } from '@/types';
+
+import TextView from '@/styles/styles';
 
 const OrderPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -192,12 +193,3 @@ const OrderPage = () => {
 };
 
 export default OrderPage;
-
-const TextView = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 16px 60px;
-  font-size: 16px;
-`;

@@ -1,12 +1,13 @@
 import { Box, Image, Input, Flex, Text, Container, Button } from '@chakra-ui/react';
 import '@/styles/productPage.css';
-import styled from '@emotion/styled';
 import { useGetGoodsDetail } from '@/api/hooks/useGetGoodsDetail';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/provider/Auth';
 import { Spinner } from '@/components/common/Spinner';
 import { useState } from 'react';
 import { getDynamicPath } from '@/routes/path';
+
+import TextView from '@/styles/styles';
 
 const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
@@ -33,18 +34,18 @@ const ProductPage = () => {
 
   if (isLoading) {
     return (
-      <TextView>
+      <TextView className="textview">
         <Spinner />
       </TextView>
     );
   }
 
   if (isError) {
-    return <TextView>에러가 발생했습니다.</TextView>;
+    return <TextView className="textview">에러가 발생했습니다.</TextView>;
   }
 
   if (!data || !data.detail || !data.detail.price || !data.detail.price.sellingPrice) {
-    return <TextView>상품 정보를 불러올 수 없습니다.</TextView>;
+    return <TextView className="textview">상품 정보를 불러올 수 없습니다.</TextView>;
   }
 
   const productDetail = data.detail;
@@ -141,12 +142,3 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
-
-const TextView = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 16px 60px;
-  font-size: 16px;
-`;
