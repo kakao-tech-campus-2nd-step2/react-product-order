@@ -22,7 +22,7 @@ const ProductDetailSection = ({ productId }: ProductDetailSectionProps) => {
     imageURL,
     name,
     price: { basicPrice },
-  } = data.detail;
+  } = data?.detail;
 
   return (
     <>
