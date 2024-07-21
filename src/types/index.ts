@@ -32,3 +32,26 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductDetailParams = {
+  id: string;
+};
+
+export type DetailData = {
+  brandInfo: {name: string}
+  name: string;
+  imageURL: string;
+  price: { sellingPrice: number };
+};
+
+export type goodsDetailData = {
+  price: number;
+  imageURL?: string;
+  name?: string;
+  brandName?: string;
+  amount?: number;
+};
+
+export type productInfoProps = {
+  productInfo: goodsDetailData;
+}
