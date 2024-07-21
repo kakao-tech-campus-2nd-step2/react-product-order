@@ -47,7 +47,9 @@ export const ProductPage: React.FC = () => {
 
   const handleGiftToMyself = () => {
     if (!authInfo) {
-      navigate(RouterPath.login);
+      if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
+        navigate(`${RouterPath.login}?redirect=${window.location.pathname}`);
+      }
     } else {
       navigate(RouterPath.order, { state: { product } });
     }
