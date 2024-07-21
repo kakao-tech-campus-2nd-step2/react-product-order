@@ -4,6 +4,7 @@ import { Layout } from '@/components/features/Layout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
+import { PaymentPage } from '@/pages/Payment/index';
 import { ProductsPage } from '@/pages/Products';
 import { ThemePage } from '@/pages/Theme';
 
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: RouterPath.products,
         element: <ProductsPage />
+      },
+      {
+        path: RouterPath.payment,
+        element: <PaymentPage />
       },
     ],
   },
