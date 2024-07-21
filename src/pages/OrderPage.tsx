@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { Button } from '@/components/common/Button/index';
 import { useGetGoodsDetail } from '@/api/hooks/useGetGoodsDetail';
-import { placeOrder } from '@/api/hooks/useOrder';
+import { usePlaceOrder } from '@/api/hooks/useOrder';
 import { Spinner } from '@/components/common/Spinner';
 import { getDynamicPath } from '@/routes/path';
 import type { ProductOrderRequestBody } from '@/types';
@@ -62,7 +62,7 @@ const OrderPage = () => {
         cashReceiptNumber: receiptNumberRef.current?.value || '',
       };
 
-      await placeOrder(orderData);
+      await usePlaceOrder(orderData);
       alert('주문이 완료되었습니다.');
       navigate(getDynamicPath.order(productId));
     } catch (error) {

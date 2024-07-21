@@ -1,9 +1,8 @@
-import { fetchInstance } from '../instance';
+import { postOrder } from '@/services/product.service';
 import type { ProductOrderRequestBody, OrderProductResponse } from '@/types';
 
-export const placeOrder = async (
+export const usePlaceOrder = async (
   orderData: ProductOrderRequestBody,
 ): Promise<OrderProductResponse> => {
-  const response = await fetchInstance.post<OrderProductResponse>('/api/v1/orders', orderData);
-  return response.data;
+  return postOrder(orderData);
 };
