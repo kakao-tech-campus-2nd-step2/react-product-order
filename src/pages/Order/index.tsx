@@ -77,12 +77,14 @@ export const OrderPage = () => {
     },
   ];
 
-  const getRegister = useCreateRegister<OrderInfo>({
-    register: register,
-    options: orderInfoOptions,
-  });
-
-  const orderPrice = location.state.price.basicPrice * location.state.count;
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length > 100) {
+      alert('100자 이내로 작성해주세요');
+      return;
+    }
+    setOrderInfo({ ...orderInfo, message: e.target.value });
+  };
 
   const handleNeedReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNeedReceiptState(e.target.checked);
@@ -95,22 +97,35 @@ export const OrderPage = () => {
     }
   };
 
-  const handleOrder = () => {
-    const needReceipt = getValues('needReceipt');
 
-    const completedOrder: OrderInfo = {
-      message: getValues('message'),
-      needReceipt: needReceipt,
-      receiptType: getValues('receiptType'),
-      receiptNumber: getValues('receiptNumber'),
-    };
-    console.log(completedOrder);
-    alert('주문이 완료되었습니다.');
+  const handleReceiptNumberKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const numberButNonNumber = ['e', 'E', '+', '-'];
+    if (numberButNonNumber.includes(e.key)) {
+      e.preventDefault();
+    }
   };
 
-  const handleError = (errors: FieldErrors<OrderInfo>) => {
-    const firstError = Object.values(errors)[0];
-    alert(firstError.message);
+  const handleReceiptNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOrderInfo({ ...orderInfo, receiptNumber: e.target.value });
+  };
+
+  const validate = () => {
+    if (!orderInfo.message) {
+      alert('메세지를 입력해주세요');
+      return false;
+    } else if (orderInfo.needReceipt && !orderInfo.receiptNumber) {
+      alert('현금영수증 번호를 입력해주세요');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validate()) {
+      alert('결제가 완료되었습니다');
+      console.log(orderInfo);
+      setOrderInfo(defaultOrderInfo);
+    }
   };
 
   return (
@@ -189,8 +204,10 @@ export const OrderPage = () => {
             </Select>
             <Input
               type="number"
-              {...getRegister('receiptNumber')}
-              onInput={handleReceiptNumberInput}
+              value={orderInfo.receiptNumber}
+              onKeyDown={handleReceiptNumberKeyDown}
+              onChange={handleReceiptNumberChange}
+              pattern="[0-9]*"
               placeholder="(-없이) 숫자만 입력해주세요"
             />
           </Flex>

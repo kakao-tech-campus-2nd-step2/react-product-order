@@ -89,10 +89,29 @@ export const ProductsPage = () => {
         navigate(RouterPath.login + `?redirect=${location.pathname}`);
       }
     } else if (productsDetail?.detail) {
-      navigate(RouterPath.order, {
-        state: { ...productsDetail.detail, count: getValues('count') },
-      });
+      navigate(RouterPath.order, { state: { ...productsDetail.detail, count: count } });
     }
+  };
+
+  const changeCount = (addCount: number) => {
+    if (count + addCount < 1) return;
+    if (productsOptions && count + addCount > productsOptions.options.giftOrderLimit) return;
+    setCount((prevCount) => prevCount + addCount);
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const numberButNonNumber = ['e', 'E', '+', '-'];
+    if (numberButNonNumber.includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (value < 1 || isNaN(value)) setCount(1);
+    else if (productsOptions && value > productsOptions.options.giftOrderLimit)
+      setCount(productsOptions.options.giftOrderLimit);
+    else setCount(value);
   };
 
   return (
@@ -129,6 +148,9 @@ export const ProductsPage = () => {
                   -
                 </Button>
                 <Input
+                  value={count.toString()}
+                  onKeyDown={handleInputKeyDown}
+                  onChange={handleInputChange}
                   type="number"
                   {...getRegister('count')}
                   mx="3"
