@@ -19,6 +19,15 @@ const CheckoutPage = () => {
     }
   }, [location.state, setQuantity]);
 
+  const handleReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setReceipt(value);
+    } else {
+      alert('숫자만 입력 가능합니다.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -103,14 +112,7 @@ const CheckoutPage = () => {
           <Input
             placeholder="(-없이) 숫자만 입력해주세요."
             value={receipt}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (/^\d*$/.test(value)) {
-                setReceipt(value);
-              } else {
-                alert('숫자만 입력 가능합니다.');
-              }
-            }}
+            onChange={handleReceiptChange}
             mt="2"
             isDisabled={!receiptEnabled}
           />
