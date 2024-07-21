@@ -1,3 +1,4 @@
+
 import { useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -80,6 +81,7 @@ const OrderPage = () => {
       };
 
       await usePlaceOrder(orderData);
+
       alert('주문이 완료되었습니다.');
       navigate(getDynamicPath.order(productId));
     } catch (error) {
