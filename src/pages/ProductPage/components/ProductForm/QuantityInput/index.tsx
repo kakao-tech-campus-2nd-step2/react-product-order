@@ -9,13 +9,13 @@ import { Container } from '@/components/ui/Layout/Container';
 type QuantityInputProps = {
   productOptions: ProductOptions;
   quantity: number;
-  setQuantity: (newQuantity: number) => void;
+  onChangeQuantity: (newQuantity: number) => void;
 };
 
 export const QuantityInput = ({
   productOptions,
   quantity,
-  setQuantity,
+  onChangeQuantity,
 }: QuantityInputProps) => {
   const maxQuantity = productOptions.giftOrderLimit;
 
@@ -26,7 +26,7 @@ export const QuantityInput = ({
       min: 1,
       max: maxQuantity,
       onChange: (valueAsNumber) => {
-        setQuantity(Number(valueAsNumber));
+        onChangeQuantity(Number(valueAsNumber));
       },
     });
 

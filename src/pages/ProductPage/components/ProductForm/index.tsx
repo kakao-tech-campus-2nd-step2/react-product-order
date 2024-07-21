@@ -55,7 +55,7 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
       <QuantityInput
         productOptions={data}
         quantity={quantity}
-        setQuantity={updateQuantity}
+        onChangeQuantity={updateQuantity}
       />
       <Container flexDirection="column" gap="1rem">
         <TotalPriceCallout totalPrice={totalPrice} />
