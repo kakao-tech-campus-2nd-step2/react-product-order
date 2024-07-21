@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Input, Button, Text, Checkbox, Box, Textarea, HStack, Select, Image, Divider, Flex, Center } from '@chakra-ui/react';
-import { fetchInstance } from '@/api/instance';
-import { ProductDetail } from '@/types';
-
+import { useProductDetail } from '@/hooks/useProductDetail';
 
 const CheckoutPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -11,31 +9,15 @@ const CheckoutPage = () => {
   const [message, setMessage] = useState('');
   const [receipt, setReceipt] = useState('');
   const [receiptEnabled, setReceiptEnabled] = useState(false);
-  const [product, setProduct] = useState<ProductDetail | null>(null);
-  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+  const {product, quantity, setQuantity, isLoading, isError} = useProductDetail(productId!);
 
   useEffect(() => {
-    const fetchProductDetail = async () => {
-      try {
-        const response = await fetchInstance.get(`/v1/products/${productId}/detail`);
-        if (response.status === 200) {
-          setProduct(response.data.detail);
-          const state = location.state as { quantity: number };
-          if (state && state.quantity) {
-            setQuantity(state.quantity);
-          }
-        } else {
-          navigate('/');
-        }
-      } catch (error) {
-        console.error('Failed to fetch product detail:', error);
-        navigate('/');
-      }
-    };
-
-    fetchProductDetail();
-  }, [productId, navigate, location.state]);
+    const state = location.state as { quantity: number};
+    if (state && state.quantity) {
+      setQuantity(state.quantity);
+    }
+  }, [location.state, setQuantity]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,6 +50,9 @@ const CheckoutPage = () => {
       alert('결제에 실패했습니다. 다시 시도해주세요.');
     }
   };
+
+  if (isLoading) return <Text>로딩중...</Text>
+  if (isError) return <Text>Failed to load product details</Text>;
 
   return (
     <Flex p="20px" direction="row" justifyContent="space-between">
