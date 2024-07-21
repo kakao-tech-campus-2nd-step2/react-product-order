@@ -72,13 +72,11 @@ export interface FixedSize {
   height: string,
 }
 
-interface OrderFormErrorStatus {
-  hasCardMessageError: boolean;
-  cardMessageErrorCaption: string;
-  hasReceiptError: boolean;
-  receiptErrorCaption: string;
-  isMessageModified: boolean;
-  isReceiptNumberModified: boolean;
+export type OrderHistoryData = Pick<OrderRequestBody, 'productId' | 'productQuantity'>;
+
+export interface OrderFormStatus {
+  isDirty: boolean;
+  errorMessage?: FormErrorMessages[string] | boolean;
 }
 
 export type OrderFormData =
