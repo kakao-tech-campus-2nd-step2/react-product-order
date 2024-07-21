@@ -1,20 +1,15 @@
 import { Textarea } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+
+import { errors } from '../Errors';
 
 type MessageFormProps = {
   onMessageChange: (message: string) => void;
 };
 
 export const MessageFormSection = ({ onMessageChange }: MessageFormProps) => {
-  const [message, setMessage] = useState('');
-
-  const handleMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const newMessage = e.target.value;
-    setMessage(newMessage);
-    onMessageChange(newMessage);
-  };
+  const { control } = useFormContext();
 
   return (
     <Wrapper>
@@ -22,24 +17,34 @@ export const MessageFormSection = ({ onMessageChange }: MessageFormProps) => {
         <span>나에게 주는 선물</span>
       </Header>
       <MessageForm>
-        <Textarea
-          name="messageCardTextMessage"
-          placeholder="선물과 함께 보낼 메시지를 적어보세요"
-          value={message}
-          onChange={handleMessageChange}
+        <Controller
+          name="message"
+          control={control}
+          rules={{
+            required: errors.messageValid,
+            maxLength: {
+              value: 100,
+              message: errors.messageType,
+            },
+          }}
+          render={({ field, fieldState: { error } }) => (
+            <>
+              <Textarea
+                name="messageCardTextMessage"
+                placeholder="선물과 함께 보낼 메시지를 적어보세요"
+                value={field.value}
+                onChange={(e) => {
+                  field.onChange(e);
+                  onMessageChange(e.target.value);
+                }}
+              />
+              {error && <ErrorText>{error.message}</ErrorText>}
+            </>
+          )}
         />
       </MessageForm>
     </Wrapper>
   );
-};
-
-export const validateMessageForm = (message: string) => {
-  if (message.trim().length === 0) {
-    return '메세지를 입력해주세요.';
-  }
-  if (message.trim().length > 100) {
-    return '메세지는 100자 이내로 입력해주세요.';
-  }
 };
 
 const Wrapper = styled.section`
@@ -63,4 +68,11 @@ const Header = styled.div`
 const MessageForm = styled.div`
   width: 100%;
   padding: 12px 30px 16px;
+`;
+
+const ErrorText = styled.span`
+  color: red;
+  font-size: 12px;
+  margin-top: 8px;
+  display: block;
 `;

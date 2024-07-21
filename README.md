@@ -33,3 +33,11 @@ npm run start
   - [x] 카드 메시지가 100글자가 넘어가면 100자 이내로 입력하도록 안내
   - [x] 현금 영수증 checkbox 클릭 시 현금영수증 번호가 입력되었는지 확인
   - [x] 현금 영수증 입력은 숫자만 입력하도록 안내
+
+### STEP3
+
+#### 📜Requirements
+
+- react-hook-form 사용하여 리팩터링
+  - [x] form / input
+  - [x] validate

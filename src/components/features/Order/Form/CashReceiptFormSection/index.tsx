@@ -1,9 +1,10 @@
 import { Checkbox, Input, Select } from '@chakra-ui/react';
-import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import styled from '@emotion/styled';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { FormContainer } from '../../OrderAsideSection/component';
 import { Gap } from '../../OrderMainSection/component';
+import { errors } from '../Errors';
 
 type CashReceiptFormProps = {
   onReceiptDataChange: (data: CashReceiptData) => void;
@@ -15,61 +16,64 @@ type CashReceiptData = {
 };
 
 export const CashReceiptForm = ({ onReceiptDataChange }: CashReceiptFormProps) => {
-  const [cashReceiptData, setCashReceiptData] = useState<CashReceiptData>({
-    isReceiptChecked: false,
-    receiptNumber: '',
-  });
-
-  const handleCheckBoxChange = () => {
-    const checkBoxEvent = !cashReceiptData.isReceiptChecked;
-    setCashReceiptData((prev) => {
-      const newData = { ...prev, isReceiptChecked: checkBoxEvent };
-      onReceiptDataChange(newData);
-      return newData;
-    });
-  };
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const receiptNumber = e.target.value;
-    setCashReceiptData((prev) => {
-      const newData = { ...prev, receiptNumber: receiptNumber };
-      onReceiptDataChange(newData);
-      validateReceiptForm(newData);
-      return newData;
-    });
-  };
+  const { control, watch } = useFormContext<CashReceiptData>();
+  const cashReceiptData = watch();
 
   return (
     <FormContainer>
-      <Checkbox
-        colorScheme="orange"
-        isChecked={cashReceiptData.isReceiptChecked}
-        onChange={handleCheckBoxChange}
-      >
-        현금영수증 신청
-      </Checkbox>
+      <Controller
+        name="isReceiptChecked"
+        control={control}
+        render={({ field }) => (
+          <Checkbox
+            colorScheme="orange"
+            isChecked={field.value}
+            onChange={(e) => {
+              field.onChange(e.target.checked);
+              onReceiptDataChange({ ...cashReceiptData, isReceiptChecked: e.target.checked });
+            }}
+          >
+            현금영수증 신청
+          </Checkbox>
+        )}
+      />
       <Gap />
       <Select name="cashReceiptType">
         <option value="PERSONAL">개인소득공제</option>
         <option value="BUSINESS">사업자증빙용</option>
       </Select>
       <div style={{ height: '8px' }} />
-      <Input
-        name="cashReceiptNumber"
-        placeholder="(-없이) 숫자만 입력해주세요."
-        onChange={handleInputChange}
+      <Controller
+        name="receiptNumber"
+        control={control}
+        rules={{
+          required: cashReceiptData.isReceiptChecked ? errors.cashReceiptValid : '',
+          validate: {
+            isNumber: (value) => (!isNaN(Number(value)) ? true : errors.cashReceiptType),
+          },
+        }}
+        render={({ field, fieldState: { error } }) => (
+          <>
+            <Input
+              {...field}
+              name="cashReceiptNumber"
+              placeholder="(-없이) 숫자만 입력해주세요."
+              onChange={(e) => {
+                field.onChange(e.target.value);
+                onReceiptDataChange({ ...cashReceiptData, receiptNumber: e.target.value });
+              }}
+            />
+            {error && <ErrorText>{error.message}</ErrorText>}
+          </>
+        )}
       />
     </FormContainer>
   );
 };
 
-export const validateReceiptForm = (data: CashReceiptData) => {
-  const receiptNumber = data.receiptNumber;
-
-  if (data.isReceiptChecked && receiptNumber.trim().length === 0) {
-    return '현금영수증 번호를 입력해주세요';
-  }
-  if (isNaN(Number(receiptNumber))) {
-    return '현금영수증 번호는 숫자로만 입력해주세요.';
-  }
-};
+const ErrorText = styled.span`
+  color: red;
+  font-size: 12px;
+  margin-top: 8px;
+  display: block;
+`;

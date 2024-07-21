@@ -1,18 +1,12 @@
 import { Divider } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { Container } from '@/components/common/layouts/Container';
 import { SplitContainer } from '@/components/common/layouts/Split';
-import {
-  CashReceiptForm,
-  validateReceiptForm,
-} from '@/components/features/Order/Form/CashReceiptFormSection';
-import {
-  MessageFormSection,
-  validateMessageForm,
-} from '@/components/features/Order/Form/MessageFormSection';
+import { CashReceiptForm } from '@/components/features/Order/Form/CashReceiptFormSection';
+import { MessageFormSection } from '@/components/features/Order/Form/MessageFormSection';
 import { OrderAsideSection } from '@/components/features/Order/OrderAsideSection';
 import { OrderMainSection } from '@/components/features/Order/OrderMainSection';
 import { storageOrderHistory } from '@/components/features/Order/util/storage';
@@ -31,24 +25,16 @@ export const OrderPage = () => {
   const productId = productData.detail.id;
   const quantity = productData.quantity;
 
-  const [formData, setFormData] = useState<FormData>({
-    message: '',
-    cashReceiptData: { isReceiptChecked: false, receiptNumber: '' },
+  const methods = useForm<FormData>({
+    defaultValues: {
+      message: '',
+      cashReceiptData: { isReceiptChecked: false, receiptNumber: '' },
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const messageError = validateMessageForm(formData.message);
-    const receiptError = validateReceiptForm(formData.cashReceiptData);
+  const { handleSubmit, control, setValue } = methods;
 
-    if (messageError) {
-      alert(`${messageError}`);
-      return;
-    }
-    if (receiptError) {
-      alert(`${receiptError}`);
-      return;
-    }
+  const onSubmit = () => {
     storageOrderHistory(productId);
     alert('주문이 완료되었습니다.');
   };
@@ -59,33 +45,37 @@ export const OrderPage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FormWrapper>
-        <Container maxWidth="1280px" justifyContent="flex-start" alignItems="flex-start">
-          <SplitContainer>
-            <div>
-              <MessageFormSection
-                onMessageChange={(message) => setFormData({ ...formData, message })}
-              />
-              <OrderMainSection product={productData.detail} />
-            </div>
-            <div>
-              <h6 className="order-aside-title">
-                <span className="span-title">결제 정보</span>
-              </h6>
-              <Divider aria-orientation="horizontal" />
-              <CashReceiptForm
-                onReceiptDataChange={(cashReceiptData) =>
-                  setFormData({ ...formData, cashReceiptData })
-                }
-              />
-              <Divider aria-orientation="horizontal" />
-              <OrderAsideSection totalCost={getTotalCost()} />
-            </div>
-          </SplitContainer>
-        </Container>
-      </FormWrapper>
-    </form>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormWrapper>
+          <Container maxWidth="1280px" justifyContent="flex-start" alignItems="flex-start">
+            <SplitContainer>
+              <div>
+                <MessageFormSection onMessageChange={(message) => setValue('message', message)} />
+                <OrderMainSection product={productData.detail} />
+              </div>
+              <div>
+                <h6 className="order-aside-title">
+                  <span className="span-title">결제 정보</span>
+                </h6>
+                <Divider aria-orientation="horizontal" />
+                <Controller
+                  name="cashReceiptData"
+                  control={control}
+                  render={({ field }) => (
+                    <CashReceiptForm
+                      onReceiptDataChange={(cashReceiptData) => field.onChange(cashReceiptData)}
+                    />
+                  )}
+                />
+                <Divider aria-orientation="horizontal" />
+                <OrderAsideSection totalCost={getTotalCost()} />
+              </div>
+            </SplitContainer>
+          </Container>
+        </FormWrapper>
+      </form>
+    </FormProvider>
   );
 };
 
