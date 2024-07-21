@@ -28,21 +28,7 @@ export const OrderPage = () => {
 
   const methods = useForm<FormValues>();
 
-  const handlePaymentClick = (values: FormValues) => {
-    const { isCashReceipt, cashReceiptNumber } = values;
-
-    if (isCashReceipt) {
-      if (!cashReceiptNumber) {
-        alert('현금영수증 번호를 입력해주세요.');
-        return;
-      }
-
-      if (!/^\d*$/.test(cashReceiptNumber)) {
-        alert('현금영수증 번호는 숫자로만 입력해주세요.');
-        return;
-      }
-    }
-
+  const handlePaymentClick = () => {
     alert('주문이 완료되었습니다.');
   };
 

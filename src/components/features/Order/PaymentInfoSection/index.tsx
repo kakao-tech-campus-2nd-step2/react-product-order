@@ -16,7 +16,8 @@ type PaymentInfoProps = {
 };
 
 export const PaymentInfoSection = ({ price }: PaymentInfoProps) => {
-  const { register } = useFormContext();
+  const { register, formState: { errors }, watch } = useFormContext();
+  const isCashReceipt = watch('isCashReceipt');
   
   return (
     <Box
@@ -49,19 +50,31 @@ export const PaymentInfoSection = ({ price }: PaymentInfoProps) => {
           현금영수증 신청
         </Checkbox>
         <Box w="100%" h="16px" />
-        <Select w="100%" pb="1px">
+        <Select w="100%" pb="1px" disabled={!isCashReceipt}>
           <option value="PERSONAL">개인소득공제</option>
           <option value="BUSINESS">사업자증빙용</option>
         </Select>
         <Box w="100%" h="8px" />
         <Input
-          {...register("cashReceiptNumber")}
+          {...register("cashReceiptNumber", {
+            required: isCashReceipt && "현금영수증 번호를 입력해주세요.",
+            pattern: {
+              value: /^\d*$/,
+              message: "현금영수증 번호는 숫자로만 입력해주세요.",
+            }
+          })}
           name="cashReceiptNumber"
           placeholder="(-없이) 숫자만 입력해주세요."
           w="100%"
           outlineOffset="2px"
           position="relative"
+          disabled={!isCashReceipt}
         />
+        {errors.cashReceiptNumber && (
+          <Text color="red" fontSize="14px" mt="2px">
+            {errors.cashReceiptNumber.message as string}
+          </Text>
+        )}
       </Box>
       <Divider opacity={0.6} borderWidth="0px 0px 1px" color="rgb(237, 237, 237)" />
       <Flex padding="16px" w="100%" justifyContent="space-between" alignItems="center">
