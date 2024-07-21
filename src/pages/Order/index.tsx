@@ -29,17 +29,7 @@ export const OrderPage = () => {
   const methods = useForm<FormValues>();
 
   const handlePaymentClick = (values: FormValues) => {
-    const { cardMessage, isCashReceipt, cashReceiptNumber } = values;
-
-    if (!cardMessage) {
-      alert('메시지를 입력해주세요.');
-      return;
-    }
-
-    if (cardMessage.length > 100) {
-      alert('메시지는 100자 이내로 입력해주세요.');
-      return;
-    }
+    const { isCashReceipt, cashReceiptNumber } = values;
 
     if (isCashReceipt) {
       if (!cashReceiptNumber) {
