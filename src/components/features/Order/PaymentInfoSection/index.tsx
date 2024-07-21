@@ -9,37 +9,15 @@ import {
   Select,
   Text,
 } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 type PaymentInfoProps = {
   price: number;
-  onPaymentClick: () => void;
 };
 
-export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) => {
-  const [isCashReceipt, setIsCashReceipt] = useState(false);
-  const cashReceiptNumberRef = useRef<HTMLInputElement>(null);
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsCashReceipt(event.target.checked);
-  };
-
-  const handlePaymentClick = () => {
-    const cashReceiptNumber = cashReceiptNumberRef.current?.value || '';
-
-    if (isCashReceipt) {
-      if (!cashReceiptNumber) {
-        alert('현금영수증 번호를 입력해주세요.');
-        return;
-      }
-      if (!/^\d*$/.test(cashReceiptNumber)) {
-        alert('현금영수증 번호는 숫자만 입력할 수 있습니다.');
-        return;
-      }
-    }
-    onPaymentClick();
-  };
-
+export const PaymentInfoSection = ({ price }: PaymentInfoProps) => {
+  const { register } = useFormContext();
+  
   return (
     <Box
       w="100%"
@@ -62,11 +40,11 @@ export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) 
       <Divider opacity={0.6} borderWidth="0px 0px 1px" w="100%" color="rgb(237, 237, 237)" />
       <Box w="100%" padding="16px">
         <Checkbox
+          {...register('isCashReceipt')}
           cursor="pointer"
           display="inline-flex"
           alignItems="center"
           position="relative"
-          onChange={handleCheckboxChange}
         >
           현금영수증 신청
         </Checkbox>
@@ -77,7 +55,7 @@ export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) 
         </Select>
         <Box w="100%" h="8px" />
         <Input
-          ref={cashReceiptNumberRef}
+          {...register("cashReceiptNumber")}
           name="cashReceiptNumber"
           placeholder="(-없이) 숫자만 입력해주세요."
           w="100%"
@@ -97,6 +75,7 @@ export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) 
       <Divider opacity={0.6} borderWidth="0px 0px 1px" color="rgb(237, 237, 237)" />
       <Box w="100%" h="32px" />
       <Button
+        type="submit"
         h="60px"
         fontSize="16px"
         w="100%"
@@ -108,7 +87,6 @@ export const PaymentInfoSection = ({ price, onPaymentClick }: PaymentInfoProps) 
         color="rgb(17, 17, 17)"
         backgroundColor="rgb(254, 229, 0)"
         boxSizing="border-box"
-        onClick={handlePaymentClick}
       >
         {price}원 결제하기
       </Button>
