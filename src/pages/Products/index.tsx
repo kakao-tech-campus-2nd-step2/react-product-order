@@ -1,11 +1,22 @@
 import { Button, Divider, Flex, Image, Input, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProductsDetail, useGetProductsOption } from '@/api';
 import Loading from '@/components/common/Loading';
 import { RouterPath } from '@/routes/path';
+import type { RegisterOption } from '@/utils/form';
+import { useCreateRegister } from '@/utils/form';
+import { clip } from '@/utils/numberControl/numberControl';
 import { authSessionStorage } from '@/utils/storage';
+
+type Inputs = {
+  count: number;
+};
+
+const defaultInputs: Inputs = {
+  count: 1,
+};
 
 export const ProductsPage = () => {
   const { productsId = '' } = useParams<{ productsId: string }>();
@@ -15,10 +26,62 @@ export const ProductsPage = () => {
     isError: isOptionsError,
     isLoading: isOptionsLoading,
   } = useGetProductsOption({ productsId });
-  const [count, setCount] = useState<number>(1);
   const currentAuthToken = authSessionStorage.get();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const maxCount = productsOptions?.options.giftOrderLimit;
+  const inputOptions: RegisterOption<Inputs>[] = [
+    {
+      name: 'count' as const,
+      option: {
+        valueAsNumber: true,
+        min: {
+          value: 1,
+          message: '1개 이상 선택해주세요.',
+        },
+        max: maxCount && {
+          value: maxCount,
+          message: `${maxCount}개 이하로 선택해주세요.`,
+        },
+      },
+    },
+  ];
+
+  const { register, handleSubmit, setValue, getValues } = useForm<Inputs>({
+    defaultValues: defaultInputs,
+  });
+  const getRegister = useCreateRegister<Inputs>({
+    register: register,
+    options: inputOptions,
+  });
+
+  const setCount = (value: number) => {
+    setValue(
+      'count',
+      clip(value, {
+        min: 1,
+        max: maxCount,
+      }),
+    );
+  };
+
+  const changeCount = (addCount: number) => {
+    setCount(getValues('count') + addCount);
+  };
+
+  const handleReceiptNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (!/^\d+$/.test(value)) {
+      e.target.value = getValues('count').toString();
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (isNaN(value)) setValue('count', 1);
+    else setCount(value);
+  };
 
   const handleOrderClick = () => {
     if (!currentAuthToken) {
@@ -89,11 +152,13 @@ export const ProductsPage = () => {
                   onKeyDown={handleInputKeyDown}
                   onChange={handleInputChange}
                   type="number"
-                  min="1"
+                  {...getRegister('count')}
                   mx="3"
                   w="100%"
                   h="36px"
                   textAlign="center"
+                  onInput={handleReceiptNumberInput}
+                  onChange={handleInputChange}
                 />
                 <Button onClick={() => changeCount(1)} w="36px" h="36px" boxSizing="border-box">
                   +
@@ -111,7 +176,7 @@ export const ProductsPage = () => {
                 >{`${productsDetail?.detail.price.basicPrice}원`}</Text>
               </Flex>
               <Button
-                onClick={handleOrderClick}
+                onClick={handleSubmit(handleOrderClick)}
                 h="50px"
                 bg="black"
                 color="white"

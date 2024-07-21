@@ -11,7 +11,12 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import type { FieldErrors } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
+
+import type { RegisterOption } from '@/utils/form';
+import { useCreateRegister } from '@/utils/form';
 
 type OrderInfo = {
   message: string;
@@ -29,9 +34,48 @@ const defaultOrderInfo: OrderInfo = {
 
 export const OrderPage = () => {
   const location = useLocation();
-  const [orderInfo, setOrderInfo] = useState<OrderInfo>(defaultOrderInfo);
+  const { register, handleSubmit, getValues } = useForm<OrderInfo>({
+    defaultValues: defaultOrderInfo,
+  });
+  const [needReceiptState, setNeedReceiptState] = useState(defaultOrderInfo.needReceipt);
 
-  const orderPrice = location.state.price.basicPrice * location.state.count;
+  const orderInfoOptions: RegisterOption<OrderInfo>[] = [
+    {
+      name: 'message' as const,
+      option: {
+        maxLength: 100,
+        required: {
+          value: true,
+          message: '메세지를 입력해주세요.',
+        },
+      },
+    },
+    {
+      name: 'needReceipt' as const,
+    },
+    {
+      name: 'receiptType' as const,
+      option: {
+        required: {
+          value: needReceiptState,
+          message: '현금영수증 종류를 선택해주세요.',
+        },
+      },
+    },
+    {
+      name: 'receiptNumber' as const,
+      option: {
+        required: {
+          value: needReceiptState,
+          message: '현금영수증 번호를 입력해주세요.',
+        },
+        pattern: {
+          value: /^[0-9]+$/,
+          message: '숫자만 입력 가능합니다.',
+        },
+      },
+    },
+  ];
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -43,12 +87,16 @@ export const OrderPage = () => {
   };
 
   const handleNeedReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOrderInfo({ ...orderInfo, needReceipt: e.target.checked });
+    setNeedReceiptState(e.target.checked);
   };
 
-  const handleReceiptTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setOrderInfo({ ...orderInfo, receiptType: e.target.value as OrderInfo['receiptType'] });
+  const handleReceiptNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (!/^\d+$/.test(value)) {
+      e.target.value = getValues('receiptNumber');
+    }
   };
+
 
   const handleReceiptNumberKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const numberButNonNumber = ['e', 'E', '+', '-'];
@@ -105,9 +153,8 @@ export const OrderPage = () => {
               resize="none"
               maxLength={100}
               _focus={{ bg: 'white' }}
+              {...getRegister('message')}
               placeholder="선물과 함께 보낼 메세지를 적어보세요"
-              value={orderInfo.message}
-              onChange={handleMessageChange}
             />
           </Flex>
           <Divider w="100%" borderWidth="4px" opacity="1" borderColor="#eeeeee" />
@@ -144,14 +191,14 @@ export const OrderPage = () => {
               size="lg"
               mb="3"
               colorScheme="yellow"
-              checked={orderInfo.needReceipt}
+              {...getRegister('needReceipt')}
               onChange={handleNeedReceiptChange}
             >
               <Text fontSize="md" fontWeight="700">
                 현금영수증 신청
               </Text>
             </Checkbox>
-            <Select value={orderInfo.receiptType} onChange={handleReceiptTypeChange}>
+            <Select {...getRegister('receiptType')}>
               <option>개인소득공제</option>
               <option>사업자증빙용</option>
             </Select>
@@ -171,7 +218,7 @@ export const OrderPage = () => {
           </Flex>
           <Divider opacity="1" borderColor="#eeeeee" />
           <Button
-            onClick={handleSubmit}
+            onClick={handleSubmit(handleOrder, handleError)}
             mt="10"
             bg="#fee500"
             py="2"
