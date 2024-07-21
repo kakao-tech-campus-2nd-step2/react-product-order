@@ -87,7 +87,7 @@ label 태그를 클릭하면 해당 폼 요소에 포커스가 이동하므로, 
 
 다음과 같이 label로 입력 필드를 감싸면 label을 클릭했을 때 내부의 입력 필드로 포커스가 이동한다.
 
-<label>
+`<label>
   Username
   <input type="text" name="username" />
-</label>
+</label>`
