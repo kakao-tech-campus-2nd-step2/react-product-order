@@ -3,18 +3,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
+import { useGetStockInfo } from "@/api/hooks/useGetStock";
 import { fetchInstance } from "@/api/instance";
 import { Spinner } from "@/components/common/Spinner";
-import { RouterPath } from "@/routes/path";
+import { getDynamicPath,RouterPath } from "@/routes/path";
 import type { DetailData } from "@/types";
 
 export const ProductsPage = () => {
   const { productId = '' } = useParams<{ productId: string }>();
   const [data, setData] = useState<DetailData>();
   const [isLoading, setIsLoading] = useState(true)
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(1);
   const navigate = useNavigate();
   const totalPrice = (Number((data?.detail.price.sellingPrice))*quantity)
+  const maxQty = useGetStockInfo();
   
   useEffect(() => {
     const fetchDetails = async () => {
@@ -40,23 +42,26 @@ export const ProductsPage = () => {
     if (!authtoken) {
       navigate(RouterPath.login);
     } else {
-      navigate(RouterPath.payment);
-    }};
+      navigate(getDynamicPath.payment(Number(productId || '1')), {
+        state: quantity,
+      })};
+  };
 
+    // min, max Qty를 어떻게 구현할까 고민하다가 그냥 이렇게 최대 수량 아래로 내릴 수 없도록 하는 것으로 결정했습니다.
     const handleChangeQty = (num: number) => {
-      const stock = 20;
+      const limit = Number(maxQty)
       setQuantity((prevQ) => prevQ+num);
       if (quantity == 0) {
         alert("더 내릴 수 없습니다.");
         setQuantity(1);
-      } else if (quantity >= stock) {
+      } else if (quantity >= limit) {
         alert("최대 수량입니다.");
-        setQuantity(stock-1);
+        setQuantity(limit-1);
       }
-    }
+    };
 
   return (
-    <Flex align="center">
+    <Flex justifyContent="center">
       <Container p="32px 32px 80px">
         <Flex>
           <Image
@@ -85,7 +90,7 @@ export const ProductsPage = () => {
           <Box>
             <Text fontSize={20}>총 결제 금액</Text>
             <Text fontSize={20}>{`${totalPrice}*원`}</Text>
-            <Button onClick={handleGiftMe}>나에게 선물하기</Button>
+              <Button onClick={handleGiftMe} backgroundColor="yellow">나에게 선물하기</Button>
             </Box>
           </Container>
         </Flex>
