@@ -32,3 +32,65 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductDetailData = GoodsData & {
+  isAccessableProductPage: boolean;
+  review: {
+    averageRating: number;
+    totalReviewCount: number;
+  };
+  productDescription: {
+    displayImage: string;
+  };
+  productDetailInfo: {
+    announcements: {
+      displayOrder: number;
+      name: string;
+      value: string;
+    }[];
+    terms: {
+      displayCode: string;
+      title: string;
+      description: string;
+    }[];
+  };
+};
+
+export type ProductDetailResponseData = {
+  detail: ProductDetailData;
+};
+
+export type ProductOrderRequestBody = {
+  productId: number;
+  productOptionId: number;
+  productQuantity: number;
+  messageCardTemplateId: number;
+  messageCardTextMessage: string;
+  senderId: number;
+  receiverId: number;
+  hasCashReceipt: boolean;
+  cashReceiptType?: "PERSONAL" | "BUSINESS";
+  cashReceiptNumber?: string;
+};
+
+export type MoreOptionData = {
+  key: string;
+  value: string;
+  level: number;
+  options: MoreOptionData[];
+  id: number;
+  usable: boolean;
+  price: number;
+  stockQuantity: number;
+  unlimitedStockQuantity: boolean;
+};
+
+export type ProductOptionData = {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  hasOption: boolean;
+  giftOrderLimit: number;
+  names: string[];
+  options: MoreOptionData[];
+};
