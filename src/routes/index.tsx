@@ -1,9 +1,11 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import { Layout } from '@/components/features/Layout';
+import Checkout from '@/pages/Checkout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
+import ProductDetailPage from '@/pages/ProductDetailPage';
 import { ThemePage } from '@/pages/Theme';
 
 import { PrivateRoute } from './components/PrivateRoute';
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
             element: <MyAccountPage />,
           },
         ],
+      },
+      {
+        path: RouterPath.productDetail,
+        element: <ProductDetailPage />,
+      },
+      {
+        path: RouterPath.checkout,
+        element: <Checkout />,
       },
       {
         path: RouterPath.notFound,
