@@ -93,10 +93,33 @@ export type ThemesProductsResponseData = {
   };
 };
 
+export type OptionData = {
+  productId: number;
+  productName: string;
+  giftOrderLimit: number;
+  hasOption: boolean;
+  productPrice: number;
+  names: string[];
+  options: {
+    key: string;
+    value: string;
+    stockQuantity: number;
+    unlimitedStockQuantity: boolean;
+    usable: boolean;
+    options: {
+      key: string;
+      value: string;
+      stockQuantity: number;
+      unlimitedStockQuantity: boolean;
+      usable: boolean;
+    }[];
+  }[];
+};
 export type GetProductsByThemeResponse = ThemesProductsResponseData;
 
 export type GetProductDetailResponse = {
   detail: GoodDetailData & GoodsData;
+  options: OptionData;
 };
 
 export type GetMessageCardTemplatesResponse = {
