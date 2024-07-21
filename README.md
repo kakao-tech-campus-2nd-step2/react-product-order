@@ -16,3 +16,6 @@ FE 카카오 선물하기 4주차 과제: 상품 주문하기
 	- [X] 카드 메시지가 100글자가 넘어가면 100자 이내로 입력하도록 안내
 	- [X] 현금 영수증 checkbox 클릭 시 현금 영수증 번호가 입력되었는지 확인
 	- [X] 현금 영수증 입력은 숫자만 입력하도록 안내
+	### 🪴 3단계 - React Hook Form을 사용하여 기존의 form 리팩터링
+- [ ] 기존에 만든 form/input을 react-hook-form으로 변경
+	- validate 또한 react-hook-form 기능을 적극적으로 활용(zod 사용 가능)
