@@ -32,3 +32,13 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type OptionData = {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  hasOption: boolean;
+  giftOrderLimit: number;
+  names: string[];
+  options: Record<string, string[]>;
+};
