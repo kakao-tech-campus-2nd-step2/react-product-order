@@ -1,34 +1,49 @@
 export type ThemeData = {
-  id: number;
-  key: string;
-  label: string;
-  title: string;
-  description?: string;
-  backgroundColor: string;
-  imageURL: string;
-};
+  id: number
+  key: string
+  label: string
+  title: string
+  description?: string
+  backgroundColor: string
+  imageURL: string
+}
 
 export type RankingFilterOption = {
-  targetType: 'ALL' | 'FEMALE' | 'MALE' | 'TEEN';
-  rankType: 'MANY_WISH' | 'MANY_RECEIVE' | 'MANY_WISH_RECEIVE';
-};
+  targetType: 'ALL' | 'FEMALE' | 'MALE' | 'TEEN'
+  rankType: 'MANY_WISH' | 'MANY_RECEIVE' | 'MANY_WISH_RECEIVE'
+}
+
+type Price = {
+  basicPrice: number
+  discountRate: number
+  sellingPrice: number
+}
 
 export type GoodsData = {
-  id: number;
-  name: string;
-  imageURL: string;
+  id: number
+  name: string
+  imageURL: string
   wish: {
-    wishCount: number;
-    isWished: boolean;
+    wishCount: number
+    isWished: boolean
   };
-  price: {
-    basicPrice: number;
-    discountRate: number;
-    sellingPrice: number;
-  };
+  price: Price
   brandInfo: {
-    id: number;
-    name: string;
-    imageURL: string;
-  };
-};
+    id: number
+    name: string
+    imageURL: string
+  }
+}
+
+export type ProductsInfoData = {
+  detail: {
+    id: number
+    imageURL: string
+    isAccessible: boolean
+    name: string
+    price: Price
+  }
+  brandInfo: {
+    id: number
+  }
+}
