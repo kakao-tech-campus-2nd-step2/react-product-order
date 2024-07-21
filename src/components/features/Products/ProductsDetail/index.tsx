@@ -1,7 +1,9 @@
 import { Box, Button, Grid, GridItem } from '@chakra-ui/react';
 import { Input } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { ErrorMessage } from '@hookform/error-message';
 import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { useGetProducts } from '@/api/hooks/useGetProducts';
@@ -18,6 +20,10 @@ type Props = {
   productId: string;
 };
 
+type FormValues = {
+  itemCount: number;
+};
+
 export const ProductsDetail = ({ productId }: Props) => {
   const {
     data: productData,
@@ -30,18 +36,19 @@ export const ProductsDetail = ({ productId }: Props) => {
     isError: isProductOptionsError,
   } = useGetProductsOptions(productId);
 
-  const [itemCount, setItemCount] = useState<number>(1);
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+  const itemCount = watch('itemCount');
+  const maxItemCount = productOptionsData?.giftOrderLimit || 100;
+
   const [totalPrice, setTotalPrice] = useState<number>(1);
   const authInfo = useAuth();
   const navigate = useNavigate();
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-    if (isNaN(value)) return;
-    if (productOptionsData && itemCount < productOptionsData.giftOrderLimit) {
-      setItemCount(value);
-    }
-  };
 
   const handleNavigate = () => {
     if (!authInfo) {
@@ -65,6 +72,7 @@ export const ProductsDetail = ({ productId }: Props) => {
       </TextView>
     );
   }
+
   if (isProductError || isProductOptionsError) {
     return <Navigate to={RouterPath.notFound} />;
   } // 상세 페이지가 없으면 홈으로
@@ -90,55 +98,92 @@ export const ProductsDetail = ({ productId }: Props) => {
           <NoKakao>카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!</NoKakao>
         </GridItem>
         <HiddenGridItem rowSpan={2} colSpan={1} maxWidth="100%" justifyContent={'center'}>
-          <ButtonBox>
-            <ButtonWrapper>
-              <div>{productData?.name}</div>
+          <form onSubmit={handleSubmit(handleNavigate)}>
+            <ButtonBox>
+              <ButtonWrapper>
+                <div>{productData?.name}</div>
+                <div
+                  style={{
+                    padding: 10,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                  }}
+                >
+                  <Button
+                    marginRight={5}
+                    size="xs"
+                    onClick={() => {
+                      if (itemCount > 1) {
+                        setValue('itemCount', Number(itemCount) - 1);
+                      }
+                    }}
+                  >
+                    -
+                  </Button>
+                  <Controller
+                    name="itemCount"
+                    control={control}
+                    defaultValue={1}
+                    rules={{
+                      required: '해당 값을 채워야 합니다.',
+                      min: {
+                        value: 1,
+                        message: '최소 한개 이상 주문 하셔야 합니다.',
+                      },
+                      max: {
+                        value: maxItemCount,
+                        message: `최대 갯수는 ${maxItemCount}개 입니다.`,
+                      },
+                    }}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        width="40%"
+                        height={'auto'}
+                        onChange={(e) => {
+                          let value = Number(e.target.value);
+                          if (value > maxItemCount) {
+                            value = maxItemCount;
+                          }
+                          field.onChange(value);
+                        }}
+                      />
+                    )}
+                  />
+                  <Button
+                    marginLeft={5}
+                    size="xs"
+                    onClick={() => {
+                      if (itemCount < maxItemCount) {
+                        setValue('itemCount', Number(itemCount) + 1);
+                      }
+                    }}
+                  >
+                    +
+                  </Button>
+                </div>
+                <ErrorMessage errors={errors} name="itemCount" />
+              </ButtonWrapper>
+            </ButtonBox>
+            <PriceBox>
               <div
                 style={{
-                  padding: 10,
+                  width: '80%',
                   display: 'flex',
-                  justifyContent: 'center',
-                  alignContent: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  margin: 10,
                 }}
               >
-                <Button marginRight={5} size="xs" onClick={() => setItemCount(itemCount - 1)}>
-                  -
-                </Button>
-                <Input
-                  placeholder={String(itemCount)}
-                  width="40%"
-                  height={'auto'}
-                  value={itemCount}
-                  onChange={handleChange}
-                />
-                <Button marginLeft={5} size="xs" onClick={() => setItemCount(itemCount + 1)}>
-                  +
-                </Button>
+                <div>총 결제 금액 </div>
+                <div>{totalPrice}</div>
               </div>
-            </ButtonWrapper>
-          </ButtonBox>
-          <PriceBox>
-            <div
-              style={{
-                width: '80%',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                margin: 10,
-              }}
-            >
-              <div>총 결제 금액 </div>
-              <div>{totalPrice}</div>
-            </div>
-            <CustomButton
-              theme="black"
-              size="large"
-              style={{ maxWidth: '80%' }}
-              onClick={handleNavigate}
-            >
-              나에게 선물하기
-            </CustomButton>
-          </PriceBox>
+              <CustomButton theme="black" size="large" style={{ maxWidth: '80%' }} type="submit">
+                나에게 선물하기
+              </CustomButton>
+            </PriceBox>
+          </form>
         </HiddenGridItem>
       </Grid>
     </Wrapper>
@@ -179,7 +224,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const ButtonBox = styled(Box)`
-  heigh: 30%;
+  height: 30%;
   display: flex;
   justify-content: center;
   @media (min-width: ${breakpoints.md}) {
