@@ -5,6 +5,7 @@ export const RouterPath = {
   login: '/login',
   myAccount: '/my-account',
   product: '/products/:productKey',
+  order: '/order',
   notFound: '*',
 };
 

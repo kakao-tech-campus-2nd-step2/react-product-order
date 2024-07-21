@@ -5,6 +5,7 @@ import { Home } from '@/pages/Home';
 import { Login } from '@/pages/Login';
 import { MyAccount } from '@/pages/MyAccount';
 import { Product } from '@/pages/Product';
+import { Order } from '@/pages/Order';
 import { Theme } from '@/pages/Theme';
 import { RouterPath } from '@/routes';
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
         ),
       },
       { path: RouterPath.product, element: <Product /> },
+      { path: RouterPath.order, element: <Order /> },
       {
         path: RouterPath.notFound,
         element: <Navigate to={RouterPath.home} />,

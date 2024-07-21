@@ -47,7 +47,7 @@ export const Aside = ({ name, price }: Props) => {
         const currentPath = window.location.pathname + window.location.search;
         navigate(`${RouterPath.login}?redirect=${encodeURIComponent(currentPath)}`);
       }
-    } else alert('확인'); // payment로 이동
+    } else navigate(RouterPath.order);
   };
 
   return (
