@@ -26,13 +26,16 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.12.0",
     "@emotion/styled": "^11.12.0",
+    "@hookform/resolvers": "^3.9.0",
     "@tanstack/react-query": "^5.51.9",
     "axios": "^1.7.2",
     "framer-motion": "^11.3.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.52.1",
     "react-intersection-observer": "^9.8.1",
-    "react-router-dom": "^6.25.1"
+    "react-router-dom": "^6.25.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.1",
