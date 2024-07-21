@@ -20,6 +20,8 @@ export default function useGetProductsDetail({ id }: ProductParams) {
       } catch {
         setError(true);
         setData(undefined);
+      } finally {
+        setLoading(false);
       }
     };
 
