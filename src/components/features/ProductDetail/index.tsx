@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
   Heading,
   Image,
@@ -17,12 +18,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useGetProduct } from '@/api/hooks/useGetProduct';
 import { Container } from '@/components/common/layouts/Container';
+import { Spinner } from '@/components/common/Spinner';
 import { useAuth } from '@/provider/Auth';
 import { breakpoints } from '@/styles/variants';
 
 export const ProductDetail = () => {
   const { productId = '' } = useParams<{ productId: string }>();
-  const { data } = useGetProduct(productId);
+  const { data, isLoading } = useGetProduct(productId);
   const [count, setCount] = useState(1);
   const navigate = useNavigate();
   const authInfo = useAuth();
@@ -40,6 +42,14 @@ export const ProductDetail = () => {
       navigate('/order', { state: { productId, count } });
     }
   };
+
+  if (isLoading) {
+    return (
+      <Center height="100vh">
+        <Spinner />
+      </Center>
+    );
+  }
 
   if (!data) return null;
   const product = data?.detail;
