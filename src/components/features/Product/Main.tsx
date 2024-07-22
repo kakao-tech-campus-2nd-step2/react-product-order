@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
-import { StyledMain } from '@/styles';
 import { breakpoints } from '@/styles/variants';
 
 type Props = {
@@ -12,7 +11,7 @@ type Props = {
 
 export const Main = ({ name, imageURL, price }: Props) => {
   return (
-    <StyledMain>
+    <Wrapper>
       <Article>
         <Header>
           <Image
@@ -32,9 +31,13 @@ export const Main = ({ name, imageURL, price }: Props) => {
           </TitleContainer>
         </Header>
       </Article>
-    </StyledMain>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  height: calc(100vh - 54px);
+`;
 
 const Article = styled.article`
   width: 100%;

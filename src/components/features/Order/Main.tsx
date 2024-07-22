@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
-import { StyledMain, Text } from '@/styles';
+import { Text } from '@/styles';
 
 type Props = {
   name: string;
@@ -12,7 +12,7 @@ type Props = {
 
 export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
   return (
-    <StyledMain border>
+    <Wrapper>
       <MessageContainer>
         <TitleContainer>
           <Text fontSize="18px" lineHeight="21px" color="rgb(34, 34, 34)" fontWeight="bold">
@@ -42,9 +42,14 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
           </Name>
         </ProductInfo>
       </ProductInfoContainer>
-    </StyledMain>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  border-left: 1px solid #e5e5e5;
+  height: calc(100vh - 54px);
+`;
 
 const MessageContainer = styled.section`
   width: 100%;

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
 import { RouterPath } from '@/routes';
-import { StyledAside } from '@/styles';
 
 type Props = {
   productId: number;
@@ -58,7 +57,7 @@ export const Aside = ({ productId, name, price }: Props) => {
   };
 
   return (
-    <StyledAside>
+    <Wrapper>
       <Container>
         <QuantityContainer>
           <Title>{name}</Title>
@@ -78,9 +77,13 @@ export const Aside = ({ productId, name, price }: Props) => {
           </Button>
         </PaymentContainer>
       </Container>
-    </StyledAside>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  height: calc(100vh - 54px);
+`;
 
 const Container = styled.div`
   width: 100%;

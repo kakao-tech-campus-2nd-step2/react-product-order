@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 
 import { Button } from '@/components/common/Button';
-import { StyledAside, Text } from '@/styles';
+import { Text } from '@/styles';
 
 type Props = { totalAmount: number };
 
 export const Aside = ({ totalAmount }: Props) => {
   return (
-    <StyledAside>
+    <Wrapper>
       <PaymentInfo>
         <TitleContainer>
           <Text fontSize="18px" lineHeight="21px" fontWeight="bold">
@@ -40,9 +40,13 @@ export const Aside = ({ totalAmount }: Props) => {
         <div style={{ backgroundColor: 'inherit', height: '32px' }} />
         <Button theme="kakao">{totalAmount}원 결제하기</Button>
       </PaymentInfo>
-    </StyledAside>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  height: calc(100vh - 54px);
+`;
 
 const PaymentInfo = styled.div`
   width: 100%;
