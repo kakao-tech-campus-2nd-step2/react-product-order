@@ -12,32 +12,36 @@ type Props = {
 
 export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
   return (
-    <StyledMain>
+    <StyledMain border>
       <MessageContainer>
-        <TextContainer>
-          <Text>나에게 주는 선물</Text>
-        </TextContainer>
+        <TitleContainer>
+          <Text fontSize="18px" lineHeight="21px" color="rgb(34, 34, 34)" isTitle>
+            나에게 주는 선물
+          </Text>
+        </TitleContainer>
         <MessageArea
           name="messageCardTextMessage"
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
         />
       </MessageContainer>
       <div style={{ width: '100%', backgroundColor: 'rgb(237, 237, 237)', height: '8px' }} />
-      <ProductInfo>
-        <span>선물내역</span>
-        <div style={{ height: '16px' }} />
-        <div>
-          <div>
-            <Image src={imageURL} alt={`${name} 썸네일`} width="86px" />
-          </div>
-          <div>
-            <p>{brandName}</p>
-            <p>
+      <ProductInfoContainer>
+        <Text fontSize="15px" lineHeight="14px" isTitle>
+          선물내역
+        </Text>
+        <div style={{ backgroundColor: 'inherit', height: '16px' }} />
+        <ProductInfo>
+          <Image src={imageURL} alt={`${name} 썸네일`} width="86px" radius={4} ratio="square" />
+          <Name>
+            <Text fontSize="13px" lineHeight="14px" color="rgb(136, 136, 136)" isTitle={false}>
+              {brandName}
+            </Text>
+            <Text fontSize="14px" lineHeight="18px" color="rgb(34, 34, 34)" overflow="hidden">
               {name} X {quantity}
-            </p>
-          </div>
-        </div>
-      </ProductInfo>
+            </Text>
+          </Name>
+        </ProductInfo>
+      </ProductInfoContainer>
     </StyledMain>
   );
 };
@@ -47,18 +51,27 @@ const MessageContainer = styled.section`
   padding: 44px 0px 32px;
 `;
 
-const TextContainer = styled.div`
+const TitleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
 `;
 
-const Text = styled.span`
-  font-size: 18px;
-  line-height: 21px;
-  color: rgb(34, 34, 34);
+type TextProps = {
+  fontSize?: string;
+  lineHeight?: string;
+  color?: string;
+  isTitle?: boolean;
+  overflow?: string;
+};
+
+const Text = styled.p<TextProps>`
+  font-size: ${({ fontSize }) => fontSize || '18px'};
+  line-height: ${({ lineHeight }) => lineHeight || '21px'};
+  color: ${({ color }) => color || '#000'};
   box-sizing: border-box;
-  font-weight: 700;
+  font-weight: ${({ isTitle }) => (isTitle ? '700' : '400')};
+  overflow: ${({ overflow }) => overflow || 'none'};
 `;
 
 const MessageArea = styled.textarea`
@@ -77,7 +90,23 @@ const MessageArea = styled.textarea`
   height: 100px;
 `;
 
-const ProductInfo = styled.section`
+const ProductInfoContainer = styled.section`
   width: 100%;
   padding: 16px;
+`;
+
+const ProductInfo = styled.div`
+  width: 100%;
+  padding: 20px 16px 16px;
+  border-radius: 8px;
+  border: 1px solid rgb(237, 237, 237);
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 8px;
+  display: flex;
+`;
+
+const Name = styled.div`
+  padding-left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 `;

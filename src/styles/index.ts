@@ -12,8 +12,9 @@ export const ErrorMessageContainer = styled.div`
   font-size: 16px;
 `;
 
-export const StyledMain = styled.main`
+export const StyledMain = styled.main<{ border?: boolean }>`
   width: 100%;
   max-width: 900px;
-  border-left: 1px solid rgb(229, 229, 229);
+
+  ${({ border }) => border && 'border-left: 1px solid rgb(229, 229, 229);'}
 `;
