@@ -13,6 +13,17 @@ export const Aside = ({ totalAmount }: Props) => {
   const [isCashReceiptChecked, setIsCashReceiptChecked] = useState(false);
   const [cashReceiptNumber, setCashReceiptNumber] = useState('');
 
+  const handleCashReceiptNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (/^\d*$/.test(value)) {
+      setCashReceiptNumber(value);
+    } else {
+      alert('숫자만 입력해주세요.');
+      setCashReceiptNumber(value.replace(/\D/g, ''));
+    }
+  };
+
   const handleOrderClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -60,7 +71,7 @@ export const Aside = ({ totalAmount }: Props) => {
             name="cashReceiptNumber"
             placeholder="(-없이) 숫자만 입력해주세요."
             value={cashReceiptNumber}
-            onChange={(e) => setCashReceiptNumber(e.target.value)}
+            onChange={handleCashReceiptNumberChange}
           />
         </CashReceipt>
         <Hr />
