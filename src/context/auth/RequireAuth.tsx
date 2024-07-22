@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { useAuth } from '@/auth/AuthContext';
 import { RouterPath } from '@/routes';
+import { useAuth } from './AuthContext';
 
 type RequireAuthProps = {
   children: ReactElement;

@@ -1,5 +1,5 @@
-import { AuthProvider } from '@/auth/AuthProvider';
-import { RequireAuth } from '@/auth/RequireAuth';
+import { AuthProvider } from '@/context/auth/AuthProvider';
+import { RequireAuth } from '@/context/auth/RequireAuth';
 import { Layout } from '@/components/features/Layout';
 import { Home } from '@/pages/Home';
 import { Login } from '@/pages/Login';
