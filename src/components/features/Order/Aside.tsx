@@ -3,7 +3,9 @@ import styled from '@emotion/styled';
 import { Button } from '@/components/common/Button';
 import { StyledAside, Text } from '@/styles';
 
-export const Aside = () => {
+type Props = { totalAmount: number };
+
+export const Aside = ({ totalAmount }: Props) => {
   return (
     <StyledAside>
       <PaymentInfo>
@@ -31,12 +33,12 @@ export const Aside = () => {
             최종 결제금액
           </Text>
           <Text fontSize="18px" lineHeight="21px" fontWeight="bold">
-            원
+            {totalAmount}원
           </Text>
         </TotalAmount>
         <Hr />
         <div style={{ backgroundColor: 'inherit', height: '32px' }} />
-        <Button theme="kakao">원 결제하기</Button>
+        <Button theme="kakao">{totalAmount}원 결제하기</Button>
       </PaymentInfo>
     </StyledAside>
   );

@@ -9,9 +9,9 @@ import { ErrorMessageContainer } from '@/styles';
 
 export const Product = () => {
   const { productKey } = useParams<{ productKey: string }>();
-  const productKeyNumber = productKey ? parseInt(productKey, 10) : undefined;
+  const productKeyNumber = productKey ? parseInt(productKey, 10) : 0;
 
-  const { data, isLoading, isError } = useProductDetail(productKeyNumber || 0);
+  const { data, isLoading, isError } = useProductDetail(productKeyNumber);
 
   const productDetail = data?.detail;
 
@@ -28,7 +28,11 @@ export const Product = () => {
             imageURL={productDetail.imageURL}
             price={productDetail.price.sellingPrice}
           />
-          <Aside name={productDetail.name} price={productDetail.price.sellingPrice} />
+          <Aside
+            productId={productKeyNumber}
+            name={productDetail.name}
+            price={productDetail.price.sellingPrice}
+          />
         </ProductContainer>
       </Container>
     </StyledProduct>

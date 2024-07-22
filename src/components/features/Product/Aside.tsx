@@ -6,11 +6,12 @@ import { RouterPath } from '@/routes';
 import { StyledAside } from '@/styles';
 
 type Props = {
+  productId: number;
   name: string;
   price: number;
 };
 
-export const Aside = ({ name, price }: Props) => {
+export const Aside = ({ productId, name, price }: Props) => {
   const navigate = useNavigate();
 
   const authToken = sessionStorage.getItem('authToken');
@@ -47,7 +48,12 @@ export const Aside = ({ name, price }: Props) => {
         const currentPath = window.location.pathname + window.location.search;
         navigate(`${RouterPath.login}?redirect=${encodeURIComponent(currentPath)}`);
       }
-    } else navigate(RouterPath.order);
+    } else {
+      const newOrder = { id: productId, quantity: quantity };
+      sessionStorage.setItem('orderHistory', JSON.stringify(newOrder));
+
+      navigate(RouterPath.order);
+    }
   };
 
   return (

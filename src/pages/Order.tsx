@@ -1,10 +1,25 @@
 import styled from '@emotion/styled';
 
+import { useProductDetail } from '@/api/hooks/useProductDetail';
 import { Container } from '@/components/common/layouts/Container';
-import { Main } from '@/components/features/Order/Main';
 import { Aside } from '@/components/features/Order/Aside';
+import { Main } from '@/components/features/Order/Main';
+import { ErrorMessageContainer } from '@/styles';
 
 export const Order = () => {
+  const orderHistoryString = sessionStorage.getItem('orderHistory');
+  const orderHistory = orderHistoryString ? JSON.parse(orderHistoryString) : {};
+  const productId = orderHistory.id || 0;
+  const quantity = orderHistory.quantity || 1;
+
+  const { data, isLoading, isError } = useProductDetail(productId);
+
+  const productDetail = data?.detail;
+
+  if (isLoading) return <ErrorMessageContainer>Loading...</ErrorMessageContainer>;
+  if (isError) return <ErrorMessageContainer>에러가 발생했습니다.</ErrorMessageContainer>;
+  if (!productDetail) return <ErrorMessageContainer>찾는 상품이 없습니다.</ErrorMessageContainer>;
+
   return (
     <StyledProduct>
       <Container maxWidth="100%" flexDirection="row" alignItems="center">
@@ -13,12 +28,12 @@ export const Order = () => {
             <div>
               <ProductContainer>
                 <Main
-                  name="[단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)"
-                  imageURL="https://st.kakaocdn.net/product/gift/product/20240703140657_19263fd5455146b0a308a4e0d6bacc6a.png"
-                  brandName="산타마리아노벨라"
-                  quantity={2}
+                  name={productDetail.name}
+                  imageURL={productDetail.imageURL}
+                  brandName={productDetail.brandInfo.name}
+                  quantity={quantity}
                 />
-                <Aside />
+                <Aside totalAmount={productDetail.price.sellingPrice * quantity} />
               </ProductContainer>
             </div>
           </div>
