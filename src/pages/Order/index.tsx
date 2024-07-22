@@ -17,7 +17,9 @@ import PaymentInfo from './PaymentInfo';
 export default () => {
     const orderHistory = orderHistoryStorage.get();
     const navigate = useNavigate();
-    const productDetail = useData<ProductDetailData>(`/products/${orderHistory?.productId}/detail`);
+    const productDetail = orderHistory?.productId
+        ? useData<ProductDetailData>(`/products/${orderHistory?.productId}/detail`)
+        : { isLoading: true, data: undefined, httpStatusCode: 0 };
 
     useEffect(() => {
         if (!orderHistory) {
