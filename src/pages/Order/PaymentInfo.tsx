@@ -1,18 +1,50 @@
 import { Checkbox, Input, Select } from '@chakra-ui/react';
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
+import { useState } from 'react';
+import type { Control } from 'react-hook-form';
+import { Controller, type UseFormRegister } from 'react-hook-form';
 
-export default ({ price }: { price: number }) => {
+import type OrderForm from './OrderForm';
+
+export default ({
+    price,
+    register,
+    control,
+}: {
+    price: number;
+    register: UseFormRegister<OrderForm>;
+    control: Control<OrderForm>;
+}) => {
+    const [cashReceipt, setCashReceipt] = useState(false);
     return (
         <div className={containerStyle}>
             <h2 className={h2Style}>결제 정보</h2>
             <div className={setReceiptStyle}>
-                <Checkbox name="hasCashReceipt">현금영수증 신청</Checkbox>
-                <Select name="cashReceiptType" defaultValue={1}>
-                    <option value="1">개인소득공제</option>
-                    <option value="2">사업자증빙용</option>
+                <Controller
+                    control={control}
+                    name="hasCashReceipt"
+                    render={({ field }) => (
+                        <Checkbox
+                            {...field}
+                            value={cashReceipt ? 'true' : 'false'}
+                            onChange={(e) => {
+                                field.onChange(e);
+                                setCashReceipt((value) => !value);
+                            }}
+                        >
+                            현금영수증 신청
+                        </Checkbox>
+                    )}
+                />
+                <Select {...register('cashReceiptType')} defaultValue={'개인소득공제'}>
+                    <option value="개인소득공제">개인소득공제</option>
+                    <option value="사업자증빙용">사업자증빙용</option>
                 </Select>
-                <Input name="cashReceiptNumber" placeholder="(-없이) 숫자만 입력해주세요." />
+                <Input
+                    {...register('cashReceiptNumber', { pattern: /^\d*$/, required: cashReceipt })}
+                    placeholder="(-없이) 숫자만 입력해주세요."
+                />
             </div>
             <PriceBox>
                 <p>최종 결제금액</p>
