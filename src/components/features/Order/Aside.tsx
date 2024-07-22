@@ -16,7 +16,11 @@ export const Aside = ({ totalAmount }: Props) => {
     if (!message.trim()) {
       alert('메시지를 입력해주세요.');
       return;
+    } else if (message.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      return;
     }
+
     // 결제 처리
     alert('주문이 완료되었습니다.');
   };
