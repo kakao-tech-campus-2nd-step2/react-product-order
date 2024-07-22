@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
 
 import { Button } from '@/components/common/Button';
 import { Spacing } from '@/components/common/layouts/Spacing';
@@ -9,6 +10,8 @@ type Props = { totalAmount: number };
 
 export const Aside = ({ totalAmount }: Props) => {
   const { message } = useMessage();
+  const [isCashReceiptChecked, setIsCashReceiptChecked] = useState(false);
+  const [cashReceiptNumber, setCashReceiptNumber] = useState('');
 
   const handleOrderClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -18,6 +21,11 @@ export const Aside = ({ totalAmount }: Props) => {
       return;
     } else if (message.length > 100) {
       alert('메시지는 100자 이내로 입력해주세요.');
+      return;
+    }
+
+    if (isCashReceiptChecked && !cashReceiptNumber.trim()) {
+      alert('현금영수증 번호를 입력해주세요.');
       return;
     }
 
@@ -36,7 +44,11 @@ export const Aside = ({ totalAmount }: Props) => {
         <Hr />
         <CashReceipt>
           <Label>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={isCashReceiptChecked}
+              onChange={() => setIsCashReceiptChecked(!isCashReceiptChecked)}
+            />
             <span>현금영수증 신청</span>
           </Label>
           <Spacing height={8} />
@@ -44,7 +56,12 @@ export const Aside = ({ totalAmount }: Props) => {
             <option value="PERSONAL">개인소득공제</option>
             <option value="BUSINESS">사업자증빙용</option>
           </Select>
-          <NumberInput name="cashReceiptNumber" placeholder="(-없이) 숫자만 입력해주세요." />
+          <NumberInput
+            name="cashReceiptNumber"
+            placeholder="(-없이) 숫자만 입력해주세요."
+            value={cashReceiptNumber}
+            onChange={(e) => setCashReceiptNumber(e.target.value)}
+          />
         </CashReceipt>
         <Hr />
         <TotalAmount>
