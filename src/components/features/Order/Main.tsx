@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
+import { StyledMain } from '@/styles';
 
 type Props = {
   name: string;
@@ -41,13 +42,6 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
   );
 };
 
-const StyledMain = styled.main`
-  width: 100%;
-  max-width: 900px;
-
-  border-left: 1px solid rgb(229, 229, 229);
-`;
-
 const MessageContainer = styled.section`
   width: 100%;
   padding: 44px 0px 32px;
@@ -71,32 +65,14 @@ const MessageArea = styled.textarea`
   width: 100%;
   margin: 14px 30px;
   padding: 12px 30px 16px;
-
-  width: 100%;
-  font-size: var(--input-font-size);
-  padding-inline-start: var(--input-padding);
-  padding-inline-end: var(--input-padding);
-  border-radius: var(--input-border-radius);
   outline: transparent solid 2px;
   outline-offset: 2px;
   position: relative;
   appearance: none;
-  transition-property: var(--chakra-transition-property-common);
-  transition-duration: var(--chakra-transition-duration-normal);
-  padding-top: var(--chakra-space-2);
-  padding-bottom: var(--chakra-space-2);
-  min-height: var(--chakra-sizes-20);
-  line-height: var(--chakra-lineHeights-short);
   vertical-align: top;
-  --input-font-size: var(--chakra-fontSizes-md);
-  --input-padding: var(--chakra-space-4);
-  --input-border-radius: var(--chakra-radii-md);
-  --input-height: var(--chakra-sizes-10);
   border-width: 2px;
   border-style: solid;
   border-image: initial;
-  border-color: var(--chakra-colors-transparent);
-  background: var(--chakra-colors-gray-100);
   resize: none;
   height: 100px;
 `;

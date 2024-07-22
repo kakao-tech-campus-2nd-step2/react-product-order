@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
+import { StyledMain } from '@/styles';
 import { breakpoints } from '@/styles/variants';
 
 type Props = {
@@ -34,11 +35,6 @@ export const Main = ({ name, imageURL, price }: Props) => {
     </StyledMain>
   );
 };
-
-const StyledMain = styled.main`
-  width: 100%;
-  max-width: 900px;
-`;
 
 const Article = styled.article`
   width: 100%;

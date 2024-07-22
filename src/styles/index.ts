@@ -11,3 +11,9 @@ export const ErrorMessageContainer = styled.div`
   padding: 40px 16px 60px;
   font-size: 16px;
 `;
+
+export const StyledMain = styled.main`
+  width: 100%;
+  max-width: 900px;
+  border-left: 1px solid rgb(229, 229, 229);
+`;
