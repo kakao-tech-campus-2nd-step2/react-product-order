@@ -2,15 +2,17 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { Button } from '@/components/common/Button';
 import { RouterPath } from '@/routes';
-import { breakpoints } from '@/styles/variants';
+import { StyledAside } from '@/styles';
 
 type Props = {
+  productId: number;
   name: string;
   price: number;
 };
 
-export const Aside = ({ name, price }: Props) => {
+export const Aside = ({ productId, name, price }: Props) => {
   const navigate = useNavigate();
 
   const authToken = sessionStorage.getItem('authToken');
@@ -47,7 +49,12 @@ export const Aside = ({ name, price }: Props) => {
         const currentPath = window.location.pathname + window.location.search;
         navigate(`${RouterPath.login}?redirect=${encodeURIComponent(currentPath)}`);
       }
-    } else alert('확인'); // payment로 이동
+    } else {
+      const newOrder = { id: productId, quantity: quantity };
+      sessionStorage.setItem('orderHistory', JSON.stringify(newOrder));
+
+      navigate(RouterPath.order);
+    }
   };
 
   return (
@@ -66,25 +73,14 @@ export const Aside = ({ name, price }: Props) => {
             총 결제 금액
             <span style={{ fontSize: '20px', letterSpacing: '-0.02em' }}>{totalAmount}원</span>
           </TotalAmount>
-          <PaymentButton onClick={handlePaymentClick}>나에게 선물하기</PaymentButton>
+          <Button theme="black" onClick={handlePaymentClick}>
+            나에게 선물하기
+          </Button>
         </PaymentContainer>
       </Container>
     </StyledAside>
   );
 };
-
-const StyledAside = styled.aside`
-  display: none;
-  position: sticky;
-  top: 54px;
-  width: 100%;
-  max-width: 360px;
-  height: calc(100vh - 54px);
-
-  @media screen and (min-width: ${breakpoints.sm}) {
-    display: block;
-  }
-`;
 
 const Container = styled.div`
   width: 100%;
@@ -150,20 +146,4 @@ const TotalAmount = styled.div`
   font-weight: 700;
   line-height: 14px;
   color: rgb(17, 17, 17);
-`;
-
-const PaymentButton = styled.button`
-  width: 100%;
-  border-radius: 4px;
-  display: flex;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 200ms ease 0s;
-  height: 60px;
-  font-size: 16px;
-  color: #fff;
-  background-color: rgb(17, 17, 17);
 `;

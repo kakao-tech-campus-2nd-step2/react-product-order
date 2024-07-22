@@ -1,17 +1,16 @@
-import styled from '@emotion/styled';
 import { useParams } from 'react-router-dom';
 
 import { useProductDetail } from '@/api/hooks/useProductDetail';
-import { Container } from '@/components/common/layouts/Container';
+import { SplitLayout } from '@/components/common/layouts/SplitLayout';
 import { Aside } from '@/components/features/Product/Aside';
 import { Main } from '@/components/features/Product/Main';
 import { ErrorMessageContainer } from '@/styles';
 
 export const Product = () => {
   const { productKey } = useParams<{ productKey: string }>();
-  const productKeyNumber = productKey ? parseInt(productKey, 10) : undefined;
+  const productKeyNumber = productKey ? parseInt(productKey, 10) : 0;
 
-  const { data, isLoading, isError } = useProductDetail(productKeyNumber || 0);
+  const { data, isLoading, isError } = useProductDetail(productKeyNumber);
 
   const productDetail = data?.detail;
 
@@ -20,29 +19,21 @@ export const Product = () => {
   if (!productDetail) return <ErrorMessageContainer>찾는 상품이 없습니다.</ErrorMessageContainer>;
 
   return (
-    <StyledProduct>
-      <Container maxWidth="100%" flexDirection="row" alignItems="center">
-        <ProductContainer>
-          <Main
-            name={productDetail.name}
-            imageURL={productDetail.imageURL}
-            price={productDetail.price.sellingPrice}
-          />
-          <Aside name={productDetail.name} price={productDetail.price.sellingPrice} />
-        </ProductContainer>
-      </Container>
-    </StyledProduct>
+    <SplitLayout
+      mainChildren={
+        <Main
+          name={productDetail.name}
+          imageURL={productDetail.imageURL}
+          price={productDetail.price.sellingPrice}
+        />
+      }
+      asideChildren={
+        <Aside
+          productId={productKeyNumber}
+          name={productDetail.name}
+          price={productDetail.price.sellingPrice}
+        />
+      }
+    />
   );
 };
-
-const StyledProduct = styled.div`
-  width: 100%;
-`;
-
-const ProductContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  position: relative;
-`;
