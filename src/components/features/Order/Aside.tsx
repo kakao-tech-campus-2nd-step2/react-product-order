@@ -10,7 +10,9 @@ type Props = { totalAmount: number };
 export const Aside = ({ totalAmount }: Props) => {
   const { message } = useMessage();
 
-  const handlePaymentClick = () => {
+  const handlePaymentClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     if (!message.trim()) {
       alert('메시지를 입력해주세요.');
       return;
