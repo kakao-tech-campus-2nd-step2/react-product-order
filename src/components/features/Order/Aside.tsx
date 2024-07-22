@@ -2,16 +2,29 @@ import styled from '@emotion/styled';
 
 import { Button } from '@/components/common/Button';
 import { Spacing } from '@/components/common/layouts/Spacing';
+import { useMessage } from '@/context/message/MessageContext';
 import { Text } from '@/styles';
 
 type Props = { totalAmount: number };
 
 export const Aside = ({ totalAmount }: Props) => {
+  const { message } = useMessage();
+
+  const handlePaymentClick = () => {
+    if (!message.trim()) {
+      alert('메시지를 입력해주세요.');
+      return;
+    }
+
+    // 결제 처리
+    alert('주문이 완료되었습니다.');
+  };
+
   return (
     <Wrapper>
       <PaymentInfo>
         <TitleContainer>
-          <Text fontSize="18px" lineHeight="21px" fontWeight="bold">
+          <Text fontSize="18px" lineHeight="21px" fontWeight="700">
             결제 정보
           </Text>
         </TitleContainer>
@@ -23,23 +36,25 @@ export const Aside = ({ totalAmount }: Props) => {
           </Label>
           <Spacing height={8} />
           <Select name="cashReceiptType" id="cashReceiptType">
-            <option value="PERSONAL">개인소등공제</option>
+            <option value="PERSONAL">개인소득공제</option>
             <option value="BUSINESS">사업자증빙용</option>
           </Select>
           <NumberInput name="cashReceiptNumber" placeholder="(-없이) 숫자만 입력해주세요." />
         </CashReceipt>
         <Hr />
         <TotalAmount>
-          <Text fontSize="15px" lineHeight="25px" fontWeight="bold">
+          <Text fontSize="15px" lineHeight="25px" fontWeight="700">
             최종 결제금액
           </Text>
-          <Text fontSize="18px" lineHeight="21px" fontWeight="bold">
+          <Text fontSize="18px" lineHeight="21px" fontWeight="700">
             {totalAmount}원
           </Text>
         </TotalAmount>
         <Hr />
         <Spacing height={32} />
-        <Button theme="kakao">{totalAmount}원 결제하기</Button>
+        <Button theme="kakao" onClick={handlePaymentClick}>
+          {totalAmount}원 결제하기
+        </Button>
       </PaymentInfo>
     </Wrapper>
   );

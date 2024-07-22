@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
 import { Spacing } from '@/components/common/layouts/Spacing';
+import { useMessage } from '@/context/message/MessageContext';
 import { Text } from '@/styles';
 
 type Props = {
@@ -12,6 +13,12 @@ type Props = {
 };
 
 export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
+  const { message, setMessage } = useMessage();
+
+  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(event.target.value);
+  };
+
   return (
     <Wrapper>
       <MessageContainer>
@@ -23,6 +30,8 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
         <MessageArea
           name="messageCardTextMessage"
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
+          value={message}
+          onChange={handleMessageChange}
         />
       </MessageContainer>
       <Spacing height={8} backgroundColor="rgb(237, 237, 237)" />
