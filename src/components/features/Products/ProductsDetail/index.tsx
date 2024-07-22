@@ -21,10 +21,36 @@ export const ProductsDetail = ({ productId }: Props) => {
   const authInfo = useAuth()
   const navigate = useNavigate()
 
+  // 선물 최대 제한 수량 
+  const giftOrderLimit = data?.options?.giftOrderLimit ?? 0
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value)
-    if (isNaN(value)) return
-    setItemCount(value)
+    if (isNaN(value)) {
+      return
+    }
+
+    if (value > giftOrderLimit) {
+      alert(`최대 선물 가능 수량은 ${giftOrderLimit}개 입니다.`)
+      setItemCount(giftOrderLimit)
+    } 
+    else {
+      setItemCount(value)
+    }
+  }
+
+  const handleIncrement = () => {
+    if (itemCount < giftOrderLimit) {
+      setItemCount(itemCount + 1)
+    } else {
+      alert(`최대 선물 가능 수량은 ${giftOrderLimit}개 입니다.`)
+    }
+  }
+
+  const handleDecrement = () => {
+    if (itemCount > 1) {
+      setItemCount(itemCount - 1)
+    }
   }
 
   const handleNavigate = () => {
@@ -39,10 +65,11 @@ export const ProductsDetail = ({ productId }: Props) => {
   }
 
   useEffect(() => {
-    if (data) {
-      setTotalPrice(data.price.basicPrice * itemCount)
+    if (data) 
+      setTotalPrice(data.detail.price.basicPrice * itemCount)
+      console.log(`상품명: ${data.detail.name} / 선물 최대 제한 수량: ${giftOrderLimit}`)
     }
-  }, [data, itemCount])
+  }, [data, itemCount, giftOrderLimit])
 
   if (isLoading) {
     return (
@@ -68,13 +95,13 @@ export const ProductsDetail = ({ productId }: Props) => {
         p={4}
       >
         <GridItem>
-          <Image src={data?.imageURL} alt={data?.name} />
+          <Image src={data?.detail?.imageURL} alt={data?.detail?.name} />
         </GridItem>
 
         <GridItem>
           <Box>
-            <Text fontSize="2xl" fontWeight="bold">{data?.name}</Text>
-            <Text fontSize="xl" color="gray.600">{data?.price.basicPrice} 원</Text>
+            <Text fontSize="2xl" fontWeight="bold">{data?.detail?.name}</Text>
+            <Text fontSize="xl" color="gray.600">{data?.detail?.price.basicPrice} 원</Text>
             <Text mt={4} fontSize="md" color="gray.500">
               카톡 친구가 아니어도 선물 코드로 선물 할 수 있어요!
             </Text>
@@ -82,7 +109,7 @@ export const ProductsDetail = ({ productId }: Props) => {
 
           <Box mt={6}>
             <QuantityControl>
-              <Button size="sm" onClick={() => setItemCount(itemCount - 1)}>-</Button>
+              <Button size="sm" onClick={handleDecrement}>-</Button>
               <Input
                 type="number"
                 width="60px"
@@ -90,8 +117,9 @@ export const ProductsDetail = ({ productId }: Props) => {
                 value={itemCount}
                 onChange={handleChange}
                 mx={2}
+                min={1}
               />
-              <Button size="sm" onClick={() => setItemCount(itemCount + 1)}>+</Button>
+              <Button size="sm" onClick={handleIncrement}>+</Button>
             </QuantityControl>
           </Box>
 

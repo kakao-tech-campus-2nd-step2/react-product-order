@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Grid, GridItem, HStack, Image,Input, Select, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Checkbox, Grid, GridItem, HStack, Image, Input, Select, Text, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -18,23 +18,33 @@ export const Order = () => {
     const number = numberRef.current?.value;
     const message = messageRef.current?.value;
 
+    // 카드 메시지가 100자를 초과할 경우 경고 표시
+    if (message && message.length > 100) {
+      alert('카드 메시지는 100자 이내로 입력해 주세요!');
+      return;
+    }
+
+    // 현금 영수증 신청을 한 경우 (체크 박스 활성화 상태)
     if (check) {
       if (number && message) {
         if (Number.isNaN(Number(number))) {
-          alert('현금 영수증 번호는 숫자만 입력해주세요');
+          alert('현금 영수증 전화번호는 숫자만 입력 가능합니다!');
         } else {
           alert('주문이 완료되었습니다.');
         }
-      } else if (!number) {
-        alert('현금 영수증 번호를 입력해주세요');
       } else if (!message) {
-        alert('메시지를 입력해주세요');
-      }
-    } else {
+        alert('선물과 함께 보낼 카드 메시지를 작성해 주세요!');
+      } else if (!number) {
+        alert('현금 영수증에 필요한 전화번호를 입력해주세요!');
+      } 
+    } 
+    
+    // 현금 영수증 신청을 하지 않은 경우 (체크 박스 비활성화 상태)
+    else {
       if (message) {
         alert('주문이 완료되었습니다.');
       } else if (!message) {
-        alert('메시지를 입력해주세요');
+        alert('선물과 함께 보낼 카드 메시지를 작성해 주세요!');
       }
     }
   };
@@ -49,8 +59,8 @@ export const Order = () => {
         p={4}
       >
         <GridItem>
-          <VStack align="start" spacing={10}>
-            <Box>
+          <VStack align="center" spacing={10}>
+            <Box textAlign="center">
               <Text fontSize="2xl" fontWeight="bold">나에게 주는 선물</Text>
               <Input
                 backgroundColor="gray.100"
@@ -58,19 +68,20 @@ export const Order = () => {
                 ref={messageRef}
                 mt={4}
                 size="lg"
-                width="300px"
+                width="750px" 
+                height="150px" 
               />
             </Box>
             <Box w="100%">
               <Text fontSize="xl" fontWeight="bold">선물 내역</Text>
               <GiftDetailBox>
-                <Image src={location.state.data.imageURL} alt={location.state.data.name} width="150px" height="150px" />
+                <Image src={location.state.data.detail.imageURL} alt={location.state.data.detail.name} width="150px" height="150px" />
                 <Box>
                   <Text fontSize="lg" fontWeight="semibold" color="gray.700">
-                    {location.state.data.brandInfo.name}
+                    {location.state.data.detail.brandInfo.name}
                   </Text>
                   <Text fontSize="md" fontWeight="medium" color="gray.500">
-                    {location.state.data.name} x {location.state.itemCount}개
+                    {location.state.data.detail.name} x {location.state.itemCount}개
                   </Text>
                 </Box>
               </GiftDetailBox>
