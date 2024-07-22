@@ -13,8 +13,8 @@
 
 ### 📝Requirements
 
-- [ ] 상품 상세 페이지에서 상품의 개수를 option API의 giftOrderLimit을 초과한 경우 선택이 불가하게 해요.
-- [ ] 결제 페이지의 Form을 validation 해요.
+- [x] 상품 상세 페이지에서 상품의 개수를 option API의 giftOrderLimit을 초과한 경우 선택이 불가하게 해요.
+- [x] 결제 페이지의 Form을 validation 해요.
 
 ## Week 4. 3단계 - React Hook Form를 사용하여 기존의 form을 리팩터링
 

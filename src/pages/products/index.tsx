@@ -14,6 +14,13 @@ interface Product {
     discountRate: number;
     sellingPrice: number;
   };
+  brandInfo: {
+    name: string;
+  };
+}
+
+interface ProductOptions {
+  giftOrderLimit: number;
 }
 
 const fetchProductDetail = async (productId: string): Promise<Product | null> => {
@@ -21,7 +28,6 @@ const fetchProductDetail = async (productId: string): Promise<Product | null> =>
     const response = await axios.get(
       `https://react-gift-mock-api-daeun0726.vercel.app/api/v1/products/${productId}/detail`,
     );
-    console.log(response.data.detail.imageUrl);
     return response.data.detail;
   } catch (error) {
     console.error('Failed to fetch product details', error);
@@ -29,9 +35,22 @@ const fetchProductDetail = async (productId: string): Promise<Product | null> =>
   }
 };
 
+const fetchProductOptions = async (productId: string): Promise<ProductOptions | null> => {
+  try {
+    const response = await axios.get(
+      `https://react-gift-mock-api-daeun0726.vercel.app/api/v1/products/${productId}/options`,
+    );
+    return response.data.options;
+  } catch (error) {
+    console.error('Failed to fetch product options', error);
+    return null;
+  }
+};
+
 export const ProductPage: React.FC = () => {
   const { productKey = '' } = useParams<{ productKey: string }>();
   const [product, setProduct] = useState<Product | null | undefined>(undefined);
+  const [options, setOptions] = useState<ProductOptions | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const authInfo = useAuth();
   const navigate = useNavigate();
@@ -40,6 +59,9 @@ export const ProductPage: React.FC = () => {
     const loadProduct = async () => {
       const productData = await fetchProductDetail(productKey);
       setProduct(productData);
+
+      const optionsData = await fetchProductOptions(productKey);
+      setOptions(optionsData);
     };
 
     loadProduct();
@@ -51,7 +73,14 @@ export const ProductPage: React.FC = () => {
         navigate(`${RouterPath.login}?redirect=${window.location.pathname}`);
       }
     } else {
-      navigate(RouterPath.order, { state: { product } });
+      const orderData = {
+        imageURL: product?.imageURL,
+        name: product?.name,
+        quantity: quantity,
+        totalPrice: product ? product.price.sellingPrice * quantity : 0,
+        brand: product?.brandInfo.name,
+      };
+      navigate(RouterPath.order, { state: { orderData } });
     }
   };
 
@@ -61,13 +90,25 @@ export const ProductPage: React.FC = () => {
     }
   }, [product, navigate]);
 
-  if (product === undefined) {
+  if (product === undefined || options === null) {
     return <div>Loading...</div>;
   }
 
   if (!product) {
     return null;
   }
+
+  const handleIncreaseQuantity = () => {
+    if (quantity < options.giftOrderLimit) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
 
   const totalPrice = product.price.sellingPrice * quantity;
 
@@ -84,12 +125,19 @@ export const ProductPage: React.FC = () => {
           <form onSubmit={handleGiftToMyself}>
             <FormSection>
               <Label>{product.name}</Label>
-              <Input
-                type="number"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                min={1}
-              />
+              <QuantityControl>
+                <Button type="button" onClick={handleDecreaseQuantity} disabled={quantity <= 1}>
+                  -
+                </Button>
+                <QuantityInput type="text" value={quantity} readOnly />
+                <Button
+                  type="button"
+                  onClick={handleIncreaseQuantity}
+                  disabled={quantity >= options.giftOrderLimit}
+                >
+                  +
+                </Button>
+              </QuantityControl>
             </FormSection>
             <FormSection>
               <Label>총 결제 금액</Label>
@@ -146,19 +194,30 @@ const Label = styled.div`
   margin-bottom: 8px;
 `;
 
-const Input = styled.input`
+const QuantityControl = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const QuantityInput = styled.input`
   width: 60px;
+  text-align: center;
+`;
+
+const Button = styled.button`
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
 `;
 
 const TotalPrice = styled.div`
   font-size: 24px;
   font-weight: bold;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  background-color: blue;
-  color: white;
-  border: none;
-  cursor: pointer;
 `;
