@@ -55,6 +55,9 @@ export const Order = () => {
     }
 
     setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      alert('주문이 완료되었습니다.');
+    }
   };
 
   if (!data) return null;
@@ -62,8 +65,6 @@ export const Order = () => {
 
   return (
     <>
-      <Text>productId: {productId}</Text>
-      <Text>count: {count}</Text>
       <form onSubmit={handleSubmit}>
         <Flex direction="row" justifyContent="space-evenly">
           <Box p="4" w={700}>
