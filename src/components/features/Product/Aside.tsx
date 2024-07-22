@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { Button } from '@/components/common/Button';
 import { RouterPath } from '@/routes';
 import { StyledAside } from '@/styles';
 
@@ -72,7 +73,9 @@ export const Aside = ({ productId, name, price }: Props) => {
             총 결제 금액
             <span style={{ fontSize: '20px', letterSpacing: '-0.02em' }}>{totalAmount}원</span>
           </TotalAmount>
-          <PaymentButton onClick={handlePaymentClick}>나에게 선물하기</PaymentButton>
+          <Button theme="black" onClick={handlePaymentClick}>
+            나에게 선물하기
+          </Button>
         </PaymentContainer>
       </Container>
     </StyledAside>
@@ -143,20 +146,4 @@ const TotalAmount = styled.div`
   font-weight: 700;
   line-height: 14px;
   color: rgb(17, 17, 17);
-`;
-
-const PaymentButton = styled.button`
-  width: 100%;
-  border-radius: 4px;
-  display: flex;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 200ms ease 0s;
-  height: 60px;
-  font-size: 16px;
-  color: #fff;
-  background-color: rgb(17, 17, 17);
 `;
