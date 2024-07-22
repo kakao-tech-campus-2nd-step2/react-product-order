@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useRef } from 'react';
 
 import { Container } from '@/components/common/Layout/Container';
 import { GiftMessageSection } from '@/components/Order/GiftMessageSection';
@@ -7,15 +8,18 @@ import { useOrderHistory } from '@/hooks/useOrderHistory';
 
 export default function OrderPage() {
   const { orderHistoryToken } = useOrderHistory();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
     <OrderPageWrapper>
       <Container maxWidth="1280px">
         <Inner>
           <Left>
-            <GiftMessageSection orderHistory={orderHistoryToken} />
+            <GiftMessageSection orderHistory={orderHistoryToken} inputRef={inputRef} />
           </Left>
           <Right>
-            <PaymentSection orderHistory={orderHistoryToken} />
+            <PaymentSection orderHistory={orderHistoryToken} inputRef={inputRef} />
           </Right>
         </Inner>
       </Container>

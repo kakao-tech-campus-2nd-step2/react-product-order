@@ -5,14 +5,15 @@ interface Props {
   name?: string;
   count: string;
   setCount: (value: string) => void;
+  limit: number;
 }
 
-export const CountOption = ({ name, count, setCount }: Props) => {
+export const CountOption = ({ name, count, setCount, limit }: Props) => {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
     step: 1,
     defaultValue: count,
     min: 1,
-    max: 1000,
+    max: limit,
     onChange: (num) => {
       setCount(num);
     },

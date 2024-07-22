@@ -27,7 +27,7 @@ export default function ProductDetailPage() {
             <DetailSection data={data} />
           </Left>
           <Right>
-            <OptionSection productId={productId} data={data} />
+            <OptionSection productId={productId} />
           </Right>
         </Inner>
       </Container>
