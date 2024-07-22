@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+
+import { useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
@@ -13,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { Button } from '@/components/common/Button/index';
 import { useGetGoodsDetail } from '@/api/hooks/useGetGoodsDetail';
-import { placeOrder } from '@/api/hooks/useOrder';
+import { usePlaceOrder } from '@/api/hooks/useOrder';
 import { Spinner } from '@/components/common/Spinner';
 import { getDynamicPath } from '@/routes/path';
 import type { ProductOrderRequestBody } from '@/types';
@@ -25,6 +26,8 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const quantity = (location.state as { quantity: number }).quantity || 1;
+  const [message, setMessage] = useState('');
+
   if (!productId) {
     return <TextView>유효하지 않은 상품 ID입니다.</TextView>;
   }
@@ -35,6 +38,15 @@ const OrderPage = () => {
   const receiptTypeRef = useRef<HTMLSelectElement>(null);
   const receiptNumberRef = useRef<HTMLInputElement>(null);
 
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setMessage(value);
+
+    if (value.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+    }
+  };
+
   const handleOrderClick = async () => {
     const message = messageRef.current?.value || '';
 
@@ -43,9 +55,15 @@ const OrderPage = () => {
       return;
     }
 
-    if (receiptCheckboxRef.current?.checked && !receiptNumberRef.current?.value.trim()) {
-      alert('현금영수증 번호를 입력해주세요.');
-      return;
+    if (receiptCheckboxRef.current?.checked) {
+      const receiptNumber = receiptNumberRef.current?.value.trim();
+      if (!receiptNumber) {
+        alert('현금영수증 번호를 입력해주세요.');
+        return;
+      } else if (!/^\d+$/.test(receiptNumber)) {
+        alert('현금영수증 번호는 숫자만 입력해주세요.');
+        return;
+      }
     }
 
     try {
@@ -62,7 +80,8 @@ const OrderPage = () => {
         cashReceiptNumber: receiptNumberRef.current?.value || '',
       };
 
-      await placeOrder(orderData);
+      await usePlaceOrder(orderData);
+
       alert('주문이 완료되었습니다.');
       navigate(getDynamicPath.order(productId));
     } catch (error) {
@@ -99,6 +118,8 @@ const OrderPage = () => {
           </Text>
           <Textarea
             ref={messageRef}
+            value={message}
+            onChange={handleMessageChange}
             placeholder="선물과 함께 보낼 메시지를 적어보세요"
             p="8px 16px 8px"
             m="26px 60px 30px"

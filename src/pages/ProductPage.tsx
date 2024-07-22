@@ -15,7 +15,12 @@ const ProductPage = () => {
   const { data, isError, isLoading } = useGetGoodsDetail(Number(productId));
 
   const handleQuantityChange = (delta: number) => {
-    setQuantity((prevQuantity) => Math.max(1, prevQuantity + delta));
+    const newQuantity = quantity + delta;
+    if (
+      newQuantity < 1 ||
+      (data?.options?.giftOrderLimit && newQuantity > data.options.giftOrderLimit)
+    )
+      setQuantity(newQuantity);
   };
 
   const navigate = useNavigate();
@@ -93,6 +98,7 @@ const ProductPage = () => {
               className="btn"
               fontWeight="bold"
               onClick={() => handleQuantityChange(-1)}
+              isDisabled={quantity <= 1}
             >
               -
             </Button>
@@ -104,6 +110,7 @@ const ProductPage = () => {
               className="btn"
               fontWeight="bold"
               onClick={() => handleQuantityChange(1)}
+              isDisabled={data?.options?.giftOrderLimit >= quantity}
             >
               +
             </Button>
