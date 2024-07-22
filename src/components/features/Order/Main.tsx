@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
-import { StyledMain } from '@/styles';
+import { StyledMain, Text } from '@/styles';
 
 type Props = {
   name: string;
@@ -15,7 +15,7 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
     <StyledMain border>
       <MessageContainer>
         <TitleContainer>
-          <Text fontSize="18px" lineHeight="21px" color="rgb(34, 34, 34)" isTitle>
+          <Text fontSize="18px" lineHeight="21px" color="rgb(34, 34, 34)" fontWeight="bold">
             나에게 주는 선물
           </Text>
         </TitleContainer>
@@ -26,14 +26,14 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
       </MessageContainer>
       <div style={{ width: '100%', backgroundColor: 'rgb(237, 237, 237)', height: '8px' }} />
       <ProductInfoContainer>
-        <Text fontSize="15px" lineHeight="14px" isTitle>
+        <Text fontSize="15px" lineHeight="14px" fontWeight="bold">
           선물내역
         </Text>
         <div style={{ backgroundColor: 'inherit', height: '16px' }} />
         <ProductInfo>
           <Image src={imageURL} alt={`${name} 썸네일`} width="86px" radius={4} ratio="square" />
           <Name>
-            <Text fontSize="13px" lineHeight="14px" color="rgb(136, 136, 136)" isTitle={false}>
+            <Text fontSize="13px" lineHeight="14px" color="rgb(136, 136, 136)">
               {brandName}
             </Text>
             <Text fontSize="14px" lineHeight="18px" color="rgb(34, 34, 34)" overflow="hidden">
@@ -55,23 +55,6 @@ const TitleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-`;
-
-type TextProps = {
-  fontSize?: string;
-  lineHeight?: string;
-  color?: string;
-  isTitle?: boolean;
-  overflow?: string;
-};
-
-const Text = styled.p<TextProps>`
-  font-size: ${({ fontSize }) => fontSize || '18px'};
-  line-height: ${({ lineHeight }) => lineHeight || '21px'};
-  color: ${({ color }) => color || '#000'};
-  box-sizing: border-box;
-  font-weight: ${({ isTitle }) => (isTitle ? '700' : '400')};
-  overflow: ${({ overflow }) => overflow || 'none'};
 `;
 
 const MessageArea = styled.textarea`

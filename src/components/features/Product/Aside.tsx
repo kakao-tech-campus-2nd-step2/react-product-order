@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { RouterPath } from '@/routes';
-import { breakpoints } from '@/styles/variants';
+import { StyledAside } from '@/styles';
 
 type Props = {
   name: string;
@@ -72,19 +72,6 @@ export const Aside = ({ name, price }: Props) => {
     </StyledAside>
   );
 };
-
-const StyledAside = styled.aside`
-  display: none;
-  position: sticky;
-  top: 54px;
-  width: 100%;
-  max-width: 360px;
-  height: calc(100vh - 54px);
-
-  @media screen and (min-width: ${breakpoints.sm}) {
-    display: block;
-  }
-`;
 
 const Container = styled.div`
   width: 100%;

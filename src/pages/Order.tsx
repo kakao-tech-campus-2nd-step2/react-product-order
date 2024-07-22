@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 import { Container } from '@/components/common/layouts/Container';
 import { Main } from '@/components/features/Order/Main';
+import { Aside } from '@/components/features/Order/Aside';
 
 export const Order = () => {
   return (
@@ -17,7 +18,7 @@ export const Order = () => {
                   brandName="산타마리아노벨라"
                   quantity={2}
                 />
-                <aside></aside>
+                <Aside />
               </ProductContainer>
             </div>
           </div>
