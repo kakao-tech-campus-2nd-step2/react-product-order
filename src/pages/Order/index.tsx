@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
@@ -12,6 +13,7 @@ import { orderHistoryStorage } from '@/lib/storage';
 
 import InputMsg from './InputMsg';
 import OrderDetail from './OrderDetail';
+import type OrderForm from './OrderForm';
 import PaymentInfo from './PaymentInfo';
 
 export default () => {
@@ -21,6 +23,24 @@ export default () => {
         ? useData<ProductDetailData>(`/products/${orderHistory?.productId}/detail`)
         : { isLoading: true, data: undefined, httpStatusCode: 0 };
 
+    const {
+        register,
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<OrderForm>();
+    const validationAlert = () => {
+        if (errors.messageCardMessage) {
+            alert('메세지를 입력해주세요.');
+        }
+        if (errors.cashReceiptNumber) {
+            if (errors.cashReceiptNumber.type === 'required')
+                alert('현금영수증 번호를 입력해주세요.');
+            else alert('현금영수증 번호는 숫자로만 입력해주세요.');
+        }
+    };
+
+    validationAlert();
     useEffect(() => {
         if (!orderHistory) {
             alert('주문 내역이 없습니다.');
@@ -31,41 +51,23 @@ export default () => {
             navigate(`/error/${productDetail.httpStatusCode}/order`, { replace: true });
     }, [navigate, orderHistory, productDetail.httpStatusCode]);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        const formData = Object.fromEntries(new FormData(event.currentTarget));
-        if (formData.messageCardMessage === '') {
-            alert('메세지를 입력해주세요.');
-            return;
-        }
-        if (formData.hasCashReceipt !== undefined) {
-            if (formData.cashReceiptNumber === '') {
-                alert('현금영수증 정보를 입력해주세요.');
-                return;
-            }
-            if (!/^\d*$/.test(formData.cashReceiptNumber as string)) {
-                alert('현금영수증 번호는 숫자로만 입력해주세요.');
-                return;
-            }
-        }
-
+    const onSubmit = (data: OrderForm) => {
         // TODO Options 구현 후 수정
         // TODO 메세지 탬플릿, 센더/리시버 id
-        const data: OrderReq = {
+        const reqData: OrderReq = {
             productId: orderHistory!.productId,
             productOptionId: 0,
             productQuantity: orderHistory!.productQuantity,
             messageCardTemplateId: 0,
-            messageCardMessage: formData.messageCardMessage as string,
+            messageCardMessage: data.messageCardMessage as string,
             senderId: 0,
             receiverId: 0,
-            hasCashReceipt: formData.hasCashReceipt !== undefined,
+            hasCashReceipt: data.hasCashReceipt !== undefined,
         };
-        if (data.hasCashReceipt) {
+        if (reqData.hasCashReceipt) {
             // TODO validation
-            data.cashReceiptType = formData.cashReceiptType as string;
-            data.cashReceiptNumber = formData.cashReceiptNumber as string;
+            reqData.cashReceiptType = data.cashReceiptType as string;
+            reqData.cashReceiptNumber = data.cashReceiptNumber as string;
         }
 
         // TODO 백엔드 오리진 허용 요청
@@ -84,10 +86,10 @@ export default () => {
     return (
         <div>
             <Header />
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={gridStyle}>
                     <div>
-                        <InputMsg />
+                        <InputMsg register={register} />
                         <div className={dividerStyle} />
                         <OrderDetail
                             imageURL={productDetail.data!.detail.imageURL}
@@ -103,6 +105,8 @@ export default () => {
                                 productDetail.data!.detail.price.sellingPrice *
                                 orderHistory!.productQuantity
                             }
+                            register={register}
+                            control={control}
                         />
                         <Button type="submit">
                             {productDetail.data!.detail.price.sellingPrice *
