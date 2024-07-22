@@ -50,7 +50,6 @@ export const PaymentSection = ({
   };
 
   const totalPrice = data.detail.price.basicPrice * orderHistory.count;
-
   return (
     <PaymentSectionWrapper>
       <Title>결제 정보</Title>

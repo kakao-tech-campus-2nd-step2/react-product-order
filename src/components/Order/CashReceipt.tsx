@@ -33,6 +33,7 @@ export const CashReceipt = forwardRef<HTMLInputElement, { checked: boolean; setC
     );
   },
 );
+
 const CashReceiptWrapper = styled.div`
   display: flex;
   flex-direction: column;
