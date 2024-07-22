@@ -65,7 +65,7 @@ export const ProductsDetail = ({ productId }: Props) => {
   }
 
   useEffect(() => {
-    if (data) {
+    if (data) 
       setTotalPrice(data.detail.price.basicPrice * itemCount)
       console.log(`상품명: ${data.detail.name} / 선물 최대 제한 수량: ${giftOrderLimit}`)
     }
@@ -117,7 +117,7 @@ export const ProductsDetail = ({ productId }: Props) => {
                 value={itemCount}
                 onChange={handleChange}
                 mx={2}
-                min={1} // 입력란에서 최소 수량을 1로 설정
+                min={1}
               />
               <Button size="sm" onClick={handleIncrement}>+</Button>
             </QuantityControl>
