@@ -1,33 +1,21 @@
 import { Checkbox, Input, Select } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import type { FormValues } from '@/pages/OrderPage';
 
 export const CashReceipt = () => {
-  const [checked, setChecked] = useState(false);
-  const [value, setValue] = useState('');
-
+  const { register } = useFormContext<FormValues>();
   return (
     <CashReceiptWrapper>
-      <Checkbox
-        checked={checked}
-        onChange={(e) => setChecked(e.target.checked)}
-        borderColor="#e6e6e6"
-        size="lg"
-        padding="10px 0px"
-        colorScheme="yellow"
-      >
+      <Checkbox {...register('cashReceipt')} borderColor="#e6e6e6" size="lg" padding="10px 0px" colorScheme="yellow">
         <Label>현금영수증 신청</Label>
       </Checkbox>
-      <Select borderColor="#e6e6e6">
+      <Select {...register('receiptType')} borderColor="#e6e6e6">
         <option value="option1">개인소득공제</option>
         <option value="option2">사업자증빙용</option>
       </Select>
-      <Input
-        placeholder="(-없이) 숫자만 입력해주세요."
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        borderColor="#e6e6e6"
-      />
+      <Input placeholder="(-없이) 숫자만 입력해주세요." {...register('number')} borderColor="#e6e6e6" />
     </CashReceiptWrapper>
   );
 };

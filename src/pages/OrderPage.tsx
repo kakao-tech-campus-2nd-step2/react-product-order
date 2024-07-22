@@ -5,6 +5,13 @@ import { GiftMessageSection } from '@/components/Order/GiftMessageSection';
 import { PaymentSection } from '@/components/Order/PaymentSection';
 import { useOrderHistory } from '@/hooks/useOrderHistory';
 
+export interface FormValues {
+  cashReceipt: boolean;
+  receiptType: string;
+  number: string;
+  message: string;
+}
+
 export default function OrderPage() {
   const { orderHistoryToken } = useOrderHistory();
   return (

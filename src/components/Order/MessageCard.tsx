@@ -1,17 +1,21 @@
 import { Textarea } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { useFormContext } from 'react-hook-form';
+
+import type { FormValues } from '@/pages/OrderPage';
 
 export const MessageCard = () => {
+  const { register } = useFormContext<FormValues>();
   return (
     <MessageCardWrapper>
       <Title>나에게 주는 선물</Title>
       <MessageCardForm>
         <Textarea
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
-          resize="none"
           height="100"
           variant="filled"
           colorScheme="gray"
+          {...register('message')}
         />
       </MessageCardForm>
     </MessageCardWrapper>
