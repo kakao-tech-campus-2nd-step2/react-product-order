@@ -14,11 +14,11 @@ export const PriceBox = styled.div`
 
     border-radius: 5px;
     background-color: #eee;
-    p:first-child {
+    p:first-of-type {
         font-size: 15px;
         font-weight: 600;
     }
-    p:last-child {
+    p:last-of-type {
         font-size: 20px;
         font-weight: 700;
     }

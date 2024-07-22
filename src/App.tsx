@@ -1,11 +1,12 @@
 import { ChakraBaseProvider, extendBaseTheme, theme as chakraTheme } from '@chakra-ui/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import axios from 'axios';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Footer from './components/features/Footer';
 import AuthContext from './context/AuthContext';
+import axiosInit from './lib/axiosConfig';
+import queryClient from './lib/queryClient';
 import { authSessionStorage } from './lib/storage';
 import Error from './pages/Error';
 import Login from './pages/Login';
@@ -15,9 +16,7 @@ import Order from './pages/Order';
 import Product from './pages/Product';
 import Theme from './pages/Theme';
 
-axios.defaults.baseURL = 'https://react-gift-mock-api-self.vercel.app/api/v1';
-const queryClient = new QueryClient();
-
+axiosInit();
 const { Button, Input, Textarea, Select, Checkbox } = chakraTheme.components;
 
 const theme = extendBaseTheme({

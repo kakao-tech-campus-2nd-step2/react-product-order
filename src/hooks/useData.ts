@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { useEffect,useState } from "react";
 
@@ -6,7 +5,7 @@ type Returns<T> = {
         data: T | null;
         isLoading: boolean;
         httpStatusCode: number;
-    } | null
+    };
 
 const useData = <T>(url: string): Returns<T> => {
     const [data, setData] = useState<T | null>(null);

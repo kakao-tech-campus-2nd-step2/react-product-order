@@ -17,7 +17,9 @@ import PaymentInfo from './PaymentInfo';
 export default () => {
     const orderHistory = orderHistoryStorage.get();
     const navigate = useNavigate();
-    const productDetail = useData<ProductDetailData>(`/products/${orderHistory?.productId}/detail`);
+    const productDetail = orderHistory?.productId
+        ? useData<ProductDetailData>(`/products/${orderHistory?.productId}/detail`)
+        : { isLoading: true, data: undefined, httpStatusCode: 0 };
 
     useEffect(() => {
         if (!orderHistory) {
@@ -25,14 +27,29 @@ export default () => {
             navigate('/', { replace: true });
             return;
         }
-        if (productDetail?.httpStatusCode !== 200)
-            navigate(`/error/${productDetail?.httpStatusCode}/order`, { replace: true });
-    }, [navigate, orderHistory, productDetail?.httpStatusCode]);
+        if (productDetail.httpStatusCode !== 200)
+            navigate(`/error/${productDetail.httpStatusCode}/order`, { replace: true });
+    }, [navigate, orderHistory, productDetail.httpStatusCode]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = Object.fromEntries(new FormData(event.currentTarget));
+        if (formData.messageCardMessage === '') {
+            alert('메세지를 입력해주세요.');
+            return;
+        }
+        if (formData.hasCashReceipt !== undefined) {
+            if (formData.cashReceiptNumber === '') {
+                alert('현금영수증 정보를 입력해주세요.');
+                return;
+            }
+            if (!/^\d*$/.test(formData.cashReceiptNumber as string)) {
+                alert('현금영수증 번호는 숫자로만 입력해주세요.');
+                return;
+            }
+        }
+
         // TODO Options 구현 후 수정
         // TODO 메세지 탬플릿, 센더/리시버 id
         const data: OrderReq = {
@@ -62,7 +79,7 @@ export default () => {
 
     if (!orderHistory) return <div></div>;
 
-    if (productDetail?.isLoading) return <LoadingUI />;
+    if (productDetail.isLoading) return <LoadingUI />;
 
     return (
         <div>
@@ -73,9 +90,9 @@ export default () => {
                         <InputMsg />
                         <div className={dividerStyle} />
                         <OrderDetail
-                            imageURL={productDetail!.data!.detail.imageURL}
-                            productName={productDetail!.data!.detail.name}
-                            brandName={productDetail!.data!.detail.brandInfo.name}
+                            imageURL={productDetail.data!.detail.imageURL}
+                            productName={productDetail.data!.detail.name}
+                            brandName={productDetail.data!.detail.brandInfo.name}
                             quantity={orderHistory!.productQuantity}
                         />
                     </div>
@@ -83,12 +100,12 @@ export default () => {
                         {/* TODO price 가져오기 및 적용 */}
                         <PaymentInfo
                             price={
-                                productDetail!.data!.detail.price.sellingPrice *
+                                productDetail.data!.detail.price.sellingPrice *
                                 orderHistory!.productQuantity
                             }
                         />
                         <Button type="submit">
-                            {productDetail!.data!.detail.price.sellingPrice *
+                            {productDetail.data!.detail.price.sellingPrice *
                                 orderHistory!.productQuantity}
                             원 결제하기
                         </Button>

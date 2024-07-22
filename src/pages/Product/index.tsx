@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/components/common/Button';
-import NumberField from '@/components/common/Form/Input/NumberField';
 import LoadingUI from '@/components/common/LoadingUI';
 import Header from '@/components/features/Header';
 import AuthContext from '@/context/AuthContext';
@@ -11,8 +10,9 @@ import type { ProductDetailData } from '@/entities/Product';
 import useData from '@/hooks/useData';
 import { orderHistoryStorage } from '@/lib/storage';
 
+import OptionsSetting from './OptionsSetting';
 import ProductDetail from './ProductDetail';
-import { PriceBox, SelectOption } from './PurchaseComps';
+import { PriceBox } from './PurchaseComps';
 
 export default () => {
     const { isAuthenticated } = useContext(AuthContext);
@@ -32,10 +32,10 @@ export default () => {
         navigate('/order');
     };
     useEffect(() => {
-        if (productDetail?.httpStatusCode !== 200) navigate('/');
-    }, [productDetail?.httpStatusCode, navigate]);
+        if (productDetail.httpStatusCode !== 200) navigate('/');
+    }, [productDetail.httpStatusCode, navigate]);
 
-    if (productDetail?.isLoading) return <LoadingUI />;
+    if (productDetail.isLoading) return <LoadingUI />;
 
     return (
         <div>
@@ -43,20 +43,17 @@ export default () => {
             <div className={layout}>
                 <section>
                     <ProductDetail
-                        imageURL={productDetail!.data!.detail.imageURL}
-                        productName={productDetail!.data!.detail.name}
-                        price={productDetail!.data!.detail.price.sellingPrice}
+                        imageURL={productDetail.data!.detail.imageURL}
+                        productName={productDetail.data!.detail.name}
+                        price={productDetail.data!.detail.price.sellingPrice}
                     />
                 </section>
                 <section className={purchaseLayout}>
-                    <SelectOption>
-                        {/* TODO 옵션 반영 */}
-                        <NumberField setValue={setCount} />
-                    </SelectOption>
+                    <OptionsSetting setCount={setCount} productId={productId} />
                     <div>
                         <PriceBox>
                             <p>총 결제 금액</p>
-                            <p>{productDetail!.data!.detail.price.sellingPrice * count}원</p>
+                            <p>{productDetail.data!.detail.price.sellingPrice * count}원</p>
                         </PriceBox>
                         <Button theme="black" onClick={onClick}>
                             나에게 선물하기
@@ -70,6 +67,9 @@ export default () => {
 
 const layout = css`
     display: flex;
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
     > * {
         margin: 10px;
     }
