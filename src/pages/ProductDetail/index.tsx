@@ -1,6 +1,7 @@
 import { Box, Button, Center, Flex, Image, Input, Spinner, Text, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Controller,useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { authSessionStorage } from '@/utils/storage';
@@ -17,10 +18,17 @@ const ProductDetailPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1);
   const [giftOrderLimit, setGiftOrderLimit] = useState<number | null>(null);
   const navigate = useNavigate();
   const toast = useToast();
+
+  const { control, setValue, watch } = useForm({
+    defaultValues: {
+      quantity: 1,
+    },
+  });
+
+  const quantity = watch('quantity');
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -58,9 +66,9 @@ const ProductDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (giftOrderLimit !== null && quantity > giftOrderLimit) {
-      setQuantity(giftOrderLimit);
+      setValue('quantity', giftOrderLimit);
     }
-  }, [quantity, giftOrderLimit]);
+  }, [quantity, giftOrderLimit, setValue]);
 
   if (isLoading || !product) {
     return (
@@ -72,13 +80,13 @@ const ProductDetailPage: React.FC = () => {
 
   const handleIncreaseQuantity = () => {
     if (giftOrderLimit === null || quantity < giftOrderLimit) {
-      setQuantity(quantity + 1);
+      setValue('quantity', quantity + 1);
     }
   };
 
   const handleDecreaseQuantity = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      setValue('quantity', quantity - 1);
     }
   };
 
@@ -132,14 +140,20 @@ const ProductDetailPage: React.FC = () => {
                 >
                   -
                 </Button>
-                <Input
-                  type="number"
-                  value={quantity}
-                  min={1}
-                  max={giftOrderLimit ?? 100}
-                  onChange={(e) => setQuantity(Math.min(Number(e.target.value), giftOrderLimit || 0))}
-                  textAlign="center"
-                  mx="2"
+                <Controller
+                  name="quantity"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      type="number"
+                      min={1}
+                      max={giftOrderLimit ?? 100}
+                      onChange={(e) => field.onChange(Math.min(Number(e.target.value), giftOrderLimit || 0))}
+                      textAlign="center"
+                      mx="2"
+                    />
+                  )}
                 />
                 <Button
                   onClick={handleIncreaseQuantity}

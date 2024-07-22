@@ -1,9 +1,11 @@
 import { Box, Button, Center, Checkbox, Flex, FormControl, FormLabel, Image, Input, Select, Spinner, Text, useToast } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import type { FieldErrors,SubmitHandler } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-
-import { authSessionStorage } from '@/utils/storage';
+import { z } from 'zod';
 
 interface Product {
   id: string;
@@ -12,19 +14,33 @@ interface Product {
   price: { sellingPrice: number };
 }
 
+const schema = z.object({
+  applyReceipt: z.boolean(),
+  receiptType: z.enum(['personal', 'business']),
+  receiptNumber: z.string().refine(value => /^\d*$/.test(value), {
+    message: '현금 영수증 번호는 숫자만 입력해야 합니다.',
+  }).optional(),
+  cardMessage: z.string().min(1, '카드 메시지를 입력해주세요.').max(100, '카드 메시지는 100자 이내로 입력해주세요.'),
+});
+
+type CheckoutFormValues = z.infer<typeof schema>;
+
 const CheckoutPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const { state } = useLocation() as { state: { totalPrice: number; product: Product; quantity: number } };
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [receiptInfo, setReceiptInfo] = useState({
-    applyReceipt: false,
-    receiptType: 'personal',
-    receiptNumber: '',
-  });
-  const [cardMessage, setCardMessage] = useState('');
   const toast = useToast();
   const navigate = useNavigate();
+  const { control, handleSubmit } = useForm<CheckoutFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      applyReceipt: false,
+      receiptType: 'personal',
+      receiptNumber: '',
+      cardMessage: '',
+    },
+  });
 
   useEffect(() => {
     if (state && state.product) {
@@ -53,57 +69,11 @@ const CheckoutPage: React.FC = () => {
     fetchProductDetail();
   }, [productId, state, navigate, toast]);
 
-  const handleSubmit = () => {
-    const authToken = authSessionStorage.get();
+  const onSubmit: SubmitHandler<CheckoutFormValues> = (_data) => {
+    const authToken = sessionStorage.getItem('authToken');
     if (!authToken) {
       navigate('/login', { state: { from: `/checkout/${productId}` } });
       return;
-    }
-
-    if (cardMessage.trim() === '') {
-      toast({
-        title: 'Error',
-        description: '카드 메시지를 입력해주세요.',
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (cardMessage.length > 100) {
-      toast({
-        title: 'Error',
-        description: '카드 메시지는 100자 이내로 입력해주세요.',
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (receiptInfo.applyReceipt) {
-      if (!receiptInfo.receiptNumber) {
-        toast({
-          title: 'Error',
-          description: '현금영수증 번호를 입력해주세요.',
-          status: 'error',
-          duration: 2000,
-          isClosable: true,
-        });
-        return;
-      }
-
-      if (!/^\d+$/.test(receiptInfo.receiptNumber)) {
-        toast({
-          title: 'Error',
-          description: '현금 영수증 번호는 숫자만 입력해야 합니다.',
-          status: 'error',
-          duration: 2000,
-          isClosable: true,
-        });
-        return;
-      }
     }
 
     // 실제 결제 처리 로직
@@ -114,6 +84,26 @@ const CheckoutPage: React.FC = () => {
       duration: 2000,
       isClosable: true,
     });
+  };
+
+  const onError = (errors: FieldErrors<CheckoutFormValues>) => {
+    if (errors.cardMessage) {
+      toast({
+        title: 'Error',
+        description: errors.cardMessage.message,
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
+    } else if (errors.receiptNumber) {
+      toast({
+        title: 'Error',
+        description: errors.receiptNumber.message,
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
+    }
   };
 
   if (isLoading || !product) {
@@ -133,14 +123,19 @@ const CheckoutPage: React.FC = () => {
               나에게 주는 선물
             </Text>
             <Box width="100%" padding="30px 60px">
-              <Input
-                type="text"
-                placeholder="선물과 함께 보낼 메시지를 적어보세요"
-                mt="4"
-                bgColor="#EDF2F7"
-                height="100px"
-                value={cardMessage}
-                onChange={(e) => setCardMessage(e.target.value)}
+              <Controller
+                name="cardMessage"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder="선물과 함께 보낼 메시지를 적어보세요"
+                    mt="4"
+                    bgColor="#EDF2F7"
+                    height="100px"
+                  />
+                )}
               />
             </Box>
           </Flex>
@@ -168,23 +163,54 @@ const CheckoutPage: React.FC = () => {
           </Text>
           <Flex borderBottom="1px solid rgb(237, 237, 237)" flexDirection="column" justifyContent="space-between" alignItems="center" p="4" mb="4">
             <FormControl display="flex" alignItems="center">
-              <Checkbox mr="4" isChecked={receiptInfo.applyReceipt} onChange={() => setReceiptInfo({ ...receiptInfo, applyReceipt: !receiptInfo.applyReceipt })} />
+              <Controller
+                name="applyReceipt"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox {...field} mr="4" isChecked={!!field.value} value={field.value ? "true" : "false"} />
+                )}
+              />
               <FormLabel mb="0">현금 영수증 신청</FormLabel>
             </FormControl>
 
-            {receiptInfo.applyReceipt && (
-              <>
-                <FormControl display="flex" alignItems="center" mt="4">
-                  <Select value={receiptInfo.receiptType} onChange={(e) => setReceiptInfo({ ...receiptInfo, receiptType: e.target.value })}>
-                    <option value="personal">개인소득공제</option>
-                    <option value="business">사업자증빙용</option>
-                  </Select>
-                </FormControl>
-                <FormControl mt="4">
-                  <Input value={receiptInfo.receiptNumber} onChange={(e) => setReceiptInfo({ ...receiptInfo, receiptNumber: e.target.value })} id="receiptNumber" type="text" placeholder="(-없이) 숫자만 입력해주세요." />
-                </FormControl>
-              </>
-            )}
+            <Controller
+              name="applyReceipt"
+              control={control}
+              render={({ field: applyReceiptField }) => (
+                <>
+                  {!!applyReceiptField.value && (
+                    <>
+                      <FormControl display="flex" alignItems="center" mt="4">
+                        <Controller
+                          name="receiptType"
+                          control={control}
+                          render={({ field: receiptTypeField }) => (
+                            <Select {...receiptTypeField}>
+                              <option value="personal">개인소득공제</option>
+                              <option value="business">사업자증빙용</option>
+                            </Select>
+                          )}
+                        />
+                      </FormControl>
+                      <FormControl mt="4">
+                        <Controller
+                          name="receiptNumber"
+                          control={control}
+                          render={({ field: receiptNumberField }) => (
+                            <Input
+                              {...receiptNumberField}
+                              id="receiptNumber"
+                              type="text"
+                              placeholder="(-없이) 숫자만 입력해주세요."
+                            />
+                          )}
+                        />
+                      </FormControl>
+                    </>
+                  )}
+                </>
+              )}
+            />
           </Flex>
           <Flex justifyContent="space-between" alignItems="center" bgColor="#F5F5F5" padding="20px">
             <Text fontSize="15px" fontWeight="bold">
@@ -194,7 +220,7 @@ const CheckoutPage: React.FC = () => {
               {state.totalPrice}원
             </Text>
           </Flex>
-          <Button bgColor="#FEE500" mt="4" onClick={handleSubmit} width="100%" height="60px" boxSizing="border-box">
+          <Button bgColor="#FEE500" mt="4" onClick={handleSubmit(onSubmit, onError)} width="100%" height="60px" boxSizing="border-box">
             {state.totalPrice}원 결제하기
           </Button>
         </Box>
