@@ -69,6 +69,10 @@ const PaymentPage = () => {
     );
   }
 
+  const handlePayment = () => {
+    alert('주문이 완료되었습니다');
+  };
+
   return (
     <Box display="flex" p={4} justifyContent="space-between" maxWidth="1200px" margin="0 auto">
       <Box flex="1" mr={4}>

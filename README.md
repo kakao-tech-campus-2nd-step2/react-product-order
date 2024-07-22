@@ -17,6 +17,7 @@
 - **UI 프레임워크:** `chakra-ui` 또는 직접 구현한 UI 컴포넌트만 사용 (외부 라이브러리 사용 금지)
 - **폼 상태 관리:** React 기본 기능 (`form`, `ref`, `state`)으로 폼 상태 관리 (외부 라이브러리 사용 금지)
 
+
 - **상품 상세 페이지 (`@/pages/ProductDetail`)**
   - [x] `/components/features/Theme/ThemeGoodsSection` 또는 `/components/features/Home/GoodsRankingSection/List`에서 상품 ID (productId)를 전달받아 페이지 이동
   - [x] 유효하지 않은 productId일 경우 메인 페이지 (/)로 리다이렉트
