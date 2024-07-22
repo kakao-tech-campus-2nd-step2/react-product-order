@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Button } from '@/components/common/Button';
+import { Spacing } from '@/components/common/layouts/Spacing';
 import { Text } from '@/styles';
 
 type Props = { totalAmount: number };
@@ -20,7 +21,7 @@ export const Aside = ({ totalAmount }: Props) => {
             <input type="checkbox" />
             <span>현금영수증 신청</span>
           </Label>
-          <div style={{ backgroundColor: 'inherit', height: '8px' }} />
+          <Spacing height={8} />
           <Select name="cashReceiptType" id="cashReceiptType">
             <option value="PERSONAL">개인소등공제</option>
             <option value="BUSINESS">사업자증빙용</option>
@@ -37,7 +38,7 @@ export const Aside = ({ totalAmount }: Props) => {
           </Text>
         </TotalAmount>
         <Hr />
-        <div style={{ backgroundColor: 'inherit', height: '32px' }} />
+        <Spacing height={32} />
         <Button theme="kakao">{totalAmount}원 결제하기</Button>
       </PaymentInfo>
     </Wrapper>

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Image } from '@/components/common/Image';
+import { Spacing } from '@/components/common/layouts/Spacing';
 import { Text } from '@/styles';
 
 type Props = {
@@ -24,7 +25,7 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
         />
       </MessageContainer>
-      <div style={{ width: '100%', backgroundColor: 'rgb(237, 237, 237)', height: '8px' }} />
+      <Spacing height={8} backgroundColor="rgb(237, 237, 237)" />
       <ProductInfoContainer>
         <Text fontSize="15px" lineHeight="14px" fontWeight="bold">
           선물내역
