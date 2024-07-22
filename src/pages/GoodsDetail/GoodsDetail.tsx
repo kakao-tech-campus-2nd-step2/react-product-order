@@ -1,18 +1,16 @@
 import { Box, Container } from '@chakra-ui/react';
 import { Navigate, useParams } from 'react-router-dom';
 
-import useGetLimit from '@/api/hooks/useGetLimit';
 import useGetProductsDetail from '@/api/hooks/useGetProductsDetail';
 import { Spinner } from '@/components/common/Spinner';
 import GoodsInfo from '@/components/features/GoodsDetail/GoodsInfo';
 import SideBar from '@/components/features/GoodsDetail/SideBar/SideBar';
 import { RouterPath } from '@/routes/path';
-import type { ProductParams } from '@/types';
+import type { ProductDetailParams } from '@/types';
 
 export const GoodsDetailPage = () => {
-  const { id = '' } = useParams<ProductParams>();
+  const { id = '' } = useParams<ProductDetailParams>();
   const { data, isLoading, isError } = useGetProductsDetail({ id });
-  const limit = useGetLimit({id}) ?? 100;
 
   if (isLoading)
     return (
@@ -31,7 +29,6 @@ export const GoodsDetailPage = () => {
         name={data.name}
         brandName={data.brandInfo.name}
         imageURL={data.imageURL}
-        limit={limit}
       />
     </Container>
   );

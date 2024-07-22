@@ -9,13 +9,13 @@ export default function GiftBasket({ productInfo }: productInfoProps) {
         선물내역
       </Text>
       <Flex p={4} borderWidth="1px" borderRadius="md" width="809px" height="126px">
-        <Image width="80px" height="80px" src={productInfo?.imageURL} alt="상품 이미지" mr={4} />
+        <Image width="80px" height="80px" src={productInfo.imageURL} alt="상품 이미지" mr={4} />
         <Box pl="8px">
           <Text fontSize="13px" color="rgb(136, 136, 136)">
-            {productInfo?.brandName}
+            {productInfo.brandName}
           </Text>
           <Text fontSize="14px" mt="3px">
-            {productInfo?.name}X{productInfo?.amount}개
+            {productInfo.name}X{productInfo.amount}개
           </Text>
         </Box>
       </Flex>

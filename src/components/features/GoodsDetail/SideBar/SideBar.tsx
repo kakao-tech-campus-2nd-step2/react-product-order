@@ -5,7 +5,7 @@ import GiftButton from '@/components/features/GoodsDetail/SideBar/GiftButton';
 import GoodsCount from '@/components/features/GoodsDetail/SideBar/GoodsCount';
 import type { goodsDetailData } from '@/types';
 
-export default function SideBar({ price, name, brandName, imageURL, limit = 100 }: goodsDetailData) {
+export default function SideBar({ price, name, brandName, imageURL }: goodsDetailData) {
   const [amount, setAmount] = useState(1);
 
   return (
@@ -18,7 +18,8 @@ export default function SideBar({ price, name, brandName, imageURL, limit = 100 
       justifyContent="space-between"
       alignItems="center"
     >
-      <GoodsCount name={name} amount={amount} setAmount={setAmount} limit={limit}/>
+      <GoodsCount name={name} amount={amount} setAmount={setAmount} />
+
       <Box>
         <Button
           boxSizing="border-box"
