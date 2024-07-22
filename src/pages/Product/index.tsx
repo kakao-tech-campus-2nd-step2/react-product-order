@@ -32,10 +32,10 @@ export default () => {
         navigate('/order');
     };
     useEffect(() => {
-        if (productDetail?.httpStatusCode !== 200) navigate('/');
-    }, [productDetail?.httpStatusCode, navigate]);
+        if (productDetail.httpStatusCode !== 200) navigate('/');
+    }, [productDetail.httpStatusCode, navigate]);
 
-    if (productDetail?.isLoading) return <LoadingUI />;
+    if (productDetail.isLoading) return <LoadingUI />;
 
     return (
         <div>
@@ -43,9 +43,9 @@ export default () => {
             <div className={layout}>
                 <section>
                     <ProductDetail
-                        imageURL={productDetail!.data!.detail.imageURL}
-                        productName={productDetail!.data!.detail.name}
-                        price={productDetail!.data!.detail.price.sellingPrice}
+                        imageURL={productDetail.data!.detail.imageURL}
+                        productName={productDetail.data!.detail.name}
+                        price={productDetail.data!.detail.price.sellingPrice}
                     />
                 </section>
                 <section className={purchaseLayout}>
@@ -53,7 +53,7 @@ export default () => {
                     <div>
                         <PriceBox>
                             <p>총 결제 금액</p>
-                            <p>{productDetail!.data!.detail.price.sellingPrice * count}원</p>
+                            <p>{productDetail.data!.detail.price.sellingPrice * count}원</p>
                         </PriceBox>
                         <Button theme="black" onClick={onClick}>
                             나에게 선물하기

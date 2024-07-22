@@ -14,14 +14,14 @@ export default ({
 }) => {
     const productOptions = useData<ProductOptions>(`products/${productId}/options`);
 
-    if (productOptions?.isLoading) return <LoadingUI />;
+    if (productOptions.isLoading) return <LoadingUI />;
 
     return (
         <SelectOption>
             {/* TODO 옵션 반영 */}
             <NumberField
                 setValue={setCount}
-                maxValue={productOptions?.data?.options.giftOrderLimit}
+                maxValue={productOptions.data?.options.giftOrderLimit}
             />
         </SelectOption>
     );

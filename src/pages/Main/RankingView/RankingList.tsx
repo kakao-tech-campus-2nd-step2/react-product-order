@@ -21,14 +21,14 @@ export default ({ showMoreDetail, targetType, rankType }: Props) => {
         `ranking/products?targetType=${targetType}&rankType=${rankType}`,
     );
     useEffect(() => {
-        if (items?.httpStatusCode !== 200)
+        if (items.httpStatusCode !== 200)
             navigate(`/error/${items?.httpStatusCode}/main_rankingList`, { replace: true });
-    }, [items?.httpStatusCode, navigate]);
+    }, [items.httpStatusCode, navigate]);
 
-    if (items?.isLoading) return <LoadingUI />;
+    if (items.isLoading) return <LoadingUI />;
     return (
         <Grid columns={{ initial: 2, xs: 3, sm: 3, md: 6 }} gap={20}>
-            {items?.data?.products
+            {items.data?.products
                 .slice(0, showMoreDetail ? undefined : 6)
                 .map((item, index) => (
                     <RankingGoodsItems

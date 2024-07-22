@@ -25,9 +25,9 @@ export default () => {
             navigate('/', { replace: true });
             return;
         }
-        if (productDetail?.httpStatusCode !== 200)
-            navigate(`/error/${productDetail?.httpStatusCode}/order`, { replace: true });
-    }, [navigate, orderHistory, productDetail?.httpStatusCode]);
+        if (productDetail.httpStatusCode !== 200)
+            navigate(`/error/${productDetail.httpStatusCode}/order`, { replace: true });
+    }, [navigate, orderHistory, productDetail.httpStatusCode]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -77,7 +77,7 @@ export default () => {
 
     if (!orderHistory) return <div></div>;
 
-    if (productDetail?.isLoading) return <LoadingUI />;
+    if (productDetail.isLoading) return <LoadingUI />;
 
     return (
         <div>
@@ -88,9 +88,9 @@ export default () => {
                         <InputMsg />
                         <div className={dividerStyle} />
                         <OrderDetail
-                            imageURL={productDetail!.data!.detail.imageURL}
-                            productName={productDetail!.data!.detail.name}
-                            brandName={productDetail!.data!.detail.brandInfo.name}
+                            imageURL={productDetail.data!.detail.imageURL}
+                            productName={productDetail.data!.detail.name}
+                            brandName={productDetail.data!.detail.brandInfo.name}
                             quantity={orderHistory!.productQuantity}
                         />
                     </div>
@@ -98,12 +98,12 @@ export default () => {
                         {/* TODO price 가져오기 및 적용 */}
                         <PaymentInfo
                             price={
-                                productDetail!.data!.detail.price.sellingPrice *
+                                productDetail.data!.detail.price.sellingPrice *
                                 orderHistory!.productQuantity
                             }
                         />
                         <Button type="submit">
-                            {productDetail!.data!.detail.price.sellingPrice *
+                            {productDetail.data!.detail.price.sellingPrice *
                                 orderHistory!.productQuantity}
                             원 결제하기
                         </Button>

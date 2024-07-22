@@ -49,15 +49,15 @@ const ThemeHeaderRender = ({ themeKey, navigate }: RenderProps) => {
     const themes = useData<Themes>('/themes');
 
     useEffect(() => {
-        if (themes?.httpStatusCode !== 200)
-            navigate(`/error/${themes?.httpStatusCode}/themes_${themeKey}`, { replace: true });
-        if (themes?.isLoading) return;
-        const thisTheme = themes?.data?.themes.find((_theme) => _theme.key == themeKey);
+        if (themes.httpStatusCode !== 200)
+            navigate(`/error/${themes.httpStatusCode}/themes_${themeKey}`, { replace: true });
+        if (themes.isLoading) return;
+        const thisTheme = themes.data?.themes.find((_theme) => _theme.key == themeKey);
         if (!thisTheme) navigate('/error/404', { replace: true });
 
         setTheme(thisTheme);
     }, [navigate, themeKey, themes]);
-    if (themes?.isLoading) {
+    if (themes.isLoading) {
         return (
             <ThemeHeader
                 label="로딩 중..."

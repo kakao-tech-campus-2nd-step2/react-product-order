@@ -13,14 +13,14 @@ export default () => {
     const themes = useData<Themes>('/themes');
     const navigate = useNavigate();
     useEffect(() => {
-        if (themes?.httpStatusCode !== 200)
+        if (themes.httpStatusCode !== 200)
             navigate('/error/' + themes?.httpStatusCode + '/main_themeList', { replace: true });
-    }, [themes?.httpStatusCode, navigate]);
+    }, [themes.httpStatusCode, navigate]);
 
-    if (themes?.isLoading) return <LoadingUI />;
+    if (themes.isLoading) return <LoadingUI />;
     return (
         <Grid columns={{ initial: 2, xs: 4, sm: 4, md: 6 }}>
-            {themes?.data?.themes.map((theme) => (
+            {themes.data?.themes.map((theme) => (
                 <ThemeButton
                     key={theme.id}
                     themeKey={theme.key}
