@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-
+import { useNavigate } from 'react-router-dom';
 import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
 import { Container } from '@/components/common/layouts/Container';
@@ -17,7 +17,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
     useGetThemesProducts({
       themeKey,
     });
-
+  const navigate = useNavigate();
   if (isLoading)
     return (
       <TextView>
@@ -47,6 +47,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
               title={name}
               amount={price.sellingPrice}
               subtitle={brandInfo.name}
+              onClick={() => navigate(`/products/${id}`)}
             />
           ))}
         </Grid>
@@ -67,10 +68,11 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
 const Wrapper = styled.section`
   width: 100%;
   padding: 28px 16px 180px;
-
+  cursor: pointer;
   @media screen and (min-width: ${breakpoints.sm}) {
     padding: 40px 16px 360px;
   }
+  
 `;
 
 const TextView = styled.div`

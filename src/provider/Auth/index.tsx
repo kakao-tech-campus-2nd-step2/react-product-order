@@ -7,6 +7,7 @@ type AuthInfo = {
   id: string;
   name: string;
   token: string;
+  isAuthenticated: boolean;
 };
 
 export const AuthContext = createContext<AuthInfo | undefined>(undefined);
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         id: currentAuthToken, // TODO: 임시로 로그인 페이지에서 입력한 이름을 ID, token, name으로 사용
         name: currentAuthToken,
         token: currentAuthToken,
+        isAuthenticated: true,
       });
       setIsReady(true);
     }

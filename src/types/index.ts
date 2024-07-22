@@ -32,3 +32,23 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductDetail = {
+  id: string;
+  name: string;
+  imageURL: string;
+  price: {
+    basicPrice: number;
+    sellingPrice: number;
+    discountRate: number;
+  };
+  brandInfo: {
+    id: string;
+    name: string;
+    imageURL: string;
+  };
+  wish: {
+    isWished: boolean;
+    wishCount: number;
+  };
+};

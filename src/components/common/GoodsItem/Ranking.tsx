@@ -6,11 +6,12 @@ import { DefaultGoodsItems, type DefaultGoodsItemsProps } from './Default';
 
 type Props = {
   rankingIndex: number;
+  onClick?: () => void; // onClick prop 추가
 } & DefaultGoodsItemsProps;
 
-export const RankingGoodsItems = ({ rankingIndex, ...props }: Props) => {
+export const RankingGoodsItems = ({ rankingIndex, onClick, ...props }: Props) => {
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       <RankingLabel rankingIndex={rankingIndex}>{rankingIndex}</RankingLabel>
       <DefaultGoodsItems {...props} />
     </Wrapper>
@@ -20,6 +21,7 @@ export const RankingGoodsItems = ({ rankingIndex, ...props }: Props) => {
 const Wrapper = styled.div`
   width: 100%;
   position: relative;
+  cursor: pointer; 
 `;
 
 const RankingLabel = styled.span<Pick<Props, 'rankingIndex'>>`
