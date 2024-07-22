@@ -19,6 +19,7 @@ export default function SideBar({ price, name, brandName, imageURL }: goodsDetai
       alignItems="center"
     >
       <GoodsCount name={name} amount={amount} setAmount={setAmount} />
+
       <Box>
         <Button
           boxSizing="border-box"
