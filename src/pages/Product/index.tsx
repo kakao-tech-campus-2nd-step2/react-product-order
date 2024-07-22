@@ -67,6 +67,9 @@ export default () => {
 
 const layout = css`
     display: flex;
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
     > * {
         margin: 10px;
     }

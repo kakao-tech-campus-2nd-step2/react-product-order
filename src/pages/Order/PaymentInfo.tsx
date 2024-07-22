@@ -45,11 +45,11 @@ const PriceBox = styled.div`
     padding: 15px;
     margin-bottom: 20px;
 
-    p:first-child {
+    p:first-of-type {
         font-size: 15px;
         font-weight: 600;
     }
-    p:last-child {
+    p:last-of-type {
         font-size: 20px;
         font-weight: 700;
     }
