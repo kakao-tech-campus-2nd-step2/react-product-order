@@ -34,7 +34,9 @@ export default () => {
             alert('메세지를 입력해주세요.');
         }
         if (errors.cashReceiptNumber) {
-            alert('현금영수증 번호를 숫자로 입력해주세요.');
+            if (errors.cashReceiptNumber.type === 'required')
+                alert('현금영수증 번호를 입력해주세요.');
+            else alert('현금영수증 번호는 숫자로만 입력해주세요.');
         }
     };
 
