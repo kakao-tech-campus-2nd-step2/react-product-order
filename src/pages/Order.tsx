@@ -23,11 +23,13 @@ export const Order = () => {
   const { data, isLoading, isError } = useProductDetail(productId);
   const productDetail = data?.detail;
 
-  const methods = useForm<OrderFormValues>({
-    mode: 'onSubmit',
-  });
-  const { handleSubmit } = methods;
+  const methods = useForm<OrderFormValues>({ mode: 'onSubmit' });
 
+  if (isLoading) return <ErrorMessageContainer>Loading...</ErrorMessageContainer>;
+  if (isError) return <ErrorMessageContainer>에러가 발생했습니다.</ErrorMessageContainer>;
+  if (!productDetail) return <ErrorMessageContainer>찾는 상품이 없습니다.</ErrorMessageContainer>;
+
+  const { handleSubmit } = methods;
   const onSubmit: SubmitHandler<OrderFormValues> = (formData) => {
     const message = formData.message;
 
@@ -46,10 +48,6 @@ export const Order = () => {
     console.log(formData);
     alert('주문이 완료되었습니다.');
   };
-
-  if (isLoading) return <ErrorMessageContainer>Loading...</ErrorMessageContainer>;
-  if (isError) return <ErrorMessageContainer>에러가 발생했습니다.</ErrorMessageContainer>;
-  if (!productDetail) return <ErrorMessageContainer>찾는 상품이 없습니다.</ErrorMessageContainer>;
 
   return (
     <MessageProvider>
