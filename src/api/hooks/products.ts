@@ -7,17 +7,17 @@ import type { ProductOptionsData } from '@/types';
 //서버와 통신하기 위한 axios 인스턴스
 import { fetchInstance } from '../instance';
 
-//경로를 생성
-const getProductOptionsPath = (productId: string) => `/v1/products/${productId}/options`;
-
 //제품 옵션 데이터를 가져오는 비동기 함수
 export const getProductOptions = async (
   productId: string,
   options?: string,
 ): Promise<ProductOptionsData> => {
-  const response = await fetchInstance.get<ProductOptionsData>(getProductOptionsPath(productId), {
-    params: options,
-  });
+  const response = await fetchInstance.get<ProductOptionsData>(
+    `/v1/products/${productId}/options`,
+    {
+      params: options,
+    },
+  );
   return response.data;
 };
 
