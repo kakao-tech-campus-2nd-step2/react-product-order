@@ -17,7 +17,7 @@ export const useGetProductDetail = (productId: string) => {
   return useQuery({
     queryKey: ['productDetail', productId],
     queryFn: () => getProductDetail(productId),
-    staleTime: 60000,
+    staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
 };
