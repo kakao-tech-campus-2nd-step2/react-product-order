@@ -71,6 +71,7 @@ export type ProductDetailData = {
       description: string;
     }[];
   };
+  giftOrderLimit?: number; // 추가된 부분
 };
 
 export type ProductOptionsData = {

@@ -49,7 +49,7 @@ export const ProductDetailPage = () => {
     if (!isAuthenticated) {
       navigate('/login');
     } else {
-      // 추가적인 로직 (예: 선물하기 페이지로 이동)
+      navigate('/order', { state: { productId, initialQuantity: quantity } });
     }
   };
 

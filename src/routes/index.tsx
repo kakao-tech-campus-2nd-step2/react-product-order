@@ -4,7 +4,8 @@ import { Layout } from '@/components/features/Layout';
 import { HomePage } from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
 import { MyAccountPage } from '@/pages/MyAccount';
-import { ProductDetailPage } from '@/pages/ProductDetail';
+import { OrderPage } from '@/pages/Order'; // 추가
+import { ProductDetailPage } from '@/pages/ProductDetail'; // 추가
 import { ThemePage } from '@/pages/Theme';
 
 import { PrivateRoute } from './components/PrivateRoute';
@@ -24,6 +25,20 @@ const router = createBrowserRouter([
         element: <ThemePage />,
       },
       {
+        path: RouterPath.productDetail,
+        element: <ProductDetailPage />,
+      },
+      {
+        path: RouterPath.order,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: RouterPath.order,
+            element: <OrderPage />,
+          },
+        ],
+      },
+      {
         path: RouterPath.myAccount,
         element: <PrivateRoute />,
         children: [
@@ -32,10 +47,6 @@ const router = createBrowserRouter([
             element: <MyAccountPage />,
           },
         ],
-      },
-      {
-        path: RouterPath.productDetail,
-        element: <ProductDetailPage />,
       },
       {
         path: RouterPath.notFound,
