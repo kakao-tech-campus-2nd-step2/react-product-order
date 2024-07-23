@@ -27,7 +27,7 @@
 
 ### 📝Requirements
 
-질문 1. 제어 컴포넌트와 비제어 컴포넌트의 차이가 무엇이고 제어 컴포넌트로 Form을 만들어야 하는 경우가 있다면 어떤 경우인지 예시와 함께 설명해주세요.[text](https://github.com/kakao-tech-campus-2nd-step2/react-product-order/pull/120/commits/cef6c6667c5a2e11c22f12f8126e7d20a3b1ca5a)
+질문 1. 제어 컴포넌트와 비제어 컴포넌트의 차이가 무엇이고 제어 컴포넌트로 Form을 만들어야 하는 경우가 있다면 어떤 경우인지 예시와 함께 설명해주세요.
 
 ### 제어 컴포넌트(Controlled Component)와 비제어 컴포넌트(Uncontrolled Component)의 차이점
 
