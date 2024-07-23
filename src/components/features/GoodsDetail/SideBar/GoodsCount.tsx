@@ -4,10 +4,11 @@ type CountData = {
   name?: string;
   amount: number;
   setAmount: React.Dispatch<React.SetStateAction<number>>;
+  limit: number;
 };
-export default function GoodsCount({ name, amount, setAmount }: CountData) {
+export default function GoodsCount({ name, amount, setAmount, limit }: CountData) {
   const handleIncrease = () => {
-    setAmount(Math.min(amount + 1, 100));
+    setAmount(Math.min(amount + 1, limit));
   };
 
   const handleDecrease = () => {
@@ -21,8 +22,9 @@ export default function GoodsCount({ name, amount, setAmount }: CountData) {
   return (
     <div>
       <Box
+        display="flex"
+        flexDirection="column"
         p="12px 14px 16px"
-        height="100px"
         width="318px"
         borderWidth="0.1px"
         borderColor="rgb(237, 237, 237)"
@@ -42,7 +44,7 @@ export default function GoodsCount({ name, amount, setAmount }: CountData) {
             borderRadius="6px"
             defaultValue={1}
             min={1}
-            max={100}
+            max={limit}
             id="amount"
             name="amount"
             value={amount}

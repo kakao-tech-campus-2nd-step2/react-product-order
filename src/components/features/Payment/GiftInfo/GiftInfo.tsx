@@ -1,10 +1,10 @@
 import { Box } from '@chakra-ui/react';
 
-import GiftMessage from '@/components/features/Payment/GiftInfo/GiftBasket';
-import GiftBasket from '@/components/features/Payment/GiftInfo/GiftMessage';
-import type { productInfoProps } from '@/types';
+import GiftBasket from '@/components/features/Payment/GiftInfo/GiftBasket';
+import GiftMessage from '@/components/features/Payment/GiftInfo/GiftMessage';
+import type { formProps, productInfoProps } from '@/types';
 
-export default function GiftInfo({ productInfo }: productInfoProps) {
+export default function GiftInfo({ productInfo, methods }: productInfoProps & formProps) {
   return (
     <Box
       display="flex"
@@ -15,8 +15,8 @@ export default function GiftInfo({ productInfo }: productInfoProps) {
       height="904px"
       borderLeft="solid 1px rgb(226, 232, 240)"
     >
-      <GiftBasket />
-      <GiftMessage productInfo={productInfo} />
+      <GiftMessage methods={methods} />
+      <GiftBasket productInfo={productInfo} />
     </Box>
   );
 }
