@@ -22,7 +22,12 @@ export const OrderPage: React.FC = () => {
   const location = useLocation();
   const orderData = location.state?.orderData as OrderData;
 
-  const { control, handleSubmit, watch } = useForm<FormValues>({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: {
       message: '',
       receiptNumber: '',
@@ -33,7 +38,15 @@ export const OrderPage: React.FC = () => {
 
   const isReceiptChecked = watch('isReceiptChecked');
 
-  const onSubmit = () => {
+  const onSubmit = (data: FormValues) => {
+    if (isReceiptChecked && !data.receiptNumber) {
+      alert('현금영수증 번호를 입력해주세요.');
+      return;
+    }
+    if (isReceiptChecked && !/^\d+$/.test(data.receiptNumber)) {
+      alert('현금영수증 번호는 숫자만 입력 가능합니다.');
+      return;
+    }
     alert('주문이 완료되었습니다.');
   };
 
@@ -52,7 +65,10 @@ export const OrderPage: React.FC = () => {
             },
           }}
           render={({ field }) => (
-            <MessageBox placeholder="선물과 함께 보낼 메시지를 적어보세요" {...field} />
+            <>
+              <MessageBox placeholder="선물과 함께 보낼 메시지를 적어보세요" {...field} />
+              {errors.message && <ErrorMessage>{errors.message.message}</ErrorMessage>}
+            </>
           )}
         />
         <GiftTitle>선물 내역</GiftTitle>
@@ -112,9 +128,13 @@ export const OrderPage: React.FC = () => {
             },
           }}
           render={({ field }) => (
-            <Input type="text" placeholder="(-없이)숫자만 입력해주세요." {...field} />
+            <>
+              <Input type="text" placeholder="(-없이)숫자만 입력해주세요." {...field} />
+              {errors.receiptNumber && <ErrorMessage>{errors.receiptNumber.message}</ErrorMessage>}
+            </>
           )}
         />
+
         <TotalPriceWrapper>
           <TotalLabel>최종 결제금액</TotalLabel>
           <TotalPrice>{orderData.totalPrice}원</TotalPrice>
@@ -160,6 +180,11 @@ const MessageBox = styled.textarea`
   border-radius: 4px;
   resize: none;
   background-color: #f7f7f7;
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
 `;
 
 const GiftInfo = styled.div`
