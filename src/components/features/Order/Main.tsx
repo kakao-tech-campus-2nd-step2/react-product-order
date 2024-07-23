@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
+import { type RegisterOptions, useFormContext } from 'react-hook-form';
 
 import { Image } from '@/components/common/Image';
 import { Spacing } from '@/components/common/layouts/Spacing';
-import { useMessage } from '@/context/message/MessageContext';
 import { Text } from '@/styles';
 
 type Props = {
@@ -13,10 +13,17 @@ type Props = {
 };
 
 export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
-  const { message, setMessage } = useMessage();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
-  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
+  const messageValidation: RegisterOptions = {
+    required: '메시지를 입력해주세요.',
+    maxLength: {
+      value: 100,
+      message: '메시지는 100자 이내로 입력해주세요.',
+    },
   };
 
   return (
@@ -28,11 +35,10 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
           </Text>
         </TitleContainer>
         <MessageArea
-          name="messageCardTextMessage"
+          {...register('message', messageValidation)}
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
-          value={message}
-          onChange={handleMessageChange}
         />
+        {errors.message && <ErrorMessage>{errors.message.message as string}</ErrorMessage>}
       </MessageContainer>
       <Spacing height={8} backgroundColor="rgb(237, 237, 237)" />
       <ProductInfoContainer>
@@ -107,4 +113,12 @@ const Name = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3px;
+`;
+
+const ErrorMessage = styled.span`
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  margin-left: 30px;
+  display: block;
 `;
