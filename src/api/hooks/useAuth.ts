@@ -16,5 +16,5 @@ export const useAuth = () => {
     checkAuthStatus();
   }, []);
 
-  return isAuthenticated;
+  return { isAuthenticated };
 };

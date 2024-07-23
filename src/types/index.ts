@@ -72,3 +72,7 @@ export type ProductDetailData = {
     }[];
   };
 };
+
+export type ProductOptionsData = {
+  giftOrderLimit: number;
+};
