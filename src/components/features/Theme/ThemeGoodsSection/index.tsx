@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
@@ -17,6 +18,12 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
     useGetThemesProducts({
       themeKey,
     });
+  const navigate = useNavigate();
+
+  const handleProductClick = (id: number) => {
+    console.log(`Navigating to product/${id}`);
+    navigate(`/product/${id}`);
+  };
 
   if (isLoading)
     return (
@@ -47,6 +54,7 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
               title={name}
               amount={price.sellingPrice}
               subtitle={brandInfo.name}
+              onClick={() => handleProductClick(id)}
             />
           ))}
         </Grid>

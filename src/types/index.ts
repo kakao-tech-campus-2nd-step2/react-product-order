@@ -32,3 +32,56 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductDetailData = {
+  detail: {
+    brandInfo: {
+      id: number;
+      name: string;
+      imageURL: string;
+    };
+    id: number;
+    imageURL: string;
+    isAccessableProductPage: boolean;
+    name: string;
+    price: {
+      basicPrice: number;
+      discountRate: number;
+      sellingPrice: number;
+    };
+    productDescription: {
+      displayImage: string;
+    };
+    productDetailInfo: {
+      announcements: {
+        displayOrder: number;
+        name: string;
+        value: string;
+      }[];
+      terms: {
+        displayOrder: number;
+        title: string;
+        description: string;
+      }[];
+    };
+    review: {
+      averageRating: number;
+      totalReviewCount: number;
+    };
+    wish: {
+      isWished: boolean;
+      wishCount: number;
+    };
+  };
+};
+
+export type ProductOption = {
+  optionId: string;
+  name: string;
+  additionalPrice: number;
+};
+
+export type ProductOptionsData = {
+  options: ProductOption[];
+  giftOrderLimit: number;
+};
