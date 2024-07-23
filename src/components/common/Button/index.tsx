@@ -96,7 +96,7 @@ const Wrapper = styled.button<Pick<Props, 'theme' | 'size'>>(
       backgroundColor: '#fee500',
 
       '&:hover': {
-        backgroundColor: '#fada0a',
+        backgroundColor: '#fee500',
       },
     };
   },

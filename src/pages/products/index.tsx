@@ -1,7 +1,11 @@
 import styled from '@emotion/styled';
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import { z } from 'zod';
 
 import { useAuth } from '@/provider/Auth';
 import { RouterPath } from '@/routes/path';
@@ -47,13 +51,32 @@ const fetchProductOptions = async (productId: string): Promise<ProductOptions | 
   }
 };
 
+const schema = z.object({
+  quantity: z.number().min(1, '1개 이상 선택해야합니다.'),
+});
+
+type FormValues = z.infer<typeof schema>;
+
 export const ProductPage: React.FC = () => {
   const { productKey = '' } = useParams<{ productKey: string }>();
   const [product, setProduct] = useState<Product | null | undefined>(undefined);
   const [options, setOptions] = useState<ProductOptions | null>(null);
-  const [quantity, setQuantity] = useState<number>(1);
   const authInfo = useAuth();
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      quantity: 1,
+    },
+  });
+
+  const currentQuantity = watch('quantity');
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -67,7 +90,7 @@ export const ProductPage: React.FC = () => {
     loadProduct();
   }, [productKey]);
 
-  const handleGiftToMyself = () => {
+  const handleGiftToMyself: SubmitHandler<FormValues> = ({ quantity }) => {
     if (!authInfo) {
       if (window.confirm('로그인이 필요한 메뉴입니다. 로그인 페이지로 이동하시겠습니까?')) {
         navigate(`${RouterPath.login}?redirect=${window.location.pathname}`);
@@ -99,18 +122,18 @@ export const ProductPage: React.FC = () => {
   }
 
   const handleIncreaseQuantity = () => {
-    if (quantity < options.giftOrderLimit) {
-      setQuantity(quantity + 1);
+    if (currentQuantity < options.giftOrderLimit) {
+      setValue('quantity', currentQuantity + 1, { shouldValidate: true });
     }
   };
 
   const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+    if (currentQuantity > 1) {
+      setValue('quantity', currentQuantity - 1, { shouldValidate: true });
     }
   };
 
-  const totalPrice = product.price.sellingPrice * quantity;
+  const totalPrice = product.price.sellingPrice * currentQuantity;
 
   return (
     <Container>
@@ -122,22 +145,39 @@ export const ProductPage: React.FC = () => {
           <ProductName>{product.name}</ProductName>
           <ProductPrice>{product.price.sellingPrice}원</ProductPrice>
           <div>카톡 친구가 아니어도 선물 코드로 선물할 수 있어요!</div>
-          <form onSubmit={handleGiftToMyself}>
+          <form onSubmit={handleSubmit(handleGiftToMyself)}>
             <FormSection>
               <Label>{product.name}</Label>
               <QuantityControl>
-                <Button type="button" onClick={handleDecreaseQuantity} disabled={quantity <= 1}>
+                <Button
+                  type="button"
+                  onClick={handleDecreaseQuantity}
+                  disabled={currentQuantity <= 1}
+                >
                   -
                 </Button>
-                <QuantityInput type="text" value={quantity} readOnly />
+                <QuantityInput
+                  type="text"
+                  value={currentQuantity}
+                  readOnly
+                  {...register('quantity', {
+                    validate: {
+                      min: (value) => value >= 1 || '1개 이상 선택해야합니다.',
+                      max: (value) =>
+                        value <= options.giftOrderLimit ||
+                        `수량은 ${options.giftOrderLimit}를 초과할 수 없습니다.`,
+                    },
+                  })}
+                />
                 <Button
                   type="button"
                   onClick={handleIncreaseQuantity}
-                  disabled={quantity >= options.giftOrderLimit}
+                  disabled={currentQuantity >= options.giftOrderLimit}
                 >
                   +
                 </Button>
               </QuantityControl>
+              {errors.quantity && <ErrorText>{errors.quantity.message}</ErrorText>}
             </FormSection>
             <FormSection>
               <Label>총 결제 금액</Label>
@@ -207,7 +247,7 @@ const QuantityInput = styled.input`
 
 const Button = styled.button`
   padding: 5px 10px;
-  background-color: blue;
+  background-color: #000;
   color: white;
   border: none;
   cursor: pointer;
@@ -220,4 +260,9 @@ const Button = styled.button`
 const TotalPrice = styled.div`
   font-size: 24px;
   font-weight: bold;
+`;
+
+const ErrorText = styled.div`
+  color: red;
+  font-size: 14px;
 `;
