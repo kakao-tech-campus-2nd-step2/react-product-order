@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
+import { useFormContext } from 'react-hook-form';
 
 import { Image } from '@/components/common/Image';
 import { Spacing } from '@/components/common/layouts/Spacing';
-import { useMessage } from '@/context/message/MessageContext';
 import { Text } from '@/styles';
 
 type Props = {
@@ -13,11 +13,7 @@ type Props = {
 };
 
 export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
-  const { message, setMessage } = useMessage();
-
-  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  };
+  const { register } = useFormContext();
 
   return (
     <Wrapper>
@@ -28,10 +24,8 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
           </Text>
         </TitleContainer>
         <MessageArea
-          name="messageCardTextMessage"
+          {...register('message', { required: true, maxLength: 100 })}
           placeholder="선물과 함께 보낼 메시지를 적어보세요"
-          value={message}
-          onChange={handleMessageChange}
         />
       </MessageContainer>
       <Spacing height={8} backgroundColor="rgb(237, 237, 237)" />

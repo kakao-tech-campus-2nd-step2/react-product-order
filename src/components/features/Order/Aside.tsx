@@ -1,47 +1,24 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { Button } from '@/components/common/Button';
 import { Spacing } from '@/components/common/layouts/Spacing';
-import { useMessage } from '@/context/message/MessageContext';
 import { Text } from '@/styles';
 
 type Props = { totalAmount: number };
 
 export const Aside = ({ totalAmount }: Props) => {
-  const { message } = useMessage();
-  const [isCashReceiptChecked, setIsCashReceiptChecked] = useState(false);
-  const [cashReceiptNumber, setCashReceiptNumber] = useState('');
+  const { control, register, setValue, watch } = useFormContext();
 
-  const handleCashReceiptNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const cashReceiptNumber = watch('cashReceiptNumber');
 
+  const handleCashReceiptNumberChange = (value: string) => {
     if (/^\d*$/.test(value)) {
-      setCashReceiptNumber(value);
+      setValue('cashReceiptNumber', value, { shouldValidate: true });
     } else {
       alert('숫자만 입력해주세요.');
-      setCashReceiptNumber(value.replace(/\D/g, ''));
+      setValue('cashReceiptNumber', value.replace(/\D/g, ''), { shouldValidate: true });
     }
-  };
-
-  const handleOrderClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (!message.trim()) {
-      alert('메시지를 입력해주세요.');
-      return;
-    } else if (message.length > 100) {
-      alert('메시지는 100자 이내로 입력해주세요.');
-      return;
-    }
-
-    if (isCashReceiptChecked && !cashReceiptNumber.trim()) {
-      alert('현금영수증 번호를 입력해주세요.');
-      return;
-    }
-
-    // 결제 처리
-    alert('주문이 완료되었습니다.');
   };
 
   return (
@@ -55,23 +32,29 @@ export const Aside = ({ totalAmount }: Props) => {
         <Hr />
         <CashReceipt>
           <Label>
-            <input
-              type="checkbox"
-              checked={isCashReceiptChecked}
-              onChange={() => setIsCashReceiptChecked(!isCashReceiptChecked)}
+            <Controller
+              name="isCashReceiptChecked"
+              control={control}
+              render={({ field }) => (
+                <input
+                  type="checkbox"
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                />
+              )}
             />
             <span>현금영수증 신청</span>
           </Label>
           <Spacing height={8} />
-          <Select name="cashReceiptType" id="cashReceiptType">
+          <Select {...register('cashReceiptType')}>
             <option value="PERSONAL">개인소득공제</option>
             <option value="BUSINESS">사업자증빙용</option>
           </Select>
           <NumberInput
-            name="cashReceiptNumber"
+            {...register('cashReceiptNumber', { required: true })}
             placeholder="(-없이) 숫자만 입력해주세요."
             value={cashReceiptNumber}
-            onChange={handleCashReceiptNumberChange}
+            onChange={(e) => handleCashReceiptNumberChange(e.target.value)}
           />
         </CashReceipt>
         <Hr />
@@ -85,9 +68,7 @@ export const Aside = ({ totalAmount }: Props) => {
         </TotalAmount>
         <Hr />
         <Spacing height={32} />
-        <Button theme="kakao" onClick={handleOrderClick}>
-          {totalAmount}원 결제하기
-        </Button>
+        <Button theme="kakao">{totalAmount}원 결제하기</Button>
       </PaymentInfo>
     </Wrapper>
   );
