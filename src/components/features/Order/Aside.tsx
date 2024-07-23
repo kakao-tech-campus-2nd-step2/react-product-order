@@ -10,16 +10,7 @@ type Props = { totalAmount: number };
 export const Aside = ({ totalAmount }: Props) => {
   const { control, register, setValue, watch } = useFormContext();
 
-  const isCashReceiptChecked = watch('isCashReceiptChecked');
   const cashReceiptNumber = watch('cashReceiptNumber');
-
-  const cashReceiptValidation = {
-    required: isCashReceiptChecked ? '현금영수증 번호를 입력해주세요.' : false,
-    pattern: {
-      value: /^\d*$/,
-      message: '숫자만 입력해주세요.',
-    },
-  };
 
   const handleCashReceiptNumberChange = (value: string) => {
     if (/^\d*$/.test(value)) {
@@ -60,7 +51,7 @@ export const Aside = ({ totalAmount }: Props) => {
             <option value="BUSINESS">사업자증빙용</option>
           </Select>
           <NumberInput
-            {...register('cashReceiptNumber', cashReceiptValidation)}
+            {...register('cashReceiptNumber', { required: true })}
             placeholder="(-없이) 숫자만 입력해주세요."
             value={cashReceiptNumber}
             onChange={(e) => handleCashReceiptNumberChange(e.target.value)}
