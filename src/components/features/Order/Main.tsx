@@ -33,7 +33,7 @@ export const Main = ({ name, imageURL, brandName, quantity }: Props) => {
         <Text fontSize="15px" lineHeight="14px" fontWeight="bold">
           선물내역
         </Text>
-        <div style={{ backgroundColor: 'inherit', height: '16px' }} />
+        <Spacing height={16} backgroundColor="inherit" />
         <ProductInfo>
           <Image src={imageURL} alt={`${name} 썸네일`} width="86px" radius={4} ratio="square" />
           <Name>
