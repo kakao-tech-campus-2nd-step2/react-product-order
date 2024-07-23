@@ -3,13 +3,13 @@ import { useState } from 'react';
 
 import { Button } from '@/components/common/Button';
 import { Spacing } from '@/components/common/layouts/Spacing';
-import { useMessage } from '@/context/message/MessageContext';
+// import { useMessage } from '@/context/message/MessageContext';
 import { Text } from '@/styles';
 
 type Props = { totalAmount: number };
 
 export const Aside = ({ totalAmount }: Props) => {
-  const { message } = useMessage();
+  //   const { message } = useMessage();
   const [isCashReceiptChecked, setIsCashReceiptChecked] = useState(false);
   const [cashReceiptNumber, setCashReceiptNumber] = useState('');
 
@@ -24,25 +24,25 @@ export const Aside = ({ totalAmount }: Props) => {
     }
   };
 
-  const handleOrderClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  //   const handleOrderClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //     e.preventDefault();
 
-    if (!message.trim()) {
-      alert('메시지를 입력해주세요.');
-      return;
-    } else if (message.length > 100) {
-      alert('메시지는 100자 이내로 입력해주세요.');
-      return;
-    }
+  //     if (!message.trim()) {
+  //       alert('메시지를 입력해주세요.');
+  //       return;
+  //     } else if (message.length > 100) {
+  //       alert('메시지는 100자 이내로 입력해주세요.');
+  //       return;
+  //     }
 
-    if (isCashReceiptChecked && !cashReceiptNumber.trim()) {
-      alert('현금영수증 번호를 입력해주세요.');
-      return;
-    }
+  //     if (isCashReceiptChecked && !cashReceiptNumber.trim()) {
+  //       alert('현금영수증 번호를 입력해주세요.');
+  //       return;
+  //     }
 
-    // 결제 처리
-    alert('주문이 완료되었습니다.');
-  };
+  //     // 결제 처리
+  //     alert('주문이 완료되었습니다.');
+  //   };
 
   return (
     <Wrapper>
@@ -85,9 +85,7 @@ export const Aside = ({ totalAmount }: Props) => {
         </TotalAmount>
         <Hr />
         <Spacing height={32} />
-        <Button theme="kakao" onClick={handleOrderClick}>
-          {totalAmount}원 결제하기
-        </Button>
+        <Button theme="kakao">{totalAmount}원 결제하기</Button>
       </PaymentInfo>
     </Wrapper>
   );

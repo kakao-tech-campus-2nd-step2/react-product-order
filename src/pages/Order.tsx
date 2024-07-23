@@ -29,6 +29,17 @@ export const Order = () => {
   const { handleSubmit } = methods;
 
   const onSubmit: SubmitHandler<OrderFormValues> = (formData) => {
+    const message = formData.message;
+
+    if (!message.trim()) {
+      alert('메시지를 입력해주세요.');
+      return;
+    } else if (message.length > 100) {
+      alert('메시지는 100자 이내로 입력해주세요.');
+      return;
+    }
+
+    // 결제 처리
     console.log(formData);
     alert('주문이 완료되었습니다.');
   };
@@ -52,7 +63,6 @@ export const Order = () => {
             }
             asideChildren={<Aside totalAmount={productDetail.price.sellingPrice * quantity} />}
           />
-          <button type="submit">주문하기</button>
         </form>
       </FormProvider>
     </MessageProvider>
