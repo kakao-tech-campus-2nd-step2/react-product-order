@@ -37,10 +37,13 @@ const Order: React.FC = () => {
   const handleTaxNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
+    //변환이 가능한지 확인합니다.
     if (!isNaN(Number(value))) {
+      // 변환이 가능하면 NaN을 반환
       setTaxNumber(value);
       setTaxNumberError('');
     } else {
+      //아니면 문구를 실행
       setTaxNumberError('숫자만 입력해주세요.');
     }
   };

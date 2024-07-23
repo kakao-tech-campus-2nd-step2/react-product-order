@@ -23,19 +23,17 @@ const ProductDetail: React.FC = () => {
     if (!isAuthenticated) {
       alert('로그인이 필요한 메뉴입니다.\n로그인 페이지로 이동하시겠습니까?');
       navigate('/login');
-    } else {
-      if (data) {
-        navigate('/order', {
-          state: {
-            product: {
-              id: productId || '',
-              name: data.detail.name,
-              imageUrl: data.detail.imageURL,
-              price: data.detail.price?.sellingPrice || 0,
-            },
+    } else if (data) {
+      navigate('/order', {
+        state: {
+          product: {
+            id: productId || '',
+            name: data.detail.name,
+            imageUrl: data.detail.imageURL,
+            price: data.detail.price?.sellingPrice || 0,
           },
-        });
-      }
+        },
+      });
     }
   };
 
