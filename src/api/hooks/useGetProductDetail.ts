@@ -7,9 +7,7 @@ import { fetchInstance } from '../instance';
 const getProductDetailPath = (productId: string) => `/v1/products/${productId}/detail`;
 
 const getProductDetail = async (productId: string): Promise<ProductDetailData> => {
-  console.log(`Fetching product details for productId: ${productId}`);
   const response = await fetchInstance.get<ProductDetailData>(getProductDetailPath(productId));
-  console.log('API response:', response.data);
   return response.data;
 };
 
