@@ -16,10 +16,11 @@ export default function useGetProductsDetail({ id }: ProductParams) {
         const response = await fetchData(`/api/v1/products/${id}/detail`);
 
         setData(response.detail);
-        setLoading(false);
       } catch {
         setError(true);
         setData(undefined);
+      } finally {
+        setLoading(false);
       }
     };
 
