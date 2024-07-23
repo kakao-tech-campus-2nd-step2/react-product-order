@@ -1,3 +1,5 @@
+import type { UseFormReturn } from 'react-hook-form';
+
 export type ThemeData = {
   id: number;
   key: string;
@@ -57,7 +59,13 @@ export type productInfoProps = {
   productInfo?: goodsDetailData;
 };
 
-export type giftMessageProps = {
+export type FormValues = {
   message: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-}
+  isReceiptChecked: boolean;
+  receiptType: 'personal' | 'business';
+  receiptNumber: string;
+};
+
+export type formProps = {
+  methods: UseFormReturn<FormValues>;
+};
