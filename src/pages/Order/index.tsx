@@ -12,29 +12,60 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import type { ZodSchema } from 'zod';
+import { z } from 'zod';
 
 import { useAuth } from '@/api/hooks/useAuth';
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
+
+const schema: ZodSchema = z.object({
+  message: z
+    .string()
+    .min(1, '메시지를 입력해주세요.')
+    .max(100, '메시지는 100자 이내로 입력해주세요.'),
+  receiptNumber: z
+    .string()
+    .optional()
+    .refine(
+      (val) => val === undefined || /^\d*$/.test(val),
+      '현금영수증 번호는 숫자로만 입력해주세요.',
+    ),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export const OrderPage = () => {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const location = useLocation();
-  const { productId, initialQuantity } = location.state || {};
+  const { productId } = location.state || {};
   const {
     data: productData,
     isLoading,
     isError,
   } = useGetProductDetail({ productId: productId ?? '' });
-  const [message, setMessage] = useState('');
-  const [quantity, setQuantity] = useState(initialQuantity ?? 1);
   const [receiptType, setReceiptType] = useState<string>('personal');
-  const [receiptNumber, setReceiptNumber] = useState('');
   const [isReceipt, setIsReceipt] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      message: '',
+      receiptNumber: '',
+    },
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -42,33 +73,16 @@ export const OrderPage = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleIncrement = () => setQuantity((prev: number) => prev + 1);
-  const handleDecrement = () => setQuantity((prev: number) => (prev > 1 ? prev - 1 : 1));
+  const handleIncrement = () => setValue('quantity', (getValues('quantity') ?? 1) + 1);
+  const handleDecrement = () => setValue('quantity', Math.max((getValues('quantity') ?? 1) - 1, 1));
 
-  const handlePayment = () => {
+  const handlePayment = (data: FormData) => {
     setError(null);
     setSuccess(null);
 
-    if (message.trim() === '') {
-      setError('메시지를 입력해주세요.');
+    if (isReceipt && !data.receiptNumber) {
+      setError('현금영수증 번호를 입력해주세요.');
       return;
-    }
-
-    if (message.length > 100) {
-      setError('메시지는 100자 이내로 입력해주세요.');
-      return;
-    }
-
-    if (isReceipt) {
-      if (receiptNumber.trim() === '') {
-        setError('현금영수증 번호를 입력해주세요.');
-        return;
-      }
-
-      if (!/^\d+$/.test(receiptNumber)) {
-        setError('현금영수증 번호는 숫자로만 입력해주세요.');
-        return;
-      }
     }
 
     setSuccess('결제 되었습니다!');
@@ -84,7 +98,7 @@ export const OrderPage = () => {
     return <Text>상품 정보를 불러오는 데 실패했습니다.</Text>;
   }
 
-  const totalPrice = (productData?.price?.sellingPrice || 0) * quantity;
+  const totalPrice = (productData?.price?.sellingPrice || 0) * (getValues('quantity') ?? 1);
 
   return (
     <Flex padding="4" justifyContent="center">
@@ -93,11 +107,20 @@ export const OrderPage = () => {
           <Text fontSize="2xl" fontWeight="bold">
             나에게 주는 선물
           </Text>
-          <Textarea
-            placeholder="선물과 함께 보낼 메시지를 적어보세요"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+          <Controller
+            name="message"
+            control={control}
+            render={({ field }) => (
+              <Textarea placeholder="선물과 함께 보낼 메시지를 적어보세요" {...field} />
+            )}
           />
+          {errors.message && (
+            <Text color="red.500">
+              {typeof errors.message === 'string'
+                ? errors.message
+                : errors.message?.message || '알 수 없는 오류가 발생했습니다.'}
+            </Text>
+          )}
           {error && <Text color="red.500">{error}</Text>}
           {success && <Text color="green.500">{success}</Text>}
           <Text fontSize="2xl" fontWeight="bold">
@@ -111,16 +134,27 @@ export const OrderPage = () => {
                 <Text>{productData.name}</Text>
                 <Text>{productData.price.sellingPrice}원</Text>
                 <HStack>
-                  <Button onClick={handleDecrement} disabled={quantity <= 1}>
+                  <Button onClick={handleDecrement} disabled={(getValues('quantity') ?? 1) <= 1}>
                     -
                   </Button>
-                  <Input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                    min={1}
-                    width="60px"
-                    textAlign="center"
+                  <Controller
+                    name="quantity"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="number"
+                        {...field}
+                        min={1}
+                        width="60px"
+                        textAlign="center"
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
+                          if (!isNaN(value)) {
+                            setValue('quantity', value);
+                          }
+                        }}
+                      />
+                    )}
                   />
                   <Button onClick={handleIncrement}>+</Button>
                 </HStack>
@@ -136,15 +170,22 @@ export const OrderPage = () => {
             <option value="personal">개인소득공제</option>
             <option value="business">사업자증빙용</option>
           </Select>
-          <Input
-            placeholder="(숫자만 입력해주세요)"
-            value={receiptNumber}
-            onChange={(e) => setReceiptNumber(e.target.value)}
+          <Controller
+            name="receiptNumber"
+            control={control}
+            render={({ field }) => <Input placeholder="(숫자만 입력해주세요)" {...field} />}
           />
+          {errors.receiptNumber && (
+            <Text color="red.500">
+              {typeof errors.receiptNumber === 'string'
+                ? errors.receiptNumber
+                : errors.receiptNumber?.message || '알 수 없는 오류가 발생했습니다.'}
+            </Text>
+          )}
           <Text fontSize="2xl" fontWeight="bold">
             최종 결제금액: {totalPrice}원
           </Text>
-          <Button colorScheme="yellow" width="full" onClick={handlePayment}>
+          <Button colorScheme="yellow" width="full" onClick={handleSubmit(handlePayment)}>
             {totalPrice}원 결제하기
           </Button>
         </VStack>

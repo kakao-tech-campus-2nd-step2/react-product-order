@@ -1,10 +1,20 @@
 import { Button, Flex, HStack, Image, Input, Spinner, Text, VStack } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import type { ZodSchema } from 'zod';
+import { z } from 'zod';
 
 import { useAuth } from '@/api/hooks/useAuth';
 import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
 import { useGetProductOptions } from '@/api/hooks/useGetProductOptions';
+
+const schema: ZodSchema = z.object({
+  quantity: z.number().min(1, '수량은 1 이상이어야 합니다.'),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export const ProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -20,7 +30,19 @@ export const ProductDetailPage = () => {
   } = useGetProductOptions(productId ?? '');
   const isAuthenticated = useAuth();
   const navigate = useNavigate();
-  const [quantity, setQuantity] = useState(1);
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      quantity: 1,
+    },
+  });
 
   useEffect(() => {
     console.log('Product ID: ', productId);
@@ -29,27 +51,30 @@ export const ProductDetailPage = () => {
   }, [productId, productData, productOptions]);
 
   const handleIncrement = () => {
-    if (productOptions && quantity < (productOptions.giftOrderLimit ?? Infinity)) {
-      setQuantity((prev) => prev + 1);
+    const currentQuantity = getValues('quantity');
+    if (productOptions && currentQuantity < (productOptions.giftOrderLimit ?? Infinity)) {
+      setValue('quantity', currentQuantity + 1);
     }
   };
 
   const handleDecrement = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  };
-
-  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value, 10);
-    if (value > 0 && value <= (productOptions?.giftOrderLimit ?? Infinity)) {
-      setQuantity(value);
+    const currentQuantity = getValues('quantity');
+    if (currentQuantity > 1) {
+      setValue('quantity', currentQuantity - 1);
     }
   };
 
-  const handleGiftClick = () => {
+  const handleQuantityChange = (value: number) => {
+    if (value > 0 && value <= (productOptions?.giftOrderLimit ?? Infinity)) {
+      setValue('quantity', value);
+    }
+  };
+
+  const handleGiftClick = (data: FormData) => {
     if (!isAuthenticated) {
       navigate('/login');
     } else {
-      navigate('/order', { state: { productId, initialQuantity: quantity } });
+      navigate('/order', { state: { productId, initialQuantity: data.quantity } });
     }
   };
 
@@ -61,7 +86,7 @@ export const ProductDetailPage = () => {
     return <Text>상품 정보를 불러오는 데 실패했습니다.</Text>;
   }
 
-  const totalPrice = productData.price.sellingPrice * quantity;
+  const totalPrice = productData.price.sellingPrice * (getValues('quantity') || 1);
 
   return (
     <Flex padding="4" justifyContent="center">
@@ -74,32 +99,41 @@ export const ProductDetailPage = () => {
           <Text fontSize="lg">{productData.brandInfo.name}</Text>
           <Text fontSize="lg">{productData.price.sellingPrice}원</Text>
           <HStack>
-            <Button onClick={handleDecrement} disabled={quantity <= 1}>
+            <Button onClick={handleDecrement} disabled={getValues('quantity') <= 1}>
               -
             </Button>
-            <Input
-              type="number"
-              value={quantity}
-              onChange={handleQuantityChange}
-              min={1}
-              max={productOptions?.giftOrderLimit ?? Infinity}
-              width="60px"
-              textAlign="center"
+            <Controller
+              name="quantity"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  {...field}
+                  min={1}
+                  max={productOptions?.giftOrderLimit ?? Infinity}
+                  width="60px"
+                  textAlign="center"
+                  onChange={(e) => handleQuantityChange(parseInt(e.target.value, 10))}
+                />
+              )}
             />
             <Button
               onClick={handleIncrement}
-              disabled={quantity >= (productOptions?.giftOrderLimit ?? Infinity)}
+              disabled={getValues('quantity') >= (productOptions?.giftOrderLimit ?? Infinity)}
             >
               +
             </Button>
           </HStack>
+          {errors.quantity && (
+            <Text color="red.500">{(errors.quantity as { message?: string })?.message}</Text>
+          )}
           <Text fontSize="lg" fontWeight="bold">
             총 결제 금액: {totalPrice}원
           </Text>
           <Button
             colorScheme="blue"
-            onClick={handleGiftClick}
-            disabled={quantity > (productOptions?.giftOrderLimit ?? Infinity)}
+            onClick={handleSubmit(handleGiftClick)}
+            disabled={getValues('quantity') > (productOptions?.giftOrderLimit ?? Infinity)}
           >
             나에게 선물하기
           </Button>
