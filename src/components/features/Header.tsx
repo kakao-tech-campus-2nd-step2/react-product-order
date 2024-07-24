@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
-
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '@/auth/AuthContext';
+import { useAuth } from '@/context/auth/AuthContext';
 
 export const Header = () => {
   const navigate = useNavigate();
+
   const { authToken, logout } = useAuth();
 
   const handleLoginClick = () => {

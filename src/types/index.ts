@@ -32,3 +32,35 @@ export type GoodsData = {
     imageURL: string;
   };
 };
+
+export type ProductDetail = {
+  id: number;
+  name: string;
+  imageURL: string;
+  wish: {
+    isWished: boolean;
+    wishCount: number;
+  };
+  price: {
+    basicPrice: number;
+    discountRate: number;
+    sellingPrice: number;
+  };
+  brandInfo: {
+    id: number;
+    name: string;
+    imageURL: string;
+  };
+  isAccessableProductPage: boolean;
+  review: {
+    averageRating: number;
+    totalReviewCount: number;
+  };
+  productDescription: {
+    displayImage: string;
+  };
+  productDetailInfo: {
+    announcements: Array<{ name: string; value: string; displayOrder: number }>;
+    terms: Array<{ displayCode: string; title: string; description: string }>;
+  };
+};

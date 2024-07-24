@@ -20,7 +20,7 @@ export const Login = () => {
     // id를 세션 스토리지에 저장
     sessionStorage.setItem('authToken', id);
 
-    // origin URL(홈)로 리다이렉트
+    // 리다이렉트
     const redirectUrl = queryParams.get('redirect') ?? `${window.location.origin}/`;
     return window.location.replace(redirectUrl);
   };
