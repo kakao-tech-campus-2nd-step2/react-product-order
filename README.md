@@ -20,8 +20,8 @@
 
 ### 📝Requirements
 
-- [ ] 기존에 만든 form / input을 react-hook-form으로 변경
-- [ ] validate react-hook-form 기능 활용
+- [x] 기존에 만든 form / input을 react-hook-form으로 변경
+- [x] validate react-hook-form 기능 활용
 
 ## Week 4. 4단계 - 질문의 답변을 README에 작성
 
@@ -45,7 +45,7 @@
   - React의 상태 업데이트 없이 직접 DOM 조작을 통해 입력 양식의 값을 변경할 수 있다.
   - 예시: `<input ref={inputRef} />`
 
-  ### 제어 컴포넌트를 사용해야 하는 경우
+  ### 제어 컴포넌트를 사용하는 경우
 
 1. 입력 양식의 값에 대한 유효성 검사 및 제어가 필요한 경우:
 2. 여러 입력 필드 간의 상호 의존성이 있는 경우:
