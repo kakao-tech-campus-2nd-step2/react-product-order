@@ -5,13 +5,9 @@ import { useGetProductDetail } from '@/api/hooks/useGetProductDetail';
 type Props = { productId: string };
 
 export const useProductDetail = ({ productId }: Props) => {
-  const { data, isLoading, isError } = useGetProductDetail({ productId });
+  const { data, isSuccess } = useGetProductDetail({ productId });
 
-  const isRender = useMemo(() => {
-    if (isLoading || isError) return false;
-    if (!data) return false;
-    return true;
-  }, [data, isLoading, isError]);
+  const isRender = useMemo(() => isSuccess, [isSuccess]);
 
   const currentProduct = data?.detail || null;
 

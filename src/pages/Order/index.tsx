@@ -1,6 +1,7 @@
 import { Divider, Text, VStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { type FieldValues, FormProvider, type SubmitHandler } from 'react-hook-form';
 
 import { GiftMessageSection } from '@/components/features/Order/GiftMessageSection';
 import { GiftSummarySection } from '@/components/features/Order/GiftSummarySection';
@@ -9,15 +10,15 @@ import { breakpoints } from '@/styles/variants';
 import type { ProductDetail, ProductOption } from '@/types';
 import { orderLocalStorage } from '@/utils/storage';
 
-const MAX_MESSAGE_LENGTH = 100;
-const validateReceiptNumber = (number: string) => /^\d+$/.test(number);
+import { type FormValues, useOrderForm } from './formSchema';
 
 export const OrderPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<
     (ProductDetail & { selectedOption: ProductOption | null; quantity: number }) | undefined
   >(undefined);
-  const [message, setMessage] = useState('');
   const [totalPrice, setTotalPrice] = useState<number>(0);
+
+  const methods = useOrderForm();
 
   useEffect(() => {
     const product = orderLocalStorage.get();
@@ -27,29 +28,19 @@ export const OrderPage = () => {
       const additionalPrice = selectedOption?.additionalPrice || 0;
       setTotalPrice((price.sellingPrice + additionalPrice) * quantity);
     }
-  }, []);
+  }, [setSelectedProduct, setTotalPrice]);
 
-  const handleOrder = (cashReceipt: boolean, receiptNumber: string) => {
-    if (!message.trim()) {
-      alert('메시지를 입력해주세요.');
-      return;
-    }
-    if (message.length > MAX_MESSAGE_LENGTH) {
-      alert(`메시지는 ${MAX_MESSAGE_LENGTH}자 이내로 입력해주세요.`);
-      return;
-    }
-    if (cashReceipt) {
-      if (!receiptNumber.trim()) {
-        alert('현금영수증 번호를 입력해주세요.');
-        return;
-      }
-      if (!validateReceiptNumber(receiptNumber)) {
-        alert('현금영수증 번호는 숫자로만 입력해주세요.');
-        return;
-      }
-    }
+  const handleOrder: SubmitHandler<FormValues> = (_data) => {
     alert('주문이 완료되었습니다.');
     orderLocalStorage.set(null);
+  };
+
+  const handleError = (errors: FieldValues) => {
+    if (errors.message) {
+      alert(errors.message.message);
+    } else if (errors.receiptNumber) {
+      alert(errors.receiptNumber.message);
+    }
   };
 
   if (!selectedProduct) {
@@ -61,14 +52,18 @@ export const OrderPage = () => {
   }
 
   return (
-    <Wrapper>
-      <VStack w="1000px" spacing={4} align="stretch">
-        <GiftMessageSection message={message} setMessage={setMessage} />
-        <Divider />
-        <GiftSummarySection product={selectedProduct} />
-      </VStack>
-      <PaymentInfoSection handleOrder={handleOrder} totalPrice={totalPrice} />
-    </Wrapper>
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(handleOrder, handleError)}>
+        <Wrapper>
+          <VStack w="1000px" spacing={4} align="stretch">
+            <GiftMessageSection />
+            <Divider />
+            <GiftSummarySection product={selectedProduct} />
+          </VStack>
+          <PaymentInfoSection totalPrice={totalPrice} />
+        </Wrapper>
+      </form>
+    </FormProvider>
   );
 };
 
