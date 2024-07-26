@@ -1,11 +1,12 @@
+import { Grid, Spinner } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 import { useGetThemesProducts } from '@/api/hooks/useGetThemesProducts';
 import { DefaultGoodsItems } from '@/components/common/GoodsItem/Default';
 import { Container } from '@/components/common/layouts/Container';
-import { Grid } from '@/components/common/layouts/Grid';
-import { Spinner } from '@/components/common/Spinner';
 import { VisibilityLoader } from '@/components/common/VisibilityLoader';
+import { getDynamicPath } from '@/routes/path';
 import { breakpoints } from '@/styles/variants';
 
 type Props = {
@@ -14,9 +15,7 @@ type Props = {
 
 export const ThemeGoodsSection = ({ themeKey }: Props) => {
   const { data, isError, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useGetThemesProducts({
-      themeKey,
-    });
+    useGetThemesProducts({ themeKey });
 
   if (isLoading)
     return (
@@ -33,21 +32,16 @@ export const ThemeGoodsSection = ({ themeKey }: Props) => {
   return (
     <Wrapper>
       <Container>
-        <Grid
-          columns={{
-            initial: 2,
-            md: 4,
-          }}
-          gap={16}
-        >
+        <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={6}>
           {flattenGoodsList.map(({ id, imageURL, name, price, brandInfo }) => (
-            <DefaultGoodsItems
-              key={id}
-              imageSrc={imageURL}
-              title={name}
-              amount={price.sellingPrice}
-              subtitle={brandInfo.name}
-            />
+            <Link to={getDynamicPath.productDetail(String(id))} key={id}>
+              <DefaultGoodsItems
+                imageSrc={imageURL}
+                title={name}
+                amount={price.sellingPrice}
+                subtitle={brandInfo.name}
+              />
+            </Link>
           ))}
         </Grid>
         {hasNextPage && (
